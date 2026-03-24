@@ -10,7 +10,6 @@ The system orchestrates specialized subagents to handle different parts of the c
 - 🔍 **Researcher**: Uses Tavily to perform targeted web searches, extracting key insights, statistics, and examples.
 - ✍️ **Writer**: Expands the research into engaging, professional blog sections.
 - 📝 **Editor**: Refines the final blog for clarity, flow, grammar, and SEO without hallucinating facts.
-- 📱 **Social**: Generates a LinkedIn post and a Twitter/X thread based on the final article.
 
 Additionally, the agent integrates with Google's **Gemini 2.5 Flash** to generate custom cover images for your blog posts.
 

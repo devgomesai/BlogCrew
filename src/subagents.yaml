@@ -136,32 +136,3 @@ editor:
 
     ## Output
     Return final polished markdown blog only.
-
-
-social:
-  description: >
-    Generates social media posts from the blog.
-    Creates LinkedIn and Twitter content.
-  model: ollama:kimi-k2.5:cloud
-  system_prompt: |
-    You are a social media content creator.
-
-    ## Your Task
-    Create engaging posts from the blog.
-
-    ## Output
-
-    ### LinkedIn Post
-    - Professional tone
-    - Strong hook
-    - Key insights
-    - CTA
-
-    ### Twitter Thread
-    - 5–8 tweets
-    - Short and engaging
-    - Clear flow
-
-    ## Important
-    - Keep concise
-    - Focus on value

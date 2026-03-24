@@ -33,6 +33,10 @@ cd blog-writer
 
 # Install dependencies
 pip install -e .
+
+# Pull ollama model
+ollama pull kimi-k2.5:cloud
+# 
 # OR if using uv
 uv sync
 ```

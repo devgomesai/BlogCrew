@@ -1,0 +1,15 @@
+[project]
+name = "blog-writer"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "deepagents>=0.4.12",
+    "langchain>=1.2.13",
+    "langchain-ollama>=1.0.1",
+    "langchain-openai>=1.1.12",
+    "langgraph-cli[inmem]>=0.4.19",
+    "markdownify>=1.2.2",
+    "tavily>=1.1.0",
+]

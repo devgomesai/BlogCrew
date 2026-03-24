@@ -79,3 +79,8 @@ src/Blog/
 - `langgraph.json`: LangGraph configuration.
 - `pyproject.toml`: Project dependencies and metadata.
 
+## 🙌 Inspiration
+
+This project is inspired by the 
+[Content Builder Agent example](https://github.com/langchain-ai/deepagents/tree/main/examples/content-builder-agent) 
+from the LangChain DeepAgents repository.

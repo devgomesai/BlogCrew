@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 from pathlib import Path
 import yaml
 from dotenv import load_dotenv

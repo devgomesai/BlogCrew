@@ -84,7 +84,7 @@ def load_subagents(config_path: Path):
 blog_agent = create_deep_agent(
     model=init_chat_model("ollama:kimi-k2.5:cloud"),
     memory=["./AGENTS.md"],
-    skills=["skills/aiskillstore-blog-writer"],
+    skills=["/skills/"],
     tools=[write_blog, generate_cover],
     subagents=load_subagents(BASE_DIR / "subagents.yaml"),
     backend=FilesystemBackend(root_dir=BASE_DIR),

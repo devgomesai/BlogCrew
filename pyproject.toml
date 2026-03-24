@@ -1,7 +1,7 @@
 [project]
 name = "blog-writer"
 version = "0.1.0"
-description = "Add your description here"
+description = "A powerful, multi-agent AI system built with DeepAgents and LangGraph. This project autonomously researches, writes, edits, and generates cover images for high-quality blog posts, along with ready-to-use social media content."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

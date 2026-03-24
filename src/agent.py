@@ -13,7 +13,6 @@ load_dotenv()
 # Root directory
 BASE_DIR = Path(__file__).parent
 
-
 @tool
 def write_blog(slug: str, content: str) -> str:
     """Save blog to Blog/<slug>/Blog.md"""
@@ -83,9 +82,9 @@ def load_subagents(config_path: Path):
 
 blog_agent = create_deep_agent(
     model=init_chat_model("ollama:kimi-k2.5:cloud"),
-    memory=["./AGENTS.md"],
-    skills=["/skills/"],
+    memory=[str(BASE_DIR / "AGENTS.md")],
+    skills=[str(BASE_DIR / "skills/blog-writer")],
     tools=[write_blog, generate_cover],
     subagents=load_subagents(BASE_DIR / "subagents.yaml"),
-    backend=FilesystemBackend(root_dir=BASE_DIR),
+    backend=FilesystemBackend(root_dir=str(BASE_DIR))
 )

@@ -1,6 +1,6 @@
 # BlogCrew ✍️🤖
 
-A powerful, multi-agent AI system built with [DeepAgents](https://github.com/deepagents/deepagents) and [LangGraph](https://github.com/langchain-ai/langgraph). This project autonomously researches, writes, edits, and generates cover images for high-quality blog posts, along with ready-to-use social media content.
+A powerful, multi-agent AI system built with [DeepAgents](https://github.com/deepagents/deepagents). This project autonomously researches, writes, edits, and generates cover images for high-quality blog posts, along with ready-to-use social media content.
 
 ## How it Works
 

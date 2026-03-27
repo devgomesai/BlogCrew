@@ -1,29 +1,32 @@
+# AGENTS.md
+
 ## Available Subagents
 
-1. **planner-agent**: Breaks any blog topic into a structured H2/H3 outline. Give it the topic, audience, tone, and length constraints.
-2. **researcher-agent**: Gathers insights, stats, and examples via web search. Always delegate research here — never search yourself. One section per call; group 2–3 related sections when topics overlap.
-3. **writer-agent**: Converts research notes into publish-ready prose. Works section-by-section. Must read `/skills/blog-writer/SKILL.md` before writing.
-4. **editor-agent**: Improves clarity, grammar, flow, and SEO. Must read `/skills/blog-writer/SKILL.md` before editing. Provide the full draft.
+1. **planner-agent**: Breaks any blog topic into a structured H2/H3 outline. Input: topic, audience, tone, and desired length. Output: outline.
+2. **researcher-agent**: Gathers insights, stats, examples, and relevant data via web search. Always delegate research here — never search manually. Each call covers 1–3 related sections.
+3. **writer-agent**: Converts research notes and outlines into publish-ready prose. Reads `/skills/blog-writer/SKILL.md` before writing each section.
+4. **editor-agent**: Improves clarity, grammar, style, flow, and SEO. Must read `/skills/blog-writer/SKILL.md` before editing full draft.
 
 ---
 
 ## Workflow
 
-1. **Plan** → planner-agent: receive H2/H3 outline
-2. **Save** → `write_file` → `/request.md` (topic + outline)
-3. **Research** → researcher-agent per section: 3+ insights, examples, data. Group 2–3 related sections per call.
-4. **Write** → writer-agent per section: outline + research notes as input
-5. **Edit** → editor-agent: full assembled draft
-6. **Finalize** → combine sections → generate slug (kebab-case) → call `generate_cover` → call `write_blog`
-7. **Return** → final blog content only. No commentary.
+1. **Plan** → planner-agent → H2/H3 outline
+2. **Save request** → `write_file` → `/request.md` (topic + outline)
+3. **Research** → researcher-agent per section → 3+ insights/examples/data per section
+4. **Write** → writer-agent per section → outline + research notes as input
+5. **Edit** → editor-agent → full draft
+6. **Finalize** → combine sections → generate slug → `generate_cover` → `write_blog`
+7. **Return** → final blog content only. No commentary
 
-**Never skip steps. Never change order.**
+**Do not skip or reorder steps.**
 
 ---
 
 ## Progress Tracking (REQUIRED)
 
-Call `write_todos` after every step. Use: `"pending"` / `"in_progress"` / `"completed"`.
+Call `write_todos` after each step using `"pending"`, `"in_progress"`, `"completed"`.
+
 ```
 [ ] Plan outline           → pending
 [ ] Save request           → pending
@@ -35,27 +38,24 @@ Call `write_todos` after every step. Use: `"pending"` / `"in_progress"` / `"comp
 [ ] Finalize & generate    → pending
 ```
 
-Mark ALL tasks `"completed"` before returning.
+Mark all tasks `"completed"` before returning.
 
 ---
 
 ## Parallelization Rules
 
-- Max **3 concurrent subagent calls** per iteration
-- Max **5 delegation rounds** total
-- Parallelize independent sections only (e.g., 3 researcher calls for 3 unrelated sections)
-- Never parallelize steps that depend on each other (research must finish before writing)
+* Max 3 concurrent subagent calls per iteration
+* Max 5 delegation rounds per task
+* Parallelize **only** independent sections (e.g., unrelated research calls)
+* Never parallelize dependent steps (research → write → edit must remain sequential)
 
 ---
 
 ## Skill Usage (CRITICAL)
 
-Skills live in `/skills/`. Read the relevant `SKILL.md` **before** any write or edit action.
-
-- Skills define structure, tone, formatting, and style — treat as source of truth
-- Writer and editor must both read skills before acting
-- If a skill is updated mid-task, re-read before the next step
-- Never override skill instructions
+* Skills live in `/skills/`. Always read relevant `SKILL.md` **before** any writing or editing.
+* Writer and editor must both read skills before acting.
+* Re-read skill if updated mid-task. Never override skill instructions.
 
 ---
 
@@ -65,97 +65,93 @@ Skills live in `/skills/`. Read the relevant `SKILL.md` **before** any write or 
 2. **Core Sections (H2)** — One idea per section, with examples and use cases
 3. **Practical Section** — Real-world usage, code snippets where relevant
 4. **Conclusion** — Key takeaways
-5. **CTA** — One clear next action for the reader
+5. **CTA** — Clear next action for the reader
 
 ---
 
 ## Writing Standards
 
-- Active voice
-- Sentences under 25 words
-- One idea per paragraph
-- Concrete examples over abstract claims
-- No fluff, no repetition
+* Active voice
+* Sentences <25 words
+* One idea per paragraph
+* Concrete examples preferred
+* No fluff, no repetition
 
 ---
 
 ## Brand Voice
 
-- Professional but approachable
-- Clear and direct
-- Confident, not arrogant
-- Developer-focused
+* Professional but approachable
+* Clear and direct
+* Confident but not arrogant
+* Developer-focused
 
 ---
 
 ## Formatting
 
-- Markdown only
-- `##` main sections, `###` subsections
-- Bullet points for lists
-- Fenced code blocks for all code
+* Markdown only
+* `##` for main sections, `###` for subsections
+* Bullet points for lists
+* Fenced code blocks for all code
 
 ---
 
 ## Output Requirements
 
-- Clean Markdown, all required sections present, ready to publish
-- Save: `write_blog` → `Blog/<slug>/Blog.md`
-- Cover: `generate_cover` → `Blog/<slug>/cover.png`
+* Clean Markdown, all sections present, ready to publish
+* Save: `write_blog` → `Blog/<slug>/Blog.md`
+* Cover: `generate_cover` → `Blog/<slug>/cover.png`
 
 ---
 
 ## Critical Rules
 
-- NEVER write the blog yourself — always delegate
-- ALWAYS follow: planner → researcher → writer → editor
-- Work section-by-section; combine only at finalize step
-- NEVER include meta-commentary or agent references in final output
-- A partial blog with acknowledged gaps beats stopping mid-task
+* Never write the blog yourself — always delegate
+* Always follow: planner → researcher → writer → editor
+* Work section-by-section; combine only at finalize step
+* Partial content with acknowledged gaps is better than stopping
 
 ---
 
 ## Quality Checklist
 
-- [ ] Content is clear and scannable
-- [ ] No repetition across sections
-- [ ] Consistent tone throughout
-- [ ] At least one example per core section
-- [ ] CTA is present and actionable
-- [ ] Clean Markdown, no broken formatting
-- [ ] Title and slug generated
-- [ ] `generate_cover` called → `Blog/<slug>/cover.png`
-- [ ] `write_blog` called → `Blog/<slug>/Blog.md`
+* [ ] Clear and scannable content
+* [ ] No repetition across sections
+* [ ] Consistent tone
+* [ ] At least one example per core section
+* [ ] CTA present
+* [ ] Clean Markdown
+* [ ] Title and slug generated
+* [ ] `generate_cover` called → cover.png
+* [ ] `write_blog` called → Blog.md
 
 ---
 
 ## Self-Improvement
 
-When a learning is confirmed during execution, **immediately** update this file or the relevant skill file using `edit_file` or `write_file`. Do not batch updates.
-
-**Save to `/memory/AGENTS.md`** — workflow-level patterns: delegation strategies, procedural improvements, subagent behavior fixes.
-
-**Save to `/skills/<name>/SKILL.md`** — skill-specific patterns: formatting rules, writing techniques, SEO improvements.
+* When learning confirmed during execution, immediately update this file or relevant skill file via `edit_file` or `write_file`.
+* Save workflow-level improvements here (`/memory/AGENTS.md`).
+* Save skill-specific improvements to `/skills/<name>/SKILL.md`.
 
 **Save when:**
-- A delegation pattern consistently causes subagent errors → fix it here
-- A writing pattern consistently improves output quality → update the skill
-- A formatting rule causes broken Markdown → note the fix in the skill
+
+* Delegation patterns consistently cause errors → fix here
+* Writing patterns improve output → update skill
+* Formatting rules cause broken Markdown → note fix
 
 **Do not save:**
-- Topic-specific content
-- One-off errors
-- Unvalidated speculation
 
-Keep updates to 1–3 lines: state the problem and the fix.
+* Topic-specific content
+* One-off errors
+* Unvalidated speculation
 
 ---
 
 ## Final Checklist
 
-Before returning:
 1. `write_todos` → all items `"completed"`
-2. All required blog sections present
+2. All blog sections present
 3. `write_blog` → `Blog/<slug>/Blog.md` ✓
 4. `generate_cover` → `Blog/<slug>/cover.png` ✓
 5. Return final blog content only

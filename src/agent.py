@@ -121,6 +121,7 @@ def load_subagents(config_path: Path) -> list[dict]:
         for name, spec in config.items()
     ]
 
+print(load_subagents(BASE_DIR / "subagents.yaml"))
 
 # ----------------------------
 # Backend Factory
@@ -150,7 +151,6 @@ def create_backend(runtime) -> CompositeBackend:
 blog_agent = create_deep_agent(
     model=init_chat_model("openai:gpt-4o-mini-2024-07-18"),  # LLM model
     memory=["/memory/AGENTS.md"],  # Memory file(s) agent can read/write
-    skills=["/skills/"],           # Skills directory (virtual path mapped via backend)
     tools=[write_blog, generate_cover],  # Tools exposed to the agent
     subagents=load_subagents(BASE_DIR / "subagents.yaml"),  # Load subagents config
     backend=create_backend,  # Backend function providing virtual path routing

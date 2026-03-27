@@ -7,28 +7,65 @@ from deepagents import create_deep_agent
 from deepagents.backends import CompositeBackend, FilesystemBackend, StateBackend
 from src.tools import web_search
 
+# Load environment variables from a .env file
 load_dotenv()
 
+# ----------------------------
+# Directory Setup
+# ----------------------------
+# BASE_DIR: directory where this script resides
 BASE_DIR = Path(__file__).parent
+
+# BLOG_DIR: where blogs will be saved
 BLOG_DIR = BASE_DIR.parent / "Blog"
+
+# SKILLS_DIR: where agent skills are stored
 SKILLS_DIR = BASE_DIR.parent / "skills"
 
-_memory_backend = FilesystemBackend(root_dir=str(BASE_DIR), virtual_mode=False)
-_skills_backend = FilesystemBackend(root_dir=str(SKILLS_DIR), virtual_mode=False)
+# ----------------------------
+# Backend Configuration
+# ----------------------------
+# FilesystemBackend handles file storage for the agent
+# virtual_mode=True ensures that virtual paths like "/skills/" or "/memory/"
+# correctly map to the underlying filesystem path on Windows/Unix.
+_memory_backend = FilesystemBackend(root_dir=str(BASE_DIR), virtual_mode=True)
+_skills_backend = FilesystemBackend(root_dir=str(SKILLS_DIR), virtual_mode=True)
 
+# ----------------------------
+# Tools
+# ----------------------------
 
-@tool
+@tool(parse_docstring=True)
 def write_blog(slug: str, content: str) -> str:
-    """Save blog to Blog/<slug>/Blog.md"""
+    """
+    Save a blog to Blog/<slug>/Blog.md
+    
+    Args:
+        slug: Subfolder name for the blog
+        content: Blog content in markdown/text
+    
+    Returns:
+        Confirmation message with saved path
+    """
     path = BLOG_DIR / slug / "Blog.md"
-    path.parent.mkdir(parents=True, exist_ok=True)
+    path.parent.mkdir(parents=True, exist_ok=True)  # Ensure folder exists
     path.write_text(content, encoding="utf-8")
     return f"Blog saved to {path}"
 
 
-@tool
+@tool(parse_docstring=True)
 def generate_cover(prompt: str, slug: str, name: str) -> str:
-    """Generate and save a cover image to Blog/<slug>/<name>.png"""
+    """
+    Generate and save a cover image to Blog/<slug>/<name>.png using Gemini image model
+    
+    Args:
+        prompt: Text prompt describing the image
+        slug: Blog subfolder
+        name: Image file name
+    
+    Returns:
+        Status message with saved path or error
+    """
     try:
         from google import genai
 
@@ -37,6 +74,7 @@ def generate_cover(prompt: str, slug: str, name: str) -> str:
             model="gemini-2.5-flash-image",
             contents=[prompt],
         )
+
         for part in res.parts:
             if part.inline_data:
                 path = BLOG_DIR / slug / f"{name}.png"
@@ -48,12 +86,25 @@ def generate_cover(prompt: str, slug: str, name: str) -> str:
         return f"Error generating cover: {e}"
 
 
+# ----------------------------
+# Subagents Loader
+# ----------------------------
 def load_subagents(config_path: Path) -> list[dict]:
-    tool_map = {"web_search": web_search}
+    """
+    Load subagents configuration from YAML
+    
+    Args:
+        config_path: Path to subagents.yaml
+    
+    Returns:
+        List of subagent configs, including tools and skills
+    """
+    tool_map = {"web_search": web_search}  # Map tool names to functions
 
     with open(config_path) as f:
         config = yaml.safe_load(f)
 
+    # Construct list of subagent definitions for create_deep_agent
     return [
         {
             "name": str(name),
@@ -65,13 +116,25 @@ def load_subagents(config_path: Path) -> list[dict]:
                 if "tools" in spec
                 else {}
             ),
-            **({"skills": spec["skills"]} if "skills" in spec else {}),  # ← add this
+            **({"skills": spec["skills"]} if "skills" in spec else {}),  # include skills if defined
         }
         for name, spec in config.items()
     ]
 
 
+# ----------------------------
+# Backend Factory
+# ----------------------------
 def create_backend(runtime) -> CompositeBackend:
+    """
+    Create a CompositeBackend for the agent
+    
+    CompositeBackend routes virtual paths like:
+        /memory/ -> _memory_backend
+        /skills/ -> _skills_backend
+    
+    StateBackend is used as default for in-memory runtime state
+    """
     return CompositeBackend(
         default=StateBackend(runtime),
         routes={
@@ -81,18 +144,14 @@ def create_backend(runtime) -> CompositeBackend:
     )
 
 
+# ----------------------------
+# Agent Creation
+# ----------------------------
 blog_agent = create_deep_agent(
-    model=init_chat_model("openai:gpt-4o-mini-2024-07-18"),
-    memory=["/memory/AGENTS.md"],
-    skills=["/skills/"],
-    tools=[write_blog, generate_cover],
-    subagents=load_subagents(BASE_DIR / "subagents.yaml"),
-    system_prompt=(
-        "You are an autonomous multi-agent blog system.\n\n"
-        "On start:\n"
-        "1. Read /memory/AGENTS.md — your workflow, delegation rules, and quality standards\n"
-        "2. Read /skills/blog-writer/SKILL.md — writing style, formatting, and structure guidelines\n\n"
-        "Treat both as source of truth. Never proceed without reading them first."
-    ),
-    backend=create_backend,
+    model=init_chat_model("openai:gpt-4o-mini-2024-07-18"),  # LLM model
+    memory=["/memory/AGENTS.md"],  # Memory file(s) agent can read/write
+    skills=["/skills/"],           # Skills directory (virtual path mapped via backend)
+    tools=[write_blog, generate_cover],  # Tools exposed to the agent
+    subagents=load_subagents(BASE_DIR / "subagents.yaml"),  # Load subagents config
+    backend=create_backend,  # Backend function providing virtual path routing
 )

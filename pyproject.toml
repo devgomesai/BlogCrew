@@ -7,9 +7,11 @@ requires-python = ">=3.12"
 dependencies = [
     "deepagents>=0.4.12",
     "langchain>=1.2.13",
+    "langchain-anthropic>=1.4.0",
     "langchain-google-genai>=4.2.1",
     "langchain-ollama>=1.0.1",
     "langchain-openai>=1.1.12",
+    "langchain-openrouter>=0.2.0",
     "langgraph-api>=0.7.86",
     "langgraph-cli[inmem]>=0.4.19",
     "markdownify>=1.2.2",

@@ -299,7 +299,7 @@ Before saving any learning, ask: **would this apply in a new conversation on a d
 | ------------------------------------------------- | ------------------------------------------------- |
 | Workflow, delegation strategy, general procedure  | `/memory/AGENTS.md`                               |
 | Writing patterns, blog structure, SEO rules       | `/skills/blog-writer/SKILL.md`                    |
-| Style patterns, section templates, voice examples | `/skills/blog-writer/references/blog-patterns.md` |
+| Style patterns, section templates, voice examples | `/skills/blog-writer/references/` |
 
 
 Always prefer **updating an existing section** over creating new content.
@@ -325,7 +325,7 @@ Keep additions concise — 1–3 lines with the problem and fix is ideal.
 ```bash
 edit_file /memory/AGENTS.md
 edit_file /skills/blog-writer/SKILL.md
-edit_file /skills/blog-writer/references/blog-patterns.md
+edit_file /skills/blog-writer/references/
 ```
 
 ---

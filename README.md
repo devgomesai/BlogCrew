@@ -23,7 +23,7 @@ blog_agent (orchestrator)
 └── editor-agent        → polishes full draft
 ```
 
-Skills and workflow instructions are loaded at startup via a custom `PreloadedStateBackend`, which works around a known `FilesystemBackend` path resolution issue on Windows.
+Skills and workflow instructions are loaded at startup via a  `CompositeBackend`, which works around a known `FilesystemBackend` path resolution issue on Windows.
 
 ## Prerequisites
 
@@ -102,10 +102,6 @@ Blog-Writer/
 ├── langgraph.json        # LangGraph CLI configuration
 └── pyproject.toml        # Project dependencies and metadata
 ```
-
-## Known Issues
-
-- `FilesystemBackend` has a path resolution bug on Windows. This project works around it using `PreloadedStateBackend`, which loads skill files from disk at startup and serves them via `StateBackend` in-memory.
 
 ## 🙌 Inspiration
 

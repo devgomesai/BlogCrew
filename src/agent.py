@@ -152,6 +152,7 @@ blog_agent = create_deep_agent(
     model=init_chat_model("openai:gpt-4o-mini-2024-07-18"),  # LLM model
     memory=["/memory/AGENTS.md"],  # Memory file(s) agent can read/write
     tools=[write_blog, generate_cover],  # Tools exposed to the agent
+    skills=["/skills/"], # All the skills
     subagents=load_subagents(BASE_DIR / "subagents.yaml"),  # Load subagents config
     backend=create_backend,  # Backend function providing virtual path routing
 )

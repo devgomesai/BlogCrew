@@ -1,157 +1,180 @@
 # AGENTS.md
 
+> **Living document.** Update this file whenever workflow patterns, skill paths, or delegation rules improve.  
+> **Closest AGENTS.md wins.** Explicit user prompts override everything.
+
+---
+
+## Startup Protocol (ALWAYS RUN FIRST)
+
+Before writing any blog or kicking off any subagent, run these checks in order:
+
+```bash
+# 1. Confirm working directory
+ls -la
+
+# 2. Confirm skills exist
+ls /skills/
+
+# 3. Confirm memory exists
+ls /memory/
+
+# 4. Read this file
+cat /memory/AGENTS.md
+```
+
+Do not skip startup. Do not assume paths exist. Confirm before acting.
+
+---
+
+## Project Overview
+
+This agent system produces publish-ready blog posts using a structured multi-agent pipeline.
+
+- **Input:** Topic
+- **Output:** `/Blog/<slug>/Blog.md` + `/Blog/<slug>/cover.png`
+- **Pipeline:** planner → researcher → writer → editor → finalize
+
+---
+
 ## Available Subagents
 
-1. **planner-agent**: Breaks any blog topic into a structured H2/H3 outline. Input: topic, audience, tone, and desired length. Output: outline.
-2. **researcher-agent**: Gathers insights, stats, examples, and relevant data via web search. Always delegate research here — never search manually. Each call covers 1–3 related sections.
-3. **writer-agent**: Converts research notes and outlines into publish-ready prose. Reads `/skills/blog-writer/SKILL.md` before writing each section.
-4. **editor-agent**: Improves clarity, grammar, style, flow, and SEO. Must read `/skills/blog-writer/SKILL.md` before editing full draft.
+
+| Agent              | Role                                             | Input                          | Output                     |
+| ------------------ | ------------------------------------------------ | ------------------------------ | -------------------------- |
+| `planner-agent`    | Breaks topic into H2/H3 outline                  | topic, audience, tone, length  | structured outline         |
+| `researcher-agent` | Gathers stats, examples, insights via web search | 1–3 related sections + outline | research notes per section |
+| `writer-agent`     | Converts outline + research into prose           | outline + research notes       | draft section              |
+| `editor-agent`     | Improves clarity, grammar, flow, SEO             | full combined draft            | polished draft             |
+
+
+**Rules:**
+
+- Never manually search — always delegate search to `researcher-agent`
+- Writer and editor must both read `/skills/blog-writer/SKILL.md` before acting
 
 ---
 
-## Workflow
+## Progress Tracking (Required)
 
-1. **Plan** → planner-agent → H2/H3 outline
-2. **Save request** → `write_file` → `/request.md` (topic + outline)
-3. **Research** → researcher-agent per section → 3+ insights/examples/data per section
-4. **Write** → writer-agent per section → outline + research notes as input
-5. **Edit** → editor-agent → full draft
-6. **Finalize** → combine sections → generate slug → `generate_cover` → `write_blog`
-7. **Return** → final blog content only. No commentary
-
-**Do not skip or reorder steps.**
-
----
-
-## Progress Tracking (REQUIRED)
-
-Call `write_todos` after each step using `"pending"`, `"in_progress"`, `"completed"`.
+Call `write_todos` after every step using statuses: `pending` | `in_progress` | `completed`.
 
 ```
-[ ] Plan outline           → pending
-[ ] Save request           → pending
-[ ] Research: Section 1    → pending
-[ ] Research: Section 2    → pending
-[ ] Write: Section 1       → pending
-[ ] Write: Section 2       → pending
-[ ] Edit full draft        → pending
-[ ] Finalize & generate    → pending
+[ ] Startup checks          → pending
+[ ] Plan outline            → pending
+[ ] Save request            → pending
+[ ] Research: Section 1     → pending
+[ ] Research: Section 2     → pending
+[ ] Research: Section N     → pending
+[ ] Write: Section 1        → pending
+[ ] Write: Section 2        → pending
+[ ] Write: Section N        → pending
+[ ] Edit full draft         → pending
+[ ] Finalize & generate     → pending
 ```
 
-Mark all tasks `"completed"` before returning.
+Mark all items `completed` before returning output.
 
 ---
 
 ## Parallelization Rules
 
-* Max 3 concurrent subagent calls per iteration
-* Max 5 delegation rounds per task
-* Parallelize **only** independent sections (e.g., unrelated research calls)
-* Never parallelize dependent steps (research → write → edit must remain sequential)
+- Max **3 concurrent** subagent calls per iteration
+- Max **5 delegation rounds** per task
+- **Parallelize:** independent research calls for unrelated sections
+- **Never parallelize:** dependent steps — research → write → edit must stay sequential
 
 ---
 
-## Skill Usage (CRITICAL)
+## Skill Usage (Critical)
 
-* Skills live in `/skills/`. Always read relevant `SKILL.md` **before** any writing or editing.
-* Writer and editor must both read skills before acting.
-* Re-read skill if updated mid-task. Never override skill instructions.
+### Understanding Skills
 
----
+Skills are modular capabilities that provide you with detailed instructions and resources on-demand. Each skill contains:
 
-## Blog Structure (REQUIRED)
+- **Level 1 - Metadata**: Brief name and description 
+- **Level 2 - Instructions**: Full detailed instructions 
+- **Level 3 - Resources**: Reference docs, scripts, examples
 
-1. **Introduction** — Hook + what the reader will learn
-2. **Core Sections (H2)** — One idea per section, with examples and use cases
-3. **Practical Section** — Real-world usage, code snippets where relevant
-4. **Conclusion** — Key takeaways
-5. **CTA** — Clear next action for the reader
+## CRITICAL: You MUST Use Skills
 
----
+Skills live in `/skills/`. Always read the relevant `SKILL.md` **before** writing or editing.
 
-## Writing Standards
+```bash
+/skills/blog-writer/SKILL.md
+```
 
-* Active voice
-* Sentences <25 words
-* One idea per paragraph
-* Concrete examples preferred
-* No fluff, no repetition
+- Writer agent reads skill before every section
+- Editor agent reads skill before editing full draft
+- Never override skill instructions
 
----
+## Why This Matters
 
-## Brand Voice
-
-* Professional but approachable
-* Clear and direct
-* Confident but not arrogant
-* Developer-focused
+- Skills contain detailed, specialized instructions that are essential for quality responses.
 
 ---
 
 ## Formatting
 
-* Markdown only
-* `##` for main sections, `###` for subsections
-* Bullet points for lists
-* Fenced code blocks for all code
+- Markdown only
+- `##` for main sections, `###` for subsections
+- Bullet points for lists
+- Fenced code blocks for all code snippets
 
 ---
 
 ## Output Requirements
 
-* Clean Markdown, all sections present, ready to publish
-* Save: `write_blog` → `Blog/<slug>/Blog.md`
-* Cover: `generate_cover` → `Blog/<slug>/cover.png`
+```bash
+# Save blog
+write_blog → Blog/<slug>/Blog.md
+
+# Generate cover image
+generate_cover → Blog/<slug>/cover.png
+```
+
+Both must be called before returning. Do not return partial output.
 
 ---
 
 ## Critical Rules
 
-* Never write the blog yourself — always delegate
-* Always follow: planner → researcher → writer → editor
-* Work section-by-section; combine only at finalize step
-* Partial content with acknowledged gaps is better than stopping
-
----
-
-## Quality Checklist
-
-* [ ] Clear and scannable content
-* [ ] No repetition across sections
-* [ ] Consistent tone
-* [ ] At least one example per core section
-* [ ] CTA present
-* [ ] Clean Markdown
-* [ ] Title and slug generated
-* [ ] `generate_cover` called → cover.png
-* [ ] `write_blog` called → Blog.md
+- Never write the blog yourself — always delegate to subagents
+- Always follow: planner → researcher → writer → editor
+- Work section-by-section; combine only at finalize step
+- Partial content with acknowledged gaps is better than stopping entirely
 
 ---
 
 ## Self-Improvement
 
-* When learning confirmed during execution, immediately update this file or relevant skill file via `edit_file` or `write_file`.
-* Save workflow-level improvements here (`/memory/AGENTS.md`).
-* Save skill-specific improvements to `/skills/<name>/SKILL.md`.
+Update this file or relevant skill files when confirmed improvements are found.
+
+```bash
+# Update workflow-level learnings
+edit_file /memory/AGENTS.md
+
+# Update skill-level learnings
+edit_file /skills/<name>/SKILL.md
+```
 
 **Save when:**
 
-* Delegation patterns consistently cause errors → fix here
-* Writing patterns improve output → update skill
-* Formatting rules cause broken Markdown → note fix
+- Delegation patterns consistently cause errors → fix here
+- Writing patterns improve output quality → update skill
+- Formatting rules cause broken Markdown → note the fix
 
 **Do not save:**
 
-* Topic-specific content
-* One-off errors
-* Unvalidated speculation
+- Topic-specific content
+- One-off errors
+- Unvalidated speculation
 
 ---
 
 ## Final Checklist
 
-1. `write_todos` → all items `"completed"`
-2. All blog sections present
-3. `write_blog` → `Blog/<slug>/Blog.md` ✓
-4. `generate_cover` → `Blog/<slug>/cover.png` ✓
-5. Return final blog content only
+1. `write_todos` → all items `completed`
+2. `write_blog` → `Blog/<slug>/Blog.md`
+3. `generate_cover` → `Blog/<slug>/cover.png`
+

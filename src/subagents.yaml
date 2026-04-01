@@ -1,7 +1,5 @@
 _defaults:
-  model: &model openai:gpt-4o-mini-2024-07-18
-  skills: &blog_skills
-    - /skills/blog-writer/
+  model: &model ollama:kimi-k2.5:cloud
 
 planner:
   name: planner-agent
@@ -94,7 +92,7 @@ writer:
     - Every claim must come from the research file — no hallucination
     - Match the section heading exactly as given
     - No preamble, no meta-commentary — section markdown only
-  skills: *blog_skills
+  skills: /skills/blog-writer/
 
 editor:
   name: editor-agent
@@ -124,4 +122,4 @@ editor:
     - Strengthen the opening hook and the closing call to action
     - Do not add new claims, remove key insights, or change meaning
     - Return final markdown only — no commentary, no changelog
-  skills: *blog_skills
+  skills: /skills/blog-writer/

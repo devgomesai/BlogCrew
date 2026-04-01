@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 import yaml
+import pprint
 from dotenv import load_dotenv
 from langchain.chat_models import init_chat_model
 from deepagents import create_deep_agent
@@ -29,36 +30,49 @@ _skills_backend = FilesystemBackend(root_dir=str(SKILLS_DIR), virtual_mode=True)
 
 
 def load_subagents(config_path: Path) -> list[dict]:
-    """
-    Load subagents configuration from YAML
-
-    Args:
-        config_path: Path to subagents.yaml
-
-    Returns:
-        List of subagent configs, including tools and skills
-    """
-    tool_map = {"web_search": web_search}  # Map tool names to functions
+    tool_map = {
+        "web_search": web_search,
+    }
 
     with open(config_path) as f:
-        config = yaml.safe_load(f)
+        config = yaml.safe_load(f) or {}
 
-    # Construct list of subagent definitions for create_deep_agent
-    return [
-        {
-            "name": str(spec["name"]),
-            "description": str(spec["description"]),
-            "system_prompt": str(spec["system_prompt"]),
-            "model": str(spec["model"]),
-            **(
-                {"tools": [tool_map[str(t)] for t in spec["tools"]]}
-                if "tools" in spec
-                else {}
-            ),
-            **({"skills": spec["skills"]} if "skills" in spec else {}),
+    defaults = config.get("_defaults", {})
+    agents = []
+
+    for key, spec in config.items():
+        if key == "_defaults":
+            continue
+
+        merged = {**defaults, **spec}
+
+        required = ["name", "description", "system_prompt", "model"]
+        missing = [f for f in required if f not in merged]
+        if missing:
+            raise ValueError(f"{key} missing fields: {missing}")
+
+        tools = []
+        for t in merged.get("tools", []):
+            if t not in tool_map:
+                raise ValueError(f"Unknown tool '{t}' in {key}")
+            tools.append(tool_map[t])
+
+        agent = {
+            "name": str(merged["name"]),
+            "description": str(merged["description"]),
+            "system_prompt": str(merged["system_prompt"]),
+            "model": str(merged["model"]),
         }
-        for spec in config.values()
-    ]
+
+        if tools:
+            agent["tools"] = tools
+
+        if "skills" in merged:
+            agent["skills"] = merged["skills"]
+
+        agents.append(agent)
+
+    return agents
 
 
 def create_backend(runtime) -> CompositeBackend:
@@ -88,3 +102,10 @@ blog_agent = create_deep_agent(
     subagents=load_subagents(BASE_DIR / "subagents.yaml"),  # Load subagents config
     backend=create_backend,  # Backend function providing virtual path routing
 )
+
+# See the Subagents
+# agents = load_subagents(BASE_DIR / "subagents.yaml")
+
+# for agent in agents:
+#     print("\n" + "=" * 50)
+#     pprint.pprint(agent)

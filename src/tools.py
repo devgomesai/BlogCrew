@@ -1,5 +1,4 @@
-"""Agent Tools.
-"""
+"""Agent Tools."""
 
 from pathlib import Path
 import httpx
@@ -16,9 +15,6 @@ BASE_DIR = Path(__file__).parent
 
 # BLOG_DIR: where blogs will be saved
 BLOG_DIR = BASE_DIR.parent / "Blog"
-
-# SKILLS_DIR: where agent skills are stored
-SKILLS_DIR = BASE_DIR.parent / "skills"
 
 
 def fetch_webpage_content(url: str, timeout: float = 10.0) -> str:
@@ -78,9 +74,7 @@ def web_search(
 
         result_text = f"""## {title}
 **URL:** {url}
-
 {content}
-
 ---
 """
         result_texts.append(result_text)

@@ -25,7 +25,7 @@ cat /memory/AGENTS.md
 
 # 5. Read and internalize the blog-writer skill (MANDATORY — before ANY other step)
 cat /skills/blog-writer/SKILL.md
-cat /skills/blog-writer/references/
+cat /skills/blog-writer/references/patterns.md
 ```
 
 Do not skip startup. Do not assume paths exist. Confirm before acting.

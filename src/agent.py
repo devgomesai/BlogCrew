@@ -3,9 +3,9 @@ from pathlib import Path
 import yaml
 import pprint
 from dotenv import load_dotenv
-from langchain.chat_models import init_chat_model
 from deepagents import create_deep_agent
 from deepagents.backends import CompositeBackend, FilesystemBackend, StateBackend
+from src.llm_service import get_llm
 from src.tools import generate_cover, web_search, write_blog
 
 # Load environment variables from a .env file
@@ -95,10 +95,11 @@ def create_backend(runtime) -> CompositeBackend:
 
 
 blog_agent = create_deep_agent(
-    model=init_chat_model(os.environ["LLM_CHOICE"]),  # LLM model
+    model=get_llm(), # LLM model
     memory=["/memory/AGENTS.md"],  # Memory file(s) agent can read/write
     tools=[write_blog, generate_cover],  # Tools exposed to the agent
-    skills=["/skills/"],  # All the skills
+    skills=["/skills/"],  # All the skills,
+    system_prompt="You are a Blog writer",
     subagents=load_subagents(BASE_DIR / "subagents.yaml"),  # Load subagents config
     backend=create_backend,  # Backend function providing virtual path routing
 )

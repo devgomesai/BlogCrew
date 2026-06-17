@@ -10,3 +10,6 @@ wheels/
 .venv
 .env
 .langgraph_api
+
+# Disk cache (tools.py web/image cache)
+.cache/

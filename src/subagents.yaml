@@ -1,5 +1,5 @@
 _defaults:
-  model: &model ollama:kimi-k2.5:cloud
+  model: &model "openrouter:nvidia/nemotron-3-ultra-550b-a55b"
 
 planner:
   name: planner-agent

@@ -11,7 +11,7 @@ The system orchestrates specialized subagents to handle different parts of the c
 - ✍️ **Writer**: Expands research notes into engaging, professional blog sections following the blog-writer skill.
 - 📝 **Editor**: Refines the final blog for clarity, flow, grammar, and SEO without hallucinating facts.
 
-The agent also integrates with Google's **Gemini 2.5 Flash** to generate custom cover images for each blog post.
+The agent also integrates with Google's **Gemini image model** to generate custom cover images for each blog post.
 
 ## Architecture
 
@@ -28,10 +28,11 @@ Skills and workflow instructions are loaded at startup via a  `CompositeBackend`
 ## Prerequisites
 
 - **Python**: `>=3.12`
-- **Ollama**: Access to `kimi-k2.5:cloud` (or configure your preferred model in `src/subagents.yaml` and `src/agent.py`)
+- **Model**: Set `LLM_CHOICE` to any `provider:model` supported by LangChain's `init_chat_model` (e.g. `openrouter:...`, `ollama:...`, `google_genai:...`, `openai:...`). The subagents' model is set separately in `src/subagents.yaml`.
 - **API Keys**:
   - `TAVILY_API_KEY`: For web research via Tavily.
-  - `GEMINI_API_KEY`: For generating cover images via `gemini-2.5-flash-image`.
+  - `GOOGLE_API_KEY`: For generating cover images via the Gemini image model.
+  - Provider key for your `LLM_CHOICE` (e.g. `OPENROUTER_API_KEY`, `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`).
 
 ## Installation
 
@@ -40,14 +41,11 @@ Skills and workflow instructions are loaded at startup via a  `CompositeBackend`
 git clone https://github.com/devgomesai/BlogCrew.git
 cd BlogCrew
 
-# Install dependencies
-pip install -e .
-
-# Pull the Ollama model
-ollama pull kimi-k2.5:cloud
-
-# OR if using uv
+# Install dependencies (preferred)
 uv sync
+
+# OR with pip
+pip install -e .
 ```
 
 ### Environment Variables
@@ -55,9 +53,12 @@ uv sync
 Create a `.env` file in the root directory:
 
 ```env
+LLM_CHOICE="openrouter:nvidia/nemotron-3-ultra-550b-a55b"  # provider:model
 TAVILY_API_KEY=your_tavily_api_key
-GEMINI_API_KEY=your_gemini_api_key
+GOOGLE_API_KEY=your_google_api_key
 ```
+
+See `.env.example` for the full list (including optional `LANGSMITH_*` tracing keys).
 
 ## Usage
 
@@ -79,7 +80,7 @@ and save it using write_blog with slug: python-data-science
 ### Output Structure
 
 ```
-src/Blog/
+Blog/
 └── your-blog-slug/
     ├── Blog.md       # Complete generated article
     └── cover.png     # AI-generated cover image
@@ -88,17 +89,18 @@ src/Blog/
 ## Project Structure
 
 ```
-Blog-Writer/
+BlogCrew/
 ├── src/
-│   ├── agent.py          # Main agent, tools, PreloadedStateBackend
-│   ├── tools.py          # Tavily search and web tools
+│   ├── agent.py          # Orchestrator wiring (create_deep_agent), backend routing
+│   ├── tools.py          # web_search (Tavily), write_blog, generate_cover
+│   ├── llm_service.py    # get_llm() → init_chat_model(LLM_CHOICE)
 │   ├── subagents.yaml    # Planner, Researcher, Writer, Editor configs
-│   ├── AGENTS.md         # Workflow instructions injected as system prompt
-│   ├── skills/
-│   │   └── blog-writer/
-│   │       ├── SKILL.md              # Blog writing skill definition
-│   │       └── references/           # Supporting reference docs
-│   └── Blog/             # Generated blog output directory
+│   └── AGENTS.md         # Orchestrator manual, loaded as /memory/AGENTS.md
+├── skills/
+│   └── blog-writer/
+│       ├── SKILL.md      # Blog writing skill definition
+│       └── references/   # patterns / sharp_edges / validations docs
+├── Blog/                 # Generated blog output directory
 ├── langgraph.json        # LangGraph CLI configuration
 └── pyproject.toml        # Project dependencies and metadata
 ```

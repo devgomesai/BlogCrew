@@ -1,14 +1,14 @@
 # AGENTS.md
 
-> **Living document.** Update this file whenever workflow patterns, skill paths, or delegation rules improve.  
-> **Closest AGENTS.md wins.** Explicit user prompts override everything.  
+> **Living document.** Update this file whenever workflow patterns, skill paths, or delegation rules improve.
+> **The nearest AGENTS.md wins.** Explicit user instructions override everything.
 > **NEVER assume files exist. Paths are VIRTUAL — always confirm before reading.**
 
 ---
 
 ## Startup Protocol (ALWAYS RUN FIRST)
 
-Before writing any blog or kicking off any subagent, run these checks in order:
+Before writing any blog or starting any subagent, run these checks in order:
 
 ```bash
 # 1. Confirm working directory
@@ -30,7 +30,7 @@ cat /skills/blog-writer/references/patterns.md
 
 Do not skip startup. Do not assume paths exist. Confirm before acting.
 
-> **After reading the skill**, extract and hold the following in working context:
+> **After reading the skill**, extract and keep the following in working context:
 >
 > - Required `BlogPost` fields and their formats (slug, title, excerpt, date, readTime, category, author, image, seo)
 > - Voice and tone rules (audience, perspective, phrasing)
@@ -41,25 +41,25 @@ Do not skip startup. Do not assume paths exist. Confirm before acting.
 
 ---
 
-## Project Overview
+## Project Summary
 
 This agent system produces publish-ready blog posts using a structured multi-agent pipeline.
 
 - **Input:** Topic
 - **Output:** `/Blog/<slug>/Blog.md` + `/Blog/<slug>/cover.png`
-- **Pipeline:** skill-read → plan → research → write → verify → edit → finalize
+- **Pipeline:** read-skill → plan → research → write → verify → edit → finalize
 
 ---
 
 ## Available Subagents
 
 
-| Agent              | Role                                                     | Input                                    | Output                    |
-| ------------------ | -------------------------------------------------------- | ---------------------------------------- | ------------------------- |
-| `planner-agent`    | Breaks topic into H2/H3 outline                          | topic + skill context                    | structured outline        |
-| `researcher-agent` | Gathers stats, examples, and insights via web search     | 1–3 focused section topics + outline     | structured research notes |
-| `writer-agent`     | Converts outline + research into prose                   | outline + research notes + skill context | draft section             |
-| `editor-agent`     | Improves clarity, grammar, flow, SEO; validates metadata | full combined draft + skill context      | polished draft + metadata |
+| Agent              | Role                                                       | Input                                          | Output                      |
+| ------------------ | ---------------------------------------------------------- | ---------------------------------------------- | --------------------------- |
+| `planner-agent`    | Breaks the topic into an H2/H3 outline                     | topic + skill context                          | structured outline          |
+| `researcher-agent` | Gathers stats, examples, and insights via web search       | 1–3 focused sections + outline                 | structured research notes   |
+| `writer-agent`     | Turns outline + research into prose                        | outline + research notes + skill context       | draft section               |
+| `editor-agent`     | Improves clarity, grammar, flow, SEO; validates metadata   | full draft + skill context                     | polished draft + metadata   |
 
 
 **Delegation rules:**
@@ -67,7 +67,7 @@ This agent system produces publish-ready blog posts using a structured multi-age
 - **Always delegate web research** to `researcher-agent` — never search yourself
 - **Always delegate writing** to `writer-agent` — never write blog prose yourself
 - **Always delegate editing** to `editor-agent` — never polish or validate metadata yourself
-- Pass the extracted `--- SKILL CONTEXT ---` block in every subagent call — never strip it
+- Pass the extracted `--- SKILL CONTEXT ---` block on every subagent call — never strip it
 
 ---
 
@@ -76,36 +76,36 @@ This agent system produces publish-ready blog posts using a structured multi-age
 Follow these steps in order. Do not skip or reorder.
 
 **Step 1 — Plan and Track**
-Break the task into focused steps using `write_todos`. Update after every completed step.
+Break the task into focused steps using `write_todos`. Update after each completed step.
 
 **Step 2 — Read Skill and Extract Context**
-Run the Startup Protocol. Read `SKILL.md` and `blog-patterns.md`. Construct the `--- SKILL CONTEXT ---` block (see format below). Hold in working context for all downstream calls.
+Run the Startup Protocol. Read `SKILL.md` and `blog-patterns.md`. Build the `--- SKILL CONTEXT ---` block (format below). Keep it in working context for all subsequent calls.
 
 **Step 3 — Save Request**
 Use `write_file` to save the user's topic and constraints to `/request.md`.
 
 **Step 4 — Plan Outline**
 Delegate to `planner-agent` with: topic + skill context.
-Receive: H2/H3 outline + suggested slug, category, readTime estimate + flagged sections needing research.
+Receive: H2/H3 outline + suggested slug, category, readTime estimate + sections flagged as needing research.
 
 **Step 5 — Research**
 Delegate to `researcher-agent`. Group 2–3 related sections per call. Up to 6 calls total.
-Parallelize independent section research; never parallelize with dependent steps.
+Parallelize research for independent sections; never parallelize with dependent steps.
 
 **Step 6 — Write**
 Delegate to `writer-agent` one section at a time.
 Pass: outline section + research notes for that section + skill context.
 
 **Step 7 — Verify**
-After all sections return, check if content is sufficient and complete.
-If gaps exist, make one additional research or writing call to fill them — then proceed regardless.
+After all sections return, verify the content is sufficient and complete.
+If there are gaps, make one extra research or writing call to fill them — then proceed regardless.
 
 **Step 8 — Edit**
 Delegate the full combined draft to `editor-agent` with skill context.
 Receive: polished draft + validated `BlogPost` metadata block.
 
 **Step 9 — Finalize and Return**
-Run the Final Checklist. Write output files. Return to user.
+Run the Final Checklist. Write output files. Return to the user.
 
 ---
 
@@ -126,10 +126,10 @@ Tone:            [from blog-patterns.md]
 Perspective:     [from blog-patterns.md]
 Standard sections: [ordered list from blog-patterns.md]
 BlogPost fields: slug | title | excerpt | content | date | readTime | category | author | image | seo
-Slug format:     YYYY-MM-DD-topic, lowercase, hyphenated
+Slug format:     lowercase, hyphenated topic (e.g. python-for-data-science); letters, numbers, hyphens, underscores only
 Date format:     ISO YYYY-MM-DD
 readTime:        word count ÷ 225, rounded to nearest minute
-SEO:             title = topic + Jamaica relevance; description = 1 sentence; keywords = 3–5 items
+SEO:             title = keyword-rich and specific to the topic; description = 1 sentence; keywords = 3–5 items
 Content template: H2 matching title → H3 subheads → numbered action steps → Final Note → Sources
 ---
 ```
@@ -198,7 +198,7 @@ Receives: 1–3 focused section topics + outline.
 
 Must:
 
-1. Search for Jamaica-relevant data, statistics, and examples where applicable
+1. Search for credible, current data, statistics, and named examples relevant to the topic
 2. Return structured notes per section: `fact | source URL | relevance`
 3. Never write prose — return raw notes only
 
@@ -209,7 +209,7 @@ Receives: outline section + research notes + skill context.
 Must:
 
 1. Re-read the `--- SKILL CONTEXT ---` block before writing each section
-2. Write in second person ("you") with confident, advisory tone
+2. Write in second person ("you") with a confident, advisory tone
 3. Follow the content template: H2 title → H3 subheads → action steps as numbered list or bolded lead-ins
 4. Cite sources inline with numbered references matching the Sources section
 5. Return one section at a time — do not combine sections
@@ -221,19 +221,19 @@ Receives: full combined draft + skill context.
 Must:
 
 1. Validate every `BlogPost` field:
-  - `slug`: lowercase, hyphenated, `YYYY-MM-DD-topic`
-  - `title`: clear, professional, Jamaica-relevant
-  - `excerpt`: 1–2 sentences matching opening value of post
+  - `slug`: lowercase, hyphenated topic (e.g. `python-for-data-science`); letters, numbers, hyphens, underscores only
+  - `title`: clear, professional, keyword-rich for the topic
+  - `excerpt`: 1–2 sentences matching the opening value of the post
   - `content`: starts with H2 matching title
   - `date`: ISO `YYYY-MM-DD`
   - `readTime`: word count ÷ 225, rounded to nearest minute
-  - `category`: existing category unless new one is clearly justified
+  - `category`: existing category unless a new one is clearly justified
   - `author`: consistent with existing author
   - `image`: `/blog/<filename>.png`
-  - `seo.title`, `seo.description`, `seo.keywords`: 3–5 keywords, Jamaica-relevant where possible
+  - `seo.title`, `seo.description`, `seo.keywords`: 3–5 keywords relevant to the topic
 2. Improve clarity, grammar, flow — do not change structure
 3. Ensure paragraphs are short and direct
-4. Confirm post ends with action-oriented close or contact invitation
+4. Confirm the post ends with an action-oriented close or contact invitation
 5. Return: polished draft + completed metadata block
 
 ---
@@ -253,7 +253,7 @@ Must:
 - Short, direct paragraphs
 - Action steps as numbered lists or bolded lead-ins
 - Sources section with numbered entries at the end
-- Post ends with invitation to act or contact
+- Post ends with an invitation to act or contact
 
 ---
 
@@ -337,4 +337,3 @@ edit_file /skills/blog-writer/references/
 3. `write_blog` → `Blog/<slug>/Blog.md` confirmed written
 4. `generate_cover` → `Blog/<slug>/cover.png` confirmed written
 5. Output contains no self-referential language, workflow references, or meta-commentary
-

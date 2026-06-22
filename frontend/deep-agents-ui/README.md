@@ -1,93 +1,59 @@
-# 🚀🧠 Deep Agents UI
+# BlogCrew UI
 
-[Deep Agents](https://github.com/langchain-ai/deepagents) is a simple, open source agent harness that implements a few generally useful tools, including planning (prior to task execution), computer access (giving the able access to a shell and a filesystem), and sub-agent delegation (isolated task execution). This is a UI for interacting with deepagents.
+Frontend for [BlogCrew](https://github.com/devgomesai/BlogCrew) — a multi-agent AI blog writing system. Built with Next.js 16, Tailwind CSS, Radix UI, and the LangGraph SDK.
 
-### 🚀 Quickstart
+## Features
 
-**Install dependencies and run the app**
+- **Chat interface** — talk to the BlogCrew orchestrator to generate blog posts
+- **Agent pipeline visualization** — see each subagent (Planner → Researcher → Writer → Editor) working in real time
+- **Published blogs** (`/blogs`) — browse generated posts with cover images, syntax-highlighted markdown, and code blocks
+- **Dark / light theme** — toggle persisted to localStorage
+- **Configurable** — set deployment URL, assistant ID, and LangSmith API key via the settings dialog
+
+## Quickstart
 
 ```bash
-git clone https://github.com/langchain-ai/deep-agents-ui.git
-cd deep-agents-ui
+# Install dependencies
 yarn install
+
+# Run the dev server
 yarn dev
 ```
 
-**Deploy a Deep Agent**
+Open [http://localhost:3000](http://localhost:3000), configure your LangGraph deployment URL and assistant ID in the settings dialog, and start generating blogs.
 
-As an example, see our [Deep Agents quickstarts](https://github.com/langchain-ai/deepagents/tree/main/examples) for examples and run the `deep_research` example.
+## Connecting to BlogCrew
 
-The `langgraph.json` file has the assistant ID as the key:
-
-```
-  "graphs": {
-    "research": "./agent.py:agent"
-  },
-```
-
-Kick off the local LangGraph deployment:
+Deploy the BlogCrew agent from the parent repository:
 
 ```bash
-cd deepagents-quickstarts/deep_research
+cd BlogCrew
 langgraph dev
 ```
 
-You will see the local LangGraph deployment log to terminal:
+Use the printed API URL (e.g. `http://127.0.0.1:2024`) and assistant ID (`blogwriter`) in the UI settings.
 
-```
-╦  ┌─┐┌┐┌┌─┐╔═╗┬─┐┌─┐┌─┐┬ ┬
-║  ├─┤││││ ┬║ ╦├┬┘├─┤├─┘├─┤
-╩═╝┴ ┴┘└┘└─┘╚═╝┴└─┴ ┴┴  ┴ ┴
+## Environment Variables
 
-- 🚀 API: http://127.0.0.1:2024
-- 🎨 Studio UI: https://smith.langchain.com/studio/?baseUrl=http://127.0.0.1:2024
-- 📚 API Docs: http://127.0.0.1:2024/docs
-...
-```
-
-You can get the Deployment URL and Assistant ID from the terminal output and `langgraph.json` file, respectively:
-
-- Deployment URL: <http://127.0.1:2024>
-- Assistant ID: `research`
-
-**Open Deep Agents UI** at [http://localhost:3000](http://localhost:3000) and input the Deployment URL and Assistant ID:
-
-- **Deployment URL**: The URL for the LangGraph deployment you are connecting to
-- **Assistant ID**: The ID of the assistant or agent you want to use
-- [Optional] **LangSmith API Key**: Your LangSmith API key (format: `lsv2_pt_...`). This may be required for accessing deployed LangGraph applications. You can also provide this via the `NEXT_PUBLIC_LANGSMITH_API_KEY` environment variable.
-
-**Usage**
-
-You can interact with the deployment via the chat interface and can edit settings at any time by clicking on the Settings button in the header.
-
-<img width="2039" height="1495" alt="Screenshot 2025-11-17 at 1 11 27 PM" src="https://github.com/user-attachments/assets/50e1b5f3-a626-4461-9ad9-90347e471e8c" />
-
-As the deepagent runs, you can see its files in LangGraph state.
-
-<img width="2039" height="1495" alt="Screenshot 2025-11-17 at 1 11 36 PM" src="https://github.com/user-attachments/assets/86cc6228-5414-4cf0-90f5-d206d30c005e" />
-
-You can click on any file to view it.
-
-<img width="2039" height="1495" alt="Screenshot 2025-11-17 at 1 11 40 PM" src="https://github.com/user-attachments/assets/9883677f-e365-428d-b941-992bdbfa79dd" />
-
-#### Optional: Environment Variables
-
-You can optionally set environment variables instead of using the settings dialog:
+Optional — settings configured in the UI take precedence:
 
 ```env
 NEXT_PUBLIC_LANGSMITH_API_KEY="lsv2_xxxx"
 ```
 
-**Note:** Settings configured in the UI take precedence over environment variables.
+## Blog Viewer
 
-#### Usage
+Generated blog posts saved to the `Blog/` directory at the repo root are automatically discoverable:
 
-You can run your Deep Agents in Debug Mode, which will execute the agent step by step. This will allow you to re-run the specific steps of the agent. This is intended to be used alongside the optimizer.
+- `/blogs` — card grid with cover images and titles
+- `/blogs/[slug]` — full post with rendered markdown, syntax highlighting, and cover image
 
-You can also turn off Debug Mode to run the full agent end-to-end.
+## Scripts
 
-#### 📚 Resources
-
-If the term "Deep Agents" is new to you, check out these videos!
-[What are Deep Agents?](https://www.youtube.com/watch?v=433SmtTc0TA)
-[Implementing Deep Agents](https://www.youtube.com/watch?v=TTMYJAw5tiA&t=701s)
+| Command | Description |
+|---------|-------------|
+| `yarn dev` | Start dev server with Turbopack |
+| `yarn build` | Production build |
+| `yarn start` | Start production server |
+| `yarn lint` | Run ESLint |
+| `yarn format` | Format with Prettier |

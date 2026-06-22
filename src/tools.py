@@ -86,13 +86,13 @@ def fetch_webpage_content(url: str, timeout: float = _HTTPX_TIMEOUT) -> str:
         return f"Network error fetching {url}: {e}"
 
 
+@tool(parse_docstring=True)
 @retry(
     stop=stop_after_attempt(3),
     wait=wait_exponential(multiplier=1, min=1, max=10),
     retry=retry_if_exception_type((httpx.HTTPError, httpx.TimeoutException)),
     reraise=True,
 )
-@tool(parse_docstring=True)
 def web_search(
     query: str,
     max_results: Annotated[int, InjectedToolArg] = 1,
@@ -194,13 +194,13 @@ def _generate_cover_gemini(prompt: str, slug: str, name: str) -> str:
     return "No image was generated"
 
 
+@tool(parse_docstring=True)
 @retry(
     stop=stop_after_attempt(3),
     wait=wait_exponential(multiplier=1, min=2, max=30),
     retry=retry_if_exception_type(Exception),
     reraise=False,
 )
-@tool(parse_docstring=True)
 def generate_cover(prompt: str, slug: str, name: str) -> str:
     """
     Generate and save a cover image to Blog/<slug>/<name>.png using Gemini image model

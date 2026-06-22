@@ -3,7 +3,8 @@ from pathlib import Path
 import yaml
 import pprint
 from dotenv import load_dotenv
-from deepagents import create_deep_agent
+from deepagents import create_deep_agent, __version__
+from langchain.agents import create_agent
 from deepagents.backends import CompositeBackend, FilesystemBackend, StateBackend
 from src.llm_service import get_llm
 from src.tools import generate_cover, web_search, write_blog

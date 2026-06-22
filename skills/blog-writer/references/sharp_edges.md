@@ -1,75 +1,75 @@
 # Blog Writing - Sharp Edges
 
-## Blog Buried Lede
+### Blog Buried Lede
 
-### **Id**
+#### **Id**
 blog-buried-lede
-### **Summary**
+#### **Summary**
 The actual insight is buried 500 words into the post
-### **Severity**
+#### **Severity**
 critical
-### **Situation**
+#### **Situation**
 Writing introductions that build up to the main point
-### **Why**
+#### **Why**
   Readers decide in 10 seconds whether to keep reading. If your best insight
   is in paragraph 6, 80% of people will never see it. The web isn't a mystery
   novel—give away the ending upfront, then explain how you got there.
   
-### **Solution**
+#### **Solution**
   Write your post. Then delete the first 3 paragraphs. Your real opening
   is usually where you finally say something interesting. Lead with the
   insight, then unpack it.
   
-### **Detection Pattern**
+#### **Detection Pattern**
   - In this post, we will
   - Before we begin
   - Let me start by
   - To understand this, we first need to
 
-## Blog No Hook First Line
+### Blog No Hook First Line
 
-### **Id**
+#### **Id**
 blog-no-hook-first-line
-### **Summary**
+#### **Summary**
 Opening line doesn't create immediate curiosity
-### **Severity**
+#### **Severity**
 high
-### **Situation**
+#### **Situation**
 Starting posts with definitions, context, or generic statements
-### **Why**
+#### **Why**
   The first line is the most valuable real estate. "API security is important"
   creates zero curiosity. "Your API is probably leaking data right now" creates
   a question the reader needs answered. Hook or lose them.
   
-### **Solution**
+#### **Solution**
   First line options that work:
   - Provocative claim: "Everything you know about X is wrong"
   - Surprising stat: "73% of developers have never..."
   - Story moment: "At 2 AM, the dashboard turned red"
   - Direct challenge: "You're making this mistake. Here's how I know."
   
-### **Detection Pattern**
+#### **Detection Pattern**
   - ^In today's world
   - ^As we all know
   - ^It's no secret that
   - ^[A-Z][a-z]+ is defined as
 
-## Blog Wall Of Text
+### Blog Wall Of Text
 
-### **Id**
+#### **Id**
 blog-wall-of-text
-### **Summary**
+#### **Summary**
 Long paragraphs with no visual breaks or scannable structure
-### **Severity**
+#### **Severity**
 high
-### **Situation**
+#### **Situation**
 Writing dense paragraphs without headers, lists, or formatting
-### **Why**
+#### **Why**
   Web readers scan before they read. If they can't quickly find value,
   they bounce. Walls of text are intimidating. People literally don't
   start reading them.
   
-### **Solution**
+#### **Solution**
   - New header every 300 words max
   - No paragraph longer than 4 lines on screen
   - Use bullet lists for 3+ related items
@@ -77,26 +77,26 @@ Writing dense paragraphs without headers, lists, or formatting
   - Pull quotes for important ideas
   - One idea per paragraph
   
-### **Detection Pattern**
+#### **Detection Pattern**
   - paragraphs over 200 words
   - sections without headers over 500 words
 
-## Blog Passive Voice Epidemic
+### Blog Passive Voice Epidemic
 
-### **Id**
+#### **Id**
 blog-passive-voice-epidemic
-### **Summary**
+#### **Summary**
 Overusing passive voice kills energy and clarity
-### **Severity**
+#### **Severity**
 medium
-### **Situation**
+#### **Situation**
 Writing "mistakes were made" instead of "I made mistakes"
-### **Why**
+#### **Why**
   Passive voice is weak, unclear, and longer. "The code was deployed by the team"
   vs "The team deployed the code." Active voice is direct, confident, and engaging.
   Passive voice makes you sound like a press release.
   
-### **Solution**
+#### **Solution**
   Find and replace passive constructions:
   - "was created" → "we created"
   - "it was discovered" → "we discovered" / "I found"
@@ -105,28 +105,28 @@ Writing "mistakes were made" instead of "I made mistakes"
   
   One test: Can you add "by zombies" after the verb? If yes, it's passive.
   
-### **Detection Pattern**
+#### **Detection Pattern**
   - was [a-z]+ed by
   - were [a-z]+ed
   - has been [a-z]+ed
   - it was found that
 
-## Blog No Specific Examples
+### Blog No Specific Examples
 
-### **Id**
+#### **Id**
 blog-no-specific-examples
-### **Summary**
+#### **Summary**
 Making claims without concrete, specific evidence
-### **Severity**
+#### **Severity**
 critical
-### **Situation**
+#### **Situation**
 Writing "many companies struggle with X" without naming any
-### **Why**
+#### **Why**
   Vague claims feel like opinions. Specific examples feel like facts.
   "Startups fail at marketing" is forgettable. "Notion spent $0 on ads
   and grew to $10B through template virality" is memorable and shareable.
   
-### **Solution**
+#### **Solution**
   Every claim gets an example. Options:
   - Named company: "Stripe did this by..."
   - Personal story: "When I tried this..."
@@ -135,28 +135,28 @@ Writing "many companies struggle with X" without naming any
   
   "Many" → name three. "Often" → give a percentage. "Experts say" → name the expert.
   
-### **Detection Pattern**
+#### **Detection Pattern**
   - many companies
   - some experts
   - it's often said
   - "studies show" without citation
 
-## Blog Expert Jargon Barrier
+### Blog Expert Jargon Barrier
 
-### **Id**
+#### **Id**
 blog-expert-jargon-barrier
-### **Summary**
+#### **Summary**
 Using insider terminology without explanation
-### **Severity**
+#### **Severity**
 high
-### **Situation**
+#### **Situation**
 Writing for experts when your audience includes beginners
-### **Why**
+#### **Why**
   Every piece of jargon is a door that closes on part of your audience.
   "Implement an event-driven architecture with CQRS" means nothing to 80%
   of readers. You're not impressing anyone—you're excluding them.
   
-### **Solution**
+#### **Solution**
   The "coffee test": Explain it like you're telling a smart friend over coffee
   who works in a different field.
   
@@ -165,26 +165,26 @@ Writing for experts when your audience includes beginners
   - Or skip jargon entirely: "Instead of checking for updates constantly,
     the system waits to be notified when something changes"
   
-### **Detection Pattern**
+#### **Detection Pattern**
   - unexplained acronyms
   - technical terms without context
 
-## Blog Listicle Without Depth
+### Blog Listicle Without Depth
 
-### **Id**
+#### **Id**
 blog-listicle-without-depth
-### **Summary**
+#### **Summary**
 Lists that are just lists, without insight or narrative
-### **Severity**
+#### **Severity**
 medium
-### **Situation**
+#### **Situation**
 Writing "10 Tips for X" where each tip is one shallow sentence
-### **Why**
+#### **Why**
   Shallow listicles are commodity content. Anyone can list 10 tips. The value
   is in the depth—the why, the how, the nuance, the story behind each point.
   Thin lists get skimmed and forgotten.
   
-### **Solution**
+#### **Solution**
   Each list item needs:
   - The what (the tip itself)
   - The why (why it matters)
@@ -193,26 +193,26 @@ Writing "10 Tips for X" where each tip is one shallow sentence
   
   Or: Fewer items, more depth. "3 counterintuitive lessons" beats "17 tips."
   
-### **Detection Pattern**
+#### **Detection Pattern**
   - list items under 50 words
   - numbered sections without examples
 
-## Blog Conclusion Is Summary
+### Blog Conclusion Is Summary
 
-### **Id**
+#### **Id**
 blog-conclusion-is-summary
-### **Summary**
+#### **Summary**
 Ending with "In conclusion, we learned..." recap
-### **Severity**
+#### **Severity**
 medium
-### **Situation**
+#### **Situation**
 Concluding by summarizing what was already said
-### **Why**
+#### **Why**
   This isn't a school essay. Readers don't need a summary—they just read it.
   Weak conclusions feel like the writer ran out of energy. They end with a
   whimper instead of resonance.
   
-### **Solution**
+#### **Solution**
   Strong conclusion options:
   - Challenge: "Now it's your turn. The first step is..."
   - Future vision: "In 5 years, this will be obvious. The question is..."
@@ -220,28 +220,28 @@ Concluding by summarizing what was already said
   - Provocative question: "So what will you do differently on Monday?"
   - Call to action: Specific next step for the reader
   
-### **Detection Pattern**
+#### **Detection Pattern**
   - In conclusion
   - To summarize
   - In this post, we covered
   - As we've seen
 
-## Blog Forgetting The Reader
+### Blog Forgetting The Reader
 
-### **Id**
+#### **Id**
 blog-forgetting-the-reader
-### **Summary**
+#### **Summary**
 Writing about the topic instead of writing to the reader
-### **Severity**
+#### **Severity**
 high
-### **Situation**
+#### **Situation**
 Focusing on what you want to say vs what they need to hear
-### **Why**
+#### **Why**
   Blog posts aren't presentations—they're conversations. "This technology
   is interesting" is about you. "You can use this to solve your X problem"
   is about them. Readers care about themselves, not your topic.
   
-### **Solution**
+#### **Solution**
   The "you" audit:
   - Aim for 3x more "you/your" than "I/we/our"
   - Every section should answer "what's in it for the reader?"
@@ -251,26 +251,26 @@ Focusing on what you want to say vs what they need to hear
   Before: "Our framework has three components"
   After: "You'll use three components to solve this"
   
-### **Detection Pattern**
+#### **Detection Pattern**
   - more "we/our" than "you/your"
   - sections without reader benefit
 
-## Blog No Clear Takeaway
+### Blog No Clear Takeaway
 
-### **Id**
+#### **Id**
 blog-no-clear-takeaway
-### **Summary**
+#### **Summary**
 Reader finishes but couldn't explain what they learned
-### **Severity**
+#### **Severity**
 critical
-### **Situation**
+#### **Situation**
 Posts that meander without a central, memorable insight
-### **Why**
+#### **Why**
   If readers can't summarize your post in one sentence, they can't share it.
   If they can't remember the key insight tomorrow, you wasted their time.
   Great posts have a "tweetable core."
   
-### **Solution**
+#### **Solution**
   Before writing, complete: "After reading this, readers will know that ___"
   
   The insight should be:
@@ -282,26 +282,26 @@ Posts that meander without a central, memorable insight
   Write that sentence. Make it your north star. If a section doesn't
   support it, cut it.
   
-### **Detection Pattern**
+#### **Detection Pattern**
   - posts without clear thesis
   - multiple competing main points
 
-## Blog Clickbait Mismatch
+### Blog Clickbait Mismatch
 
-### **Id**
+#### **Id**
 blog-clickbait-mismatch
-### **Summary**
+#### **Summary**
 Headline promises something the content doesn't deliver
-### **Severity**
+#### **Severity**
 critical
-### **Situation**
+#### **Situation**
 Sensational headlines with underwhelming content
-### **Why**
+#### **Why**
   You get one chance to break trust. Clickbait works once. The reader
   who feels tricked never comes back, never shares, and actively warns
   others. Your reputation compounds—make it compound positively.
   
-### **Solution**
+#### **Solution**
   The 80/20 rule: If your headline is a 10, your content must be a 12.
   Under-promise, over-deliver.
   
@@ -310,29 +310,29 @@ Sensational headlines with underwhelming content
   
   Readers should finish thinking "that was even better than I expected."
   
-### **Detection Pattern**
+#### **Detection Pattern**
   - secret
   - trick
   - hack
   - you won't believe
   - extreme numbers without proof
 
-## Blog Wrong Reading Level
+### Blog Wrong Reading Level
 
-### **Id**
+#### **Id**
 blog-wrong-reading-level
-### **Summary**
+#### **Summary**
 Writing too complex or too simple for your audience
-### **Severity**
+#### **Severity**
 medium
-### **Situation**
+#### **Situation**
 Misjudging audience expertise level
-### **Why**
+#### **Why**
   Too complex: You lose them in jargon. Too simple: You bore them or
   feel condescending. Both destroy engagement. The sweet spot is
   "respected peer explaining something new."
   
-### **Solution**
+#### **Solution**
   Adjust depth by audience:
   - Beginners: More analogies, more basics, more encouragement
   - Intermediate: Skip basics, focus on non-obvious insights
@@ -341,21 +341,21 @@ Misjudging audience expertise level
   When in doubt, aim for "smart generalist"—someone intelligent who
   doesn't know this specific topic. That's most of your readers.
   
-### **Detection Pattern**
+#### **Detection Pattern**
   - unexplained prerequisites
   - over-explained basics
 
-## Blog Ai Tells Phrases
+### Blog Ai Tells Phrases
 
-### **Id**
+#### **Id**
 blog-ai-tells-phrases
-### **Summary**
+#### **Summary**
 Using phrases that instantly reveal AI-generated content
-### **Severity**
+#### **Severity**
 critical
-### **Situation**
+#### **Situation**
 Writing content that sounds robotic and corporate
-### **Why**
+#### **Why**
   Readers have developed AI-detection radar. These phrases trigger it:
   - "In today's fast-paced world"
   - "Let's dive in" / "Let's explore"
@@ -366,7 +366,7 @@ Writing content that sounds robotic and corporate
   
   When readers sense AI, they stop trusting the content immediately.
   
-### **Solution**
+#### **Solution**
   Delete these phrases entirely. They add nothing.
   
   Instead of announcing ("Let's explore..."), just start exploring.
@@ -375,24 +375,24 @@ Writing content that sounds robotic and corporate
   
   Read your draft aloud. If it sounds like a press release, rewrite.
   
-### **Detection Pattern**
+#### **Detection Pattern**
   - in today's
   - let's dive
   - game-changer
   - unlock your potential
   - cannot be overstated
 
-## Blog Ai Perfect Structure
+### Blog Ai Perfect Structure
 
-### **Id**
+#### **Id**
 blog-ai-perfect-structure
-### **Summary**
+#### **Summary**
 Content that's too clean and perfectly organized
-### **Severity**
+#### **Severity**
 high
-### **Situation**
+#### **Situation**
 Every section is the same length, parallel structure everywhere
-### **Why**
+#### **Why**
   Real human writing is messy. It has:
   - Tangents and asides
   - Sections of varying length
@@ -402,7 +402,7 @@ Every section is the same length, parallel structure everywhere
   
   Perfect parallel structure and identical section lengths scream algorithm.
   
-### **Solution**
+#### **Solution**
   Deliberately break the pattern:
   - Make one section twice as long as others
   - Add a personal aside or tangent
@@ -412,21 +412,21 @@ Every section is the same length, parallel structure everywhere
   
   Humans are imperfect. Write like one.
   
-### **Detection Pattern**
+#### **Detection Pattern**
   - identical section lengths
   - perfect parallel structure
 
-## Blog Ai Hedge Everything
+### Blog Ai Hedge Everything
 
-### **Id**
+#### **Id**
 blog-ai-hedge-everything
-### **Summary**
+#### **Summary**
 Qualifying every statement to avoid committing to anything
-### **Severity**
+#### **Severity**
 high
-### **Situation**
+#### **Situation**
 Using "it could be argued" / "some might say" / "potentially"
-### **Why**
+#### **Why**
   AI models are trained to be balanced and avoid controversy.
   This creates a distinctive voice that hedges everything:
   - "It can be argued that..."
@@ -436,7 +436,7 @@ Using "it could be argued" / "some might say" / "potentially"
   
   Humans have opinions. AI has qualifications.
   
-### **Solution**
+#### **Solution**
   Take a stance. Be wrong if you have to.
   
   "It could be argued that remote work is effective"
@@ -447,23 +447,23 @@ Using "it could be argued" / "some might say" / "potentially"
   
   Readers respect conviction. They're bored by balance.
   
-### **Detection Pattern**
+#### **Detection Pattern**
   - it can be argued
   - some might say
   - this could potentially
   - there are various
 
-## Blog Ai Corporate Vocabulary
+### Blog Ai Corporate Vocabulary
 
-### **Id**
+#### **Id**
 blog-ai-corporate-vocabulary
-### **Summary**
+#### **Summary**
 Using words that no human would say in conversation
-### **Severity**
+#### **Severity**
 medium
-### **Situation**
+#### **Situation**
 Leverage, utilize, optimize, streamline, synergy, robust
-### **Why**
+#### **Why**
   These words are AI favorites because they appear frequently in
   business/corporate content. No human says "leverage" to a friend.
   
@@ -477,7 +477,7 @@ Leverage, utilize, optimize, streamline, synergy, robust
   - seamless (smooth)
   - holistic (complete)
   
-### **Solution**
+#### **Solution**
   Use the word you'd use texting a friend:
   - "leverage your network" → "use your network"
   - "utilize this tool" → "use this tool"
@@ -487,7 +487,7 @@ Leverage, utilize, optimize, streamline, synergy, robust
   
   If the word has a simpler synonym, use the simpler one.
   
-### **Detection Pattern**
+#### **Detection Pattern**
   - leverage
   - utilize
   - streamline
@@ -495,17 +495,17 @@ Leverage, utilize, optimize, streamline, synergy, robust
   - robust
   - seamless
 
-## Blog Ai No Personality
+### Blog Ai No Personality
 
-### **Id**
+#### **Id**
 blog-ai-no-personality
-### **Summary**
+#### **Summary**
 Content that could have been written by anyone (or anything)
-### **Severity**
+#### **Severity**
 high
-### **Situation**
+#### **Situation**
 Generic advice without personal perspective or specific experience
-### **Why**
+#### **Why**
   AI can only synthesize existing information. It can't:
   - Share personal failures
   - Have controversial opinions
@@ -515,7 +515,7 @@ Generic advice without personal perspective or specific experience
   
   Content without these signals feels machine-generated.
   
-### **Solution**
+#### **Solution**
   Add signals of genuine perspective WITHOUT fabricating experiences:
   - Strong opinions: "This approach is overrated. Here's why..."
   - Specific knowledge: "The failure mode is always the same..."
@@ -525,22 +525,22 @@ Generic advice without personal perspective or specific experience
   CRITICAL: Voice is HOW you write, not WHAT you claim.
   Never claim experiences that didn't happen.
   
-### **Detection Pattern**
+#### **Detection Pattern**
   - no personal stories
   - no specific experiences
   - no opinions or stances
 
-## Blog Experience Fabrication
+### Blog Experience Fabrication
 
-### **Id**
+#### **Id**
 blog-experience-fabrication
-### **Summary**
+#### **Summary**
 Claiming personal experiences that never happened
-### **Severity**
+#### **Severity**
 critical
-### **Situation**
+#### **Situation**
 Writing "I've seen", "I've been on", "In my years of", "I remember when"
-### **Why**
+#### **Why**
   This is the cardinal sin of AI-assisted content. Fabricating experiences is:
   1. Ethically wrong - it's lying to readers
   2. Destroys trust when discovered
@@ -550,7 +550,7 @@ Writing "I've seen", "I've been on", "In my years of", "I remember when"
   Personas are VOICE, not IDENTITY. You can change HOW you write,
   but never WHAT you claim happened.
   
-### **Solution**
+#### **Solution**
   Transform fabricated experiences to authoritative statements:
   
   ❌ "I've been on the call when a database gets dumped in real-time."
@@ -566,7 +566,7 @@ Writing "I've seen", "I've been on", "In my years of", "I remember when"
   The pattern: Remove "I" + past action. State the phenomenon.
   Add authority through DEPTH, not fictional autobiography.
   
-### **Detection Pattern**
+#### **Detection Pattern**
   - I've seen
   - I've been on
   - I remember when
@@ -575,22 +575,22 @@ Writing "I've seen", "I've been on", "In my years of", "I remember when"
   - I once
   - I learned the hard way
 
-## Blog Fake Statistics
+### Blog Fake Statistics
 
-### **Id**
+#### **Id**
 blog-fake-statistics
-### **Summary**
+#### **Summary**
 Making up statistics without sources
-### **Severity**
+#### **Severity**
 critical
-### **Situation**
+#### **Situation**
 Writing "73% of developers" or "9 out of 10 teams" without citation
-### **Why**
+#### **Why**
   Fabricated statistics are lies with numbers. They're worse than vague claims
   because they pretend to be data-backed. Readers who fact-check lose all trust.
   AI-generated content is notorious for inventing plausible-sounding numbers.
   
-### **Solution**
+#### **Solution**
   Options for data-backed claims:
   1. Use real, cited statistics: "According to Stack Overflow's 2024 survey, 71%..."
   2. Use qualitative language: "Most teams" instead of "83% of teams"
@@ -599,23 +599,23 @@ Writing "73% of developers" or "9 out of 10 teams" without citation
   
   If you can't cite it, don't quantify it.
   
-### **Detection Pattern**
+#### **Detection Pattern**
   - "[0-9]+% of (developers|teams|companies|users)"
   - "[0-9] out of [0-9]"
   - "studies show" without citation
   - "research indicates" without source
 
-## Blog Negation Affirmation
+### Blog Negation Affirmation
 
-### **Id**
+#### **Id**
 blog-negation-affirmation
-### **Summary**
+#### **Summary**
 AI fingerprint pattern - saying what something ISN'T before what it IS
-### **Severity**
+#### **Severity**
 high
-### **Situation**
+#### **Situation**
 Writing "It's not just about X—it's about Y"
-### **Why**
+#### **Why**
   This is a distinctive AI writing pattern. Real writers state things directly.
   The structure "not just...it's about" is a verbal crutch that:
   1. Wastes words on what you're NOT saying
@@ -624,7 +624,7 @@ Writing "It's not just about X—it's about Y"
   
   Humans rarely write this way in natural speech.
   
-### **Solution**
+#### **Solution**
   Just say what it IS. Skip the negation entirely.
   
   ❌ "It's not just about the code—it's about the people."
@@ -638,31 +638,31 @@ Writing "It's not just about X—it's about Y"
   
   Delete everything before the dash. Start with your actual point.
   
-### **Detection Pattern**
+#### **Detection Pattern**
   - It's not just about
   - This isn't merely
   - It's not only
   - not just...it's about
   - more than just
 
-## Blog Setup Phrases
+### Blog Setup Phrases
 
-### **Id**
+#### **Id**
 blog-setup-phrases
-### **Summary**
+#### **Summary**
 Announcing what you're about to say instead of saying it
-### **Severity**
+#### **Severity**
 medium
-### **Situation**
+#### **Situation**
 Starting sentences with "Here's the thing:", "The reality is:", etc.
-### **Why**
+#### **Why**
   These are verbal placeholder phrases that add nothing. They delay content
   and signal that the writer doesn't trust their own point to stand alone.
   AI uses these constantly because they're common in training data.
   
   "Here's the thing:" is the written equivalent of "um".
   
-### **Solution**
+#### **Solution**
   Delete the setup. Start with the content.
   
   ❌ "Here's the thing: most startups fail at distribution."
@@ -679,7 +679,7 @@ Starting sentences with "Here's the thing:", "The reality is:", etc.
   
   Your point is stronger without the preamble.
   
-### **Detection Pattern**
+#### **Detection Pattern**
   - Here's the thing
   - The reality is
   - What's interesting is
@@ -687,24 +687,24 @@ Starting sentences with "Here's the thing:", "The reality is:", etc.
   - The fact is
   - What matters is
 
-## Blog Platitude Endings
+### Blog Platitude Endings
 
-### **Id**
+#### **Id**
 blog-platitude-endings
-### **Summary**
+#### **Summary**
 Ending paragraphs with vague, uplifting non-statements
-### **Severity**
+#### **Severity**
 medium
-### **Situation**
+#### **Situation**
 Writing "and that's what makes it powerful" or "which is why it matters"
-### **Why**
+#### **Why**
   These are empty conclusion phrases that could apply to anything. They signal
   the writer ran out of actual insight and is padding to feel complete.
   AI defaults to these because they're "safe" endings.
   
   If your ending could work on any paragraph, it adds nothing.
   
-### **Solution**
+#### **Solution**
   End with specifics, or just stop.
   
   ❌ "This approach saves time, and that's what makes it valuable."
@@ -718,7 +718,7 @@ Writing "and that's what makes it powerful" or "which is why it matters"
   
   The test: Can this ending attach to any paragraph? If yes, cut it.
   
-### **Detection Pattern**
+#### **Detection Pattern**
   - and that's what makes it
   - which is exactly why
   - and that's why it matters

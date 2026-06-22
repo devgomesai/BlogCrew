@@ -1,4 +1,4 @@
-## Introduction
+### Introduction
 
 AI agents are moving from experimental demos into production infrastructure. That shift matters because the bar for production is much higher than the bar for a chatbot.
 
@@ -8,7 +8,7 @@ Adoption is already broadening across business functions. McKinsey-referenced re
 
 For developers, the shift is straightforward: the job is no longer just prompting a model. It is designing an AI agent system that can call tools, manage state, enforce policy, and recover from errors.
 
-## What Are AI Agents?
+### What Are AI Agents?
 
 AI agents are systems that perceive context, decide on a next action, and use tools to act toward a goal rather than only generating text.
 
@@ -23,11 +23,11 @@ That makes an AI agent closer to a software system than a single model call.
 
 It is also important not to equate “agent” with “fully autonomous.” Many production systems are constrained agents that operate inside bounded workflows with human oversight. That is often the more practical and safer design.
 
-## How AI Agents Work
+### How AI Agents Work
 
 Most AI agent systems follow a small number of patterns.
 
-### Common agent patterns
+#### Common agent patterns
 
 - **ReAct-style loops**: reason, act, observe
 - **Plan-and-execute**: create a plan first, then carry it out
@@ -38,11 +38,11 @@ ReAct works well in changing or partially observable environments because the ag
 
 Plan-and-execute can reduce LLM calls for multi-step tasks because the agent plans once and then follows that plan. The tradeoff is that the plan can become stale if the environment changes.
 
-## Building Blocks of Production AI Agents
+### Building Blocks of Production AI Agents
 
 Production agents need more than a prompt and a model.
 
-### Core components
+#### Core components
 
 - **Persistent state**
 - **Memory**
@@ -56,11 +56,11 @@ Observability is not optional. Developers need traces of prompts, tool calls, ou
 
 Guardrails are also becoming part of the platform layer. For example, AWS Bedrock Guardrails can be associated with agents, knowledge bases, and flows.
 
-## Practical Developer Use Cases
+### Practical Developer Use Cases
 
 High-value AI agent use cases tend to cluster around work that already involves repeated decision-making and tool use.
 
-### Common use cases
+#### Common use cases
 
 - **Customer support**
 - **Software development**
@@ -73,11 +73,11 @@ A customer support agent can search internal knowledge bases and take action on 
 
 Data and operations agents are especially useful when tasks involve repeated retrieval, transformation, and decision-making across multiple systems.
 
-## Designing a Production-Ready Agent
+### Designing a Production-Ready Agent
 
 A production-ready agent starts with boundaries, not ambition.
 
-### Design principles
+#### Design principles
 
 - Define the goal clearly
 - List the allowed tools
@@ -94,11 +94,11 @@ Production readiness also depends on:
 - Cost control
 - Human-in-the-loop fallbacks for high-risk actions
 
-## Common Pitfalls and How to Avoid Them
+### Common Pitfalls and How to Avoid Them
 
 The biggest failure modes are usually architectural, not model-related.
 
-### Pitfalls to watch
+#### Pitfalls to watch
 
 - **Unbounded loops**  
   Add iteration limits, cost budgets, and termination conditions.
@@ -111,11 +111,11 @@ The biggest failure modes are usually architectural, not model-related.
 
 These failures often show up when a system is treated like a clever demo instead of a production workflow.
 
-## Practical Implementation Tips for Developers
+### Practical Implementation Tips for Developers
 
 The safest way to build an AI agent is to start narrow and expand deliberately.
 
-### Implementation tips
+#### Implementation tips
 
 - Begin with one narrow use case
 - Keep the tool set small at first
@@ -127,7 +127,7 @@ The safest way to build an AI agent is to start narrow and expand deliberately.
 
 A good production pilot should be measurable. If a workflow is repetitive, policy-driven, and high ROI, it is a strong candidate for a bounded agent.
 
-### Example agent loop
+#### Example agent loop
 
 ```python
 for step in range(max_steps):
@@ -140,7 +140,7 @@ for step in range(max_steps):
 
 This kind of loop is simple on purpose. The important part is not sophistication. It is control.
 
-## Conclusion
+### Conclusion
 
 AI agents are a systems engineering problem as much as an AI problem.
 
@@ -148,7 +148,7 @@ The winning pattern for production is usually constrained autonomy: enough intel
 
 Teams that invest early in observability, guardrails, and reliable orchestration will ship more useful AI agents with lower risk.
 
-## CTA
+### CTA
 
 If you are building with AI agents, start with one workflow, instrument it, and replace brittle manual steps with a bounded agent.
 

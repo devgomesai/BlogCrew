@@ -24,11 +24,11 @@ planner:
     - No content, no prose — structure only
 
     Return clean markdown:
-    ## [Hook or Framing Section]
-    ## [Core Section]
-    ### [Subsection]
-    ## [Insight or Takeaway Section]
-    ## [Strong Close]
+    ### [Hook or Framing Section]
+    ### [Core Section]
+    #### [Subsection]
+    ### [Insight or Takeaway Section]
+    ### [Strong Close]
 
 researcher:
   name: researcher-agent
@@ -51,11 +51,11 @@ researcher:
     3. Save findings to the file path given — do not return inline
 
     Save in this format:
-    ### Key Insights
-    ### Statistics / Data (with year and source)
-    ### Named Examples (real companies, people, products)
-    ### Expert Quotes (attributed, with source URL)
-    ### Sources (URL required for every item)
+    #### Key Insights
+    #### Statistics / Data (with year and source)
+    #### Named Examples (real companies, people, products)
+    #### Expert Quotes (attributed, with source URL)
+    #### Sources (URL required for every item)
 
     Rules:
     - Every claim needs a source URL — unsourced facts are unusable

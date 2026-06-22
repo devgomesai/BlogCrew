@@ -6,7 +6,7 @@
 
 ---
 
-## Startup Protocol (ALWAYS RUN FIRST)
+### Startup Protocol (ALWAYS RUN FIRST)
 
 Before writing any blog or starting any subagent, run these checks in order:
 
@@ -41,7 +41,7 @@ Do not skip startup. Do not assume paths exist. Confirm before acting.
 
 ---
 
-## Project Summary
+### Project Summary
 
 This agent system produces publish-ready blog posts using a structured multi-agent pipeline.
 
@@ -51,7 +51,7 @@ This agent system produces publish-ready blog posts using a structured multi-age
 
 ---
 
-## Available Subagents
+### Available Subagents
 
 
 | Agent              | Role                                                       | Input                                          | Output                      |
@@ -71,7 +71,7 @@ This agent system produces publish-ready blog posts using a structured multi-age
 
 ---
 
-## Workflow
+### Workflow
 
 Follow these steps in order. Do not skip or reorder.
 
@@ -109,13 +109,13 @@ Run the Final Checklist. Write output files. Return to the user.
 
 ---
 
-## Skill Read Protocol (Critical — Non-Negotiable)
+### Skill Read Protocol (Critical — Non-Negotiable)
 
-### When to read
+#### When to read
 
 Read **once at startup** by the orchestrator. Individual agents do **not** re-read the file — they receive the extracted context block in their input prompt.
 
-### Extracted context format
+#### Extracted context format
 
 After reading the skill files, construct this block and include it verbatim in every subagent call:
 
@@ -134,7 +134,7 @@ Content template: H2 matching title → H3 subheads → numbered action steps �
 ---
 ```
 
-### Priority rules
+#### Priority rules
 
 1. Explicit user prompt — highest priority
 2. Skill instructions — governs writing, tone, formatting, SEO, and metadata
@@ -144,7 +144,7 @@ If a conflict is found, note it at the finalize step and update this file.
 
 ---
 
-## Progress Tracking (Required)
+### Progress Tracking (Required)
 
 Call `write_todos` after every workflow step. Statuses: `pending` | `in_progress` | `completed`.
 
@@ -169,7 +169,7 @@ Mark ALL items `completed` before returning. Never return with items still pendi
 
 ---
 
-## Parallelization Rules
+### Parallelization Rules
 
 - Max **3 concurrent** subagent calls per iteration
 - Max **5 delegation rounds** per task
@@ -179,9 +179,9 @@ Mark ALL items `completed` before returning. Never return with items still pendi
 
 ---
 
-## Per-Agent Instructions
+### Per-Agent Instructions
 
-### Planner Agent
+#### Planner Agent
 
 Receives: topic + audience + tone + length + skill context.
 
@@ -192,7 +192,7 @@ Must:
 3. Output: H2/H3 outline + suggested `slug`, `category`, `readTime` estimate
 4. Flag any sections needing external data for researcher-agent
 
-### Researcher Agent
+#### Researcher Agent
 
 Receives: 1–3 focused section topics + outline.
 
@@ -202,7 +202,7 @@ Must:
 2. Return structured notes per section: `fact | source URL | relevance`
 3. Never write prose — return raw notes only
 
-### Writer Agent
+#### Writer Agent
 
 Receives: outline section + research notes + skill context.
 
@@ -214,7 +214,7 @@ Must:
 4. Cite sources inline with numbered references matching the Sources section
 5. Return one section at a time — do not combine sections
 
-### Editor Agent
+#### Editor Agent
 
 Receives: full combined draft + skill context.
 
@@ -238,17 +238,17 @@ Must:
 
 ---
 
-## Output Guidelines
+### Output Guidelines
 
-### Presentation rules
+#### Presentation rules
 
-- Use `##` for sections, `###` for subsections
+- Use `###` for sections, `####` for subsections
 - Write in paragraphs; use lists only where the content is genuinely list-shaped
 - **No self-referential language**: no "I wrote...", "I researched...", "The agent produced..."
 - **No meta-commentary**: no methodology sections, no workflow references in the output
 - No statements like "the user requested" or "this post satisfies"
 
-### Content requirements
+#### Content requirements
 
 - Short, direct paragraphs
 - Action steps as numbered lists or bolded lead-ins
@@ -257,7 +257,7 @@ Must:
 
 ---
 
-## Output Files
+### Output Files
 
 ```bash
 # Save blog post
@@ -271,7 +271,7 @@ Both must be written before returning. Do not return partial output.
 
 ---
 
-## Critical Rules
+### Critical Rules
 
 - Never write blog prose yourself — always delegate to subagents
 - Never search yourself — always delegate to researcher-agent
@@ -283,16 +283,16 @@ Both must be written before returning. Do not return partial output.
 
 ---
 
-## Self-Improvement
+### Self-Improvement
 
-### Scope test — decide what to save
+#### Scope test — decide what to save
 
 Before saving any learning, ask: **would this apply in a new conversation on a different topic?**
 
 - **No — task-specific** (this topic, this post, this request): **do not save**
 - **Yes — agent-wide** (recurring errors, reliable patterns, API behavior): **save immediately**
 
-### Where to save
+#### Where to save
 
 
 | Learning type                                     | Save to                                           |
@@ -305,20 +305,20 @@ Before saving any learning, ask: **would this apply in a new conversation on a d
 Always prefer **updating an existing section** over creating new content.
 Keep additions concise — 1–3 lines with the problem and fix is ideal.
 
-### When to update
+#### When to update
 
 - A skill instruction consistently produces wrong output → fix the relevant SKILL.md
 - A new section structure produces better engagement → add to `blog-patterns.md`
 - A `BlogPost` field keeps failing validation → tighten the editor checklist here
 - A delegation pattern causes repeated errors → update the workflow steps here
 
-### When NOT to update
+#### When NOT to update
 
 - One-off errors from bad input or transient issues
 - Speculative improvements not validated through actual execution
 - Topic-specific content or one-time observations
 
-### How to update
+#### How to update
 
 **Update immediately** — the moment a fix is confirmed, persist it before moving on. Do not batch.
 
@@ -330,7 +330,7 @@ edit_file /skills/blog-writer/references/
 
 ---
 
-## Final Checklist (Hard Gate — Run Before Returning)
+### Final Checklist (Hard Gate — Run Before Returning)
 
 1. `write_todos` → ALL items marked `completed`
 2. All `BlogPost` fields validated by editor-agent

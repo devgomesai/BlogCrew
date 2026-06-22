@@ -4,13 +4,13 @@ What if building a production-grade AI agent was as simple as describing what yo
 
 This isn't a pipe dream anymore. It's Agent Bricks.
 
-## What Agent Bricks Actually Are
+### What Agent Bricks Actually Are
 
 Think of Agent Bricks as a declarative platform that lets you build production-ready AI agents without drowning in boilerplate code. Instead of spending weeks wiring together infrastructure, you simply describe your agent in natural language. Databricks handles the heavy lifting.
 
 The platform sits natively within the Databricks ecosystem, so your agents plug directly into your data lakehouse, governance policies, and existing ML workflows. No duct tape required.
 
-## The "It Just Works" Factor
+### The "It Just Works" Factor
 
 Here's where things get interesting. Agent Bricks doesn't just give you a framework—it gives you intelligence.
 
@@ -18,19 +18,19 @@ Describe what you need, and the platform automatically selects and fine-tunes th
 
 MLflow evaluation comes built-in. Unity Catalog governance is automatic. MCP tool integration works out of the box. Plus, you get pre-built templates so you're never staring at a blank page.
 
-## Real-World Impact
+### Real-World Impact
 
 The use cases are already piling up. Manufacturing teams use Agent Bricks for predictive maintenance—that alone accounts for 35% of current implementations. Medical researchers synthesize literature 23% of the time. Market intelligence teams build competitive analysis agents (14% of use cases).
 
 But here's the stat that caught my attention: multi-agent workflows are growing 327%. Teams aren't just building single agents anymore. They're orchestrating fleets of them, each handling specialized tasks and collaborating on complex problems.
 
-## Why This Actually Matters
+### Why This Actually Matters
 
 The numbers tell a compelling story. Teams using built-in evaluation tools deploy 6 times more AI projects than those going it alone. And with Unity Catalog governance baked in, organizations enable 12 times more AI initiatives—because security and compliance stop being blockers and become enablers.
 
 That's the real shift here. Agent Bricks doesn't just make AI development faster. It makes it scalable, governable, and actually doable for teams without armies of ML engineers.
 
-## The Bottom Line
+### The Bottom Line
 
 We're moving from an era where building AI agents required specialized expertise and months of effort to one where the barrier to entry is simply describing what you need.
 

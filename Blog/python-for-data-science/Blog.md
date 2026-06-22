@@ -1,6 +1,6 @@
 # Python for Data Science
 
-## Introduction
+### Introduction
 
 Data now drives every major business decision. Companies that leverage data effectively outperform competitors by wide margins. This shift created explosive demand for data scientists worldwide.
 
@@ -10,11 +10,11 @@ Python emerged as the undisputed leader in this space. According to the JetBrain
 
 This guide shows you why Python dominates data science. You will learn what makes its ecosystem indispensable. You will understand how to leverage its libraries for real-world projects. By the end, you will know exactly why Python skills can boost your salary by up to **22%**.
 
-## Why Python Dominates Data Science
+### Why Python Dominates Data Science
 
 Python did not become the data science standard by accident. Three factors cemented its position: an unmatched ecosystem, readable yet powerful syntax, and a thriving global community.
 
-### The Ecosystem Advantage
+#### The Ecosystem Advantage
 
 Data science requires diverse tools. You need numerical computing, data manipulation, machine learning, and visualization capabilities. Python offers battle-tested libraries for each.
 
@@ -28,7 +28,7 @@ Data science requires diverse tools. You need numerical computing, data manipula
 
 The ecosystem bridges gaps other languages cannot. Python connects prototyping to production better than alternatives. This matters when your model needs to serve millions of users.
 
-### Readability Meets Performance
+#### Readability Meets Performance
 
 Data science code must communicate clearly. Teams review each other's work constantly. Code readability directly impacts productivity.
 
@@ -40,7 +40,7 @@ Python handles everything from small CSV files to distributed datasets. Tools li
 
 When you need speed, Python integrates with compiled languages. When you need scale, Python connects to distributed computing frameworks. You never hit a wall.
 
-### Community and Resource Availability
+#### Community and Resource Availability
 
 Python's community powers its dominance. Thousands of developers contribute libraries, tutorials, and documentation daily. This collective effort keeps the ecosystem current and well-supported.
 
@@ -50,11 +50,11 @@ Conferences like **PyCon, EuroPython, and PyData** increasingly focus on data sc
 
 The community creates abundant learning resources. Free tutorials cover every library and use case. Stack Overflow answers resolve common issues within minutes. This support network accelerates your growth as a data scientist.
 
-## Essential Python Libraries for Data Science
+### Essential Python Libraries for Data Science
 
 Python's data science ecosystem rests on a foundation of powerful libraries. These tools transform Python from a general-purpose language into a data powerhouse. Let's explore the essential libraries every data scientist needs.
 
-### NumPy: The Foundation for Numerical Computing
+#### NumPy: The Foundation for Numerical Computing
 
 NumPy provides the backbone of modern data science. Its `ndarray` object enables efficient numerical computing in Python.
 
@@ -76,7 +76,7 @@ taxes = transactions * 0.15  # Instant calculation
 
 Financial institutions use NumPy to calculate risks across millions of transactions daily. The speed enables real-time decision making.
 
-### Pandas: Data Manipulation Made Simple
+#### Pandas: Data Manipulation Made Simple
 
 Pandas reigns as the most popular data manipulation library. 83% of data scientists use it regularly. It provides a standard interface for cleaning, transforming, and analyzing data.
 
@@ -93,7 +93,7 @@ df['date'] = pd.to_datetime(df['date'])
 df_clean = df.dropna().merge(inventory_df, on='product_id')
 ```
 
-### Matplotlib and Seaborn: Visualization Power
+#### Matplotlib and Seaborn: Visualization Power
 
 Data without visualization tells no story. Matplotlib and Seaborn provide the visual layer.
 
@@ -115,7 +115,7 @@ plt.title('Marketing ROI Analysis')
 plt.savefig('report_figure.pdf', dpi=300)
 ```
 
-### Scikit-learn: Machine Learning Toolkit
+#### Scikit-learn: Machine Learning Toolkit
 
 Scikit-learn stands as the industry standard for machine learning. With over 500 million downloads, it powers ML workflows worldwide.
 
@@ -138,7 +138,7 @@ for name, model in models.items():
     print(f"{name}: {model.score(X_test, y_test)}")
 ```
 
-### Bonus: Jupyter
+#### Bonus: Jupyter
 
 87% of data scientists use Jupyter regularly. It combines code execution, narrative text, and visualizations in one document.
 
@@ -146,11 +146,11 @@ Jupyter supports the iterative nature of data science. Experiment with code. Vis
 
 The notebook format enables collaboration. Share a single `.ipynb` file with stakeholders. They see your code, outputs, and explanations together.
 
-## Setting Up Your Environment
+### Setting Up Your Environment
 
 A proper environment setup prevents headaches later. Invest time upfront to avoid dependency nightmares.
 
-### Installing Python and Anaconda
+#### Installing Python and Anaconda
 
 Skip the full Anaconda distribution. It consumes 3GB+ and includes licensing restrictions. Instead, choose Miniforge or Miniconda.
 
@@ -160,7 +160,7 @@ Miniconda provides a minimal installation around 400MB. Install only what you ne
 
 Conda handles both Python and non-Python dependencies. It manages C libraries, CUDA drivers, and system packages automatically. Pip cannot handle these complex dependencies alone.
 
-### Virtual Environments Best Practices
+#### Virtual Environments Best Practices
 
 Create one environment per project. Isolation prevents dependency conflicts between projects. Keep environments local to each project directory.
 
@@ -184,7 +184,7 @@ dependencies:
 
 Always specify version numbers. Unpinned dependencies break projects silently. Pin major and minor versions for stability.
 
-### Jupyter Notebook vs. IDE Options
+#### Jupyter Notebook vs. IDE Options
 
 Choose your tools based on workflow preferences.
 
@@ -204,7 +204,7 @@ Quick experiments suit the classic Jupyter interface. It's lightweight and launc
 
 Large Python projects benefit from PyCharm. It offers superior refactoring and debugging tools. Best suited for production code development, not exploratory analysis.
 
-### Common Setup Pitfalls
+#### Common Setup Pitfalls
 
 Avoid these mistakes that plague beginners:
 
@@ -220,9 +220,9 @@ Avoid these mistakes that plague beginners:
 
 Following these practices creates a robust foundation. Your data science projects will run smoothly across any machine.
 
-## Data Manipulation Fundamentals
+### Data Manipulation Fundamentals
 
-### Loading Data (CSV, Excel, Databases)
+#### Loading Data (CSV, Excel, Databases)
 
 Pandas provides a consistent `pd.read_*` interface for importing data from any source. This unified approach simplifies data ingestion regardless of format.
 
@@ -254,7 +254,7 @@ engine = create_engine('sqlite:///database.db')
 df = pd.read_sql_query("SELECT * FROM users WHERE age > 25", con=engine)
 ```
 
-### DataFrames: Structure and Indexing
+#### DataFrames: Structure and Indexing
 
 Pandas offers four accessors for data selection. They differ by label versus position and single versus multiple values.
 
@@ -281,7 +281,7 @@ df.iloc[[0, 2, 4]]               # Specific rows
 
 Remember: `loc` uses inclusive slicing for labels. `iloc` uses exclusive slicing like standard Python.
 
-### Cleaning and Preprocessing Basics
+#### Cleaning and Preprocessing Basics
 
 Real data contains missing values, duplicates, and wrong types. Pandas provides methods for each problem.
 
@@ -309,7 +309,7 @@ df['date'] = pd.to_datetime(df['date'])
 df['price'] = pd.to_numeric(df['price'], errors='coerce')
 ```
 
-### Aggregation and Transformation
+#### Aggregation and Transformation
 
 The GroupBy pattern follows split-apply-combine logic. Group data, apply functions, combine results.
 
@@ -339,9 +339,9 @@ df['dept_avg'] = df.groupby('department')['salary'].transform('mean')
 df.pivot_table(values='sales', index='month', columns='region', aggfunc='sum')
 ```
 
-## Data Visualization and Exploratory Analysis
+### Data Visualization and Exploratory Analysis
 
-### Creating Basic Plots with Matplotlib
+#### Creating Basic Plots with Matplotlib
 
 Matplotlib provides fine-grained control over every element. Start with the "Foundational Four" chart types:
 
@@ -369,7 +369,7 @@ Control figure size and resolution:
 fig, ax = plt.subplots(figsize=(10, 6), dpi=100)
 ```
 
-### Statistical Visualizations with Seaborn
+#### Statistical Visualizations with Seaborn
 
 Seaborn builds on Matplotlib and specializes in statistical graphics. It handles complex plots with simple syntax.
 
@@ -398,7 +398,7 @@ sns.heatmap(correlation, annot=True, cmap='coolwarm')
 
 Seaborn automatically adds confidence intervals and chooses appropriate color palettes.
 
-### Best Practices for Clear Data Storytelling
+#### Best Practices for Clear Data Storytelling
 
 Effective data storytelling combines three components: accurate data, compelling narrative, and clear visualizations.
 
@@ -431,11 +431,11 @@ Lead with the conclusion. Provide context through benchmarks and comparisons. Ev
 
 Clean visualizations communicate clearly. They transform raw data into actionable insights that drive understanding and action.
 
-## Machine Learning Introduction
+### Machine Learning Introduction
 
 Machine learning transforms raw data into predictive models. Python's scikit-learn library makes this process accessible. It provides a unified interface for hundreds of algorithms.
 
-### Scikit-learn Workflow
+#### Scikit-learn Workflow
 
 Every machine learning project follows a consistent pattern. First, split your data into training and testing sets. Then train your model on the training data. Next, generate predictions. Finally, evaluate performance.
 
@@ -466,7 +466,7 @@ predictions = model.predict(X_test)
 accuracy = accuracy_score(y_test, predictions)
 ```
 
-### Data Preprocessing for ML
+#### Data Preprocessing for ML
 
 Raw data rarely arrives ready for modeling. Numerical features often have different scales. Categorical variables need encoding. Missing values require handling.
 
@@ -497,7 +497,7 @@ pipeline = Pipeline([
 ])
 ```
 
-### Building Your First Model
+#### Building Your First Model
 
 Start simple. Classification predicts categories. Regression predicts continuous values.
 
@@ -514,7 +514,7 @@ Every model follows the same code structure:
 
 Beginners should focus on understanding this flow. Do not worry about algorithm internals yet. Treat models as tools that learn patterns from data.
 
-### Evaluation Metrics Basics
+#### Evaluation Metrics Basics
 
 Metrics tell you if your model works. Different problems require different metrics.
 
@@ -539,11 +539,11 @@ print(f"Cross-validation scores: {scores}")
 print(f"Average accuracy: {scores.mean():.3f}")
 ```
 
-## Practical Walkthrough: Analyzing a Real Dataset
+### Practical Walkthrough: Analyzing a Real Dataset
 
 Let us work through a complete example. We will use the California Housing dataset from scikit-learn. This dataset contains housing information from California districts. We will predict median house values.
 
-### Step 1: Import Libraries
+#### Step 1: Import Libraries
 
 ```python
 import pandas as pd
@@ -557,7 +557,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 ```
 
-### Step 2: Load and Explore the Data
+#### Step 2: Load and Explore the Data
 
 ```python
 # Load the dataset
@@ -576,7 +576,7 @@ print("\nStatistical summary:")
 print(df.describe())
 ```
 
-### Step 3: Clean and Prepare the Data
+#### Step 3: Clean and Prepare the Data
 
 The California Housing dataset is relatively clean. Still, we check for missing values and examine distributions.
 
@@ -600,7 +600,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-### Step 4: Visualize Key Relationships
+#### Step 4: Visualize Key Relationships
 
 Understanding feature relationships guides modeling decisions.
 
@@ -621,7 +621,7 @@ plt.title('Income vs House Value Relationship')
 plt.show()
 ```
 
-### Step 5: Build a Simple Predictive Model
+#### Step 5: Build a Simple Predictive Model
 
 We will use linear regression as our baseline model.
 
@@ -648,7 +648,7 @@ model.fit(X_train_scaled, y_train)
 y_pred = model.predict(X_test_scaled)
 ```
 
-### Step 6: Evaluate and Interpret Results
+#### Step 6: Evaluate and Interpret Results
 
 ```python
 # Calculate metrics
@@ -681,7 +681,7 @@ print("\nFeature Coefficients (sorted by magnitude):")
 print(feature_importance)
 ```
 
-### Interpreting the Results
+#### Interpreting the Results
 
 Our linear regression model explains approximately sixty percent of the variance in house prices. The RMSE tells us typical prediction errors. The R² score shows room for improvement.
 
@@ -691,7 +691,7 @@ This baseline model demonstrates the complete machine learning workflow. You can
 
 The code above runs end-to-end. Copy it into your environment. Experiment with modifications. This hands-on practice builds intuition faster than theory alone.
 
-## Conclusion
+### Conclusion
 
 You've covered the essentials of Python for data science. Let's recap the key takeaways.
 
@@ -723,7 +723,7 @@ Ready to continue growing? Start with these steps:
 - **Kaggle Learn** — Interactive courses with real datasets
 - **Coursera and edX** — Structured courses from top universities
 
-## Ready to Start Your Data Science Journey?
+### Ready to Start Your Data Science Journey?
 
 The best time to start is now. Open your terminal. Install Miniforge. Load a dataset. Write your first line of Pandas code.
 

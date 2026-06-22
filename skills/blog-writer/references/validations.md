@@ -1,14 +1,14 @@
 # Blog Writing - Validations
 
-## Weak Opening Phrases
+### Weak Opening Phrases
 
-### **Id**
+#### **Id**
 blog-weak-opening-phrases
-### **Severity**
+#### **Severity**
 error
-### **Type**
+#### **Type**
 regex
-### **Pattern**
+#### **Pattern**
   - ^In this (post|article|guide)
   - ^In today's (world|age|society)
   - ^As we all know
@@ -17,24 +17,24 @@ regex
   - ^Let me start by
   - ^Before we (begin|dive in|get started)
   - ^Welcome to (this|my|our)
-### **Message**
+#### **Message**
 Weak opening detected. Your first line should hook, not clear throat.
-### **Fix Action**
+#### **Fix Action**
 Start with a story moment, surprising fact, provocative claim, or direct challenge
-### **Applies To**
+#### **Applies To**
   - *.md
   - *.mdx
   - *.txt
 
-## Cliche Conclusion Phrases
+### Cliche Conclusion Phrases
 
-### **Id**
+#### **Id**
 blog-conclusion-cliches
-### **Severity**
+#### **Severity**
 warning
-### **Type**
+#### **Type**
 regex
-### **Pattern**
+#### **Pattern**
   - In conclusion
   - To summarize
   - To sum up
@@ -43,24 +43,24 @@ regex
   - In this (post|article), we (covered|learned|explored)
   - I hope (this|you)
   - Thanks for reading
-### **Message**
+#### **Message**
 Cliche conclusion detected. End with resonance, not recap.
-### **Fix Action**
+#### **Fix Action**
 End with a challenge, question, call to action, or resonant final image
-### **Applies To**
+#### **Applies To**
   - *.md
   - *.mdx
   - *.txt
 
-## Passive Voice Overuse
+### Passive Voice Overuse
 
-### **Id**
+#### **Id**
 blog-passive-voice
-### **Severity**
+#### **Severity**
 warning
-### **Type**
+#### **Type**
 regex
-### **Pattern**
+#### **Pattern**
   - was [a-z]+ed by
   - were [a-z]+ed by
   - has been [a-z]+ed
@@ -68,48 +68,48 @@ regex
   - will be [a-z]+ed
   - is being [a-z]+ed
   - it was (found|discovered|noted|observed) that
-### **Message**
+#### **Message**
 Passive voice detected. Active voice is more direct and engaging.
-### **Fix Action**
+#### **Fix Action**
 Rewrite in active voice: 'X was done by Y' → 'Y did X'
-### **Applies To**
+#### **Applies To**
   - *.md
   - *.mdx
   - *.txt
 
-## Vague Claims Without Specifics
+### Vague Claims Without Specifics
 
-### **Id**
+#### **Id**
 blog-vague-claims
-### **Severity**
+#### **Severity**
 warning
-### **Type**
+#### **Type**
 regex
-### **Pattern**
+#### **Pattern**
   - many (companies|people|developers|teams|experts)
   - some (studies|research|experts) (show|say|suggest)
   - it('s| is) (often|commonly|widely) (said|believed|known)
   - experts (say|agree|believe)
   - studies show
   - research (shows|suggests|indicates)
-### **Message**
+#### **Message**
 Vague claim detected. Specifics create credibility.
-### **Fix Action**
+#### **Fix Action**
 Name the companies, cite the study, quote the expert. 'Many' → name three.
-### **Applies To**
+#### **Applies To**
   - *.md
   - *.mdx
   - *.txt
 
-## Corporate Jargon and Buzzwords
+### Corporate Jargon and Buzzwords
 
-### **Id**
+#### **Id**
 blog-corporate-jargon
-### **Severity**
+#### **Severity**
 warning
-### **Type**
+#### **Type**
 regex
-### **Pattern**
+#### **Pattern**
   - leverage (our|the|your)
   - synerg(y|ies|ize)
   - paradigm shift
@@ -124,24 +124,24 @@ regex
   - bandwidth
   - value-add
   - thought leader
-### **Message**
+#### **Message**
 Corporate jargon detected. Write like a human, not a press release.
-### **Fix Action**
+#### **Fix Action**
 Replace with plain language. If your grandma wouldn't say it, rewrite.
-### **Applies To**
+#### **Applies To**
   - *.md
   - *.mdx
   - *.txt
 
-## Filler Phrases That Add Nothing
+### Filler Phrases That Add Nothing
 
-### **Id**
+#### **Id**
 blog-filler-phrases
-### **Severity**
+#### **Severity**
 info
-### **Type**
+#### **Type**
 regex
-### **Pattern**
+#### **Pattern**
   - It('s| is) (important|worth noting|interesting) to note that
   - Needless to say
   - It goes without saying
@@ -153,24 +153,24 @@ regex
   - Obviously,
   - Literally,
   - At this point in time
-### **Message**
+#### **Message**
 Filler phrase detected. Every word must earn its place.
-### **Fix Action**
+#### **Fix Action**
 Delete the filler and state your point directly
-### **Applies To**
+#### **Applies To**
   - *.md
   - *.mdx
   - *.txt
 
-## Weak Verb Constructions
+### Weak Verb Constructions
 
-### **Id**
+#### **Id**
 blog-weak-verbs
-### **Severity**
+#### **Severity**
 info
-### **Type**
+#### **Type**
 regex
-### **Pattern**
+#### **Pattern**
   - \bis able to\b
   - \bhas the ability to\b
   - \bin order to\b
@@ -179,43 +179,43 @@ regex
   - \bcome to the conclusion\b
   - \bgive consideration to\b
   - \bhas an impact on\b
-### **Message**
+#### **Message**
 Weak verb construction. Use strong, direct verbs.
-### **Fix Action**
+#### **Fix Action**
 'is able to' → 'can', 'make use of' → 'use', 'has an impact on' → 'impacts'
-### **Applies To**
+#### **Applies To**
   - *.md
   - *.mdx
   - *.txt
 
-## Missing Reader Focus (Too Much I/We)
+### Missing Reader Focus (Too Much I/We)
 
-### **Id**
+#### **Id**
 blog-missing-you-focus
-### **Severity**
+#### **Severity**
 warning
-### **Type**
+#### **Type**
 regex
-### **Pattern**
+#### **Pattern**
   - \b(We|Our|I|My) (believe|think|feel|are|have|want|need|offer|provide)\b
-### **Message**
+#### **Message**
 Heavy I/We focus detected. Blog posts should be about the reader.
-### **Fix Action**
+#### **Fix Action**
 Flip perspective: 'We provide X' → 'You get X', 'Our tool does' → 'You can'
-### **Applies To**
+#### **Applies To**
   - *.md
   - *.mdx
   - *.txt
 
-## Clickbait Language Patterns
+### Clickbait Language Patterns
 
-### **Id**
+#### **Id**
 blog-clickbait-signals
-### **Severity**
+#### **Severity**
 warning
-### **Type**
+#### **Type**
 regex
-### **Pattern**
+#### **Pattern**
   - you won't believe
   - will (blow your mind|shock you)
   - the secret (to|of)
@@ -223,147 +223,147 @@ regex
   - what happened next
   - [0-9]+ (things|reasons|ways|tips) .*!{2,}
   - MUST (read|see|know)
-### **Message**
+#### **Message**
 Clickbait language detected. Build trust, not hype.
-### **Fix Action**
+#### **Fix Action**
 Under-promise in headline, over-deliver in content. Remove sensationalism.
-### **Applies To**
+#### **Applies To**
   - *.md
   - *.mdx
   - *.txt
 
-## Long Section Without Subheading
+### Long Section Without Subheading
 
-### **Id**
+#### **Id**
 blog-no-subheadings
-### **Severity**
+#### **Severity**
 warning
-### **Type**
+#### **Type**
 regex
-### **Pattern**
+#### **Pattern**
   -     ^(?!#)([^
     ]+
     ){20,}(?!#)
-### **Message**
+#### **Message**
 Long section without subheading. Readers scan before they read.
-### **Fix Action**
+#### **Fix Action**
 Add a subheading every 300 words max. Break up walls of text.
-### **Applies To**
+#### **Applies To**
   - *.md
   - *.mdx
 
-## Rhetorical Questions Without Follow-through
+### Rhetorical Questions Without Follow-through
 
-### **Id**
+#### **Id**
 blog-questions-without-answers
-### **Severity**
+#### **Severity**
 info
-### **Type**
+#### **Type**
 regex
-### **Pattern**
+#### **Pattern**
   - \?\s*\n\s*\n
-### **Message**
+#### **Message**
 Question followed by paragraph break. Don't leave questions hanging.
-### **Fix Action**
+#### **Fix Action**
 Follow questions immediately with the answer or insight
-### **Applies To**
+#### **Applies To**
   - *.md
   - *.mdx
   - *.txt
 
-## Ellipsis Overuse
+### Ellipsis Overuse
 
-### **Id**
+#### **Id**
 blog-triple-dots-overuse
-### **Severity**
+#### **Severity**
 info
-### **Type**
+#### **Type**
 regex
-### **Pattern**
+#### **Pattern**
   - \.{3,}
   - \.\.\.
-### **Message**
+#### **Message**
 Ellipsis detected. Often a crutch for unfinished thoughts.
-### **Fix Action**
+#### **Fix Action**
 Complete your thought or use a dash (—) for dramatic pause instead
-### **Applies To**
+#### **Applies To**
   - *.md
   - *.mdx
   - *.txt
 
-## Excessive Exclamation Marks
+### Excessive Exclamation Marks
 
-### **Id**
+#### **Id**
 blog-excessive-exclamation
-### **Severity**
+#### **Severity**
 warning
-### **Type**
+#### **Type**
 regex
-### **Pattern**
+#### **Pattern**
   - !{2,}
   - !\s+[A-Z].*!
-### **Message**
+#### **Message**
 Multiple exclamation marks or excessive enthusiasm detected.
-### **Fix Action**
+#### **Fix Action**
 One exclamation mark per post max. Let your words create excitement, not punctuation.
-### **Applies To**
+#### **Applies To**
   - *.md
   - *.mdx
   - *.txt
 
-## AI Giveaway - Landscape/World Phrases
+### AI Giveaway - Landscape/World Phrases
 
-### **Id**
+#### **Id**
 blog-ai-landscape-phrases
-### **Severity**
+#### **Severity**
 error
-### **Type**
+#### **Type**
 regex
-### **Pattern**
+#### **Pattern**
   - in today's (fast-paced|digital|modern|ever-changing) (world|landscape|age|era)
   - in the (ever-evolving|rapidly changing|dynamic) landscape
   - in an increasingly (digital|connected|complex) world
   - navigating the (complex|digital|modern) landscape
-### **Message**
+#### **Message**
 AI giveaway phrase detected. This screams 'a robot wrote this'.
-### **Fix Action**
+#### **Fix Action**
 Delete entirely. Start with something specific instead.
-### **Applies To**
+#### **Applies To**
   - *.md
   - *.mdx
   - *.txt
 
-## AI Giveaway - Dive/Explore/Unpack
+### AI Giveaway - Dive/Explore/Unpack
 
-### **Id**
+#### **Id**
 blog-ai-dive-explore
-### **Severity**
+#### **Severity**
 warning
-### **Type**
+#### **Type**
 regex
-### **Pattern**
+#### **Pattern**
   - let's (dive|delve) (in|into|deep)
   - let's (explore|unpack|examine|discuss)
   - we'll (dive|delve|explore) (into|deep)
   - without further ado
-### **Message**
+#### **Message**
 AI transition phrase detected. These are overused by AI writers.
-### **Fix Action**
+#### **Fix Action**
 Just say what you're going to say. No announcement needed.
-### **Applies To**
+#### **Applies To**
   - *.md
   - *.mdx
   - *.txt
 
-## AI Giveaway - Hype Words
+### AI Giveaway - Hype Words
 
-### **Id**
+#### **Id**
 blog-ai-game-changer
-### **Severity**
+#### **Severity**
 warning
-### **Type**
+#### **Type**
 regex
-### **Pattern**
+#### **Pattern**
   - game.?changer
   - paradigm shift
   - revolutionary
@@ -372,138 +372,138 @@ regex
   - unlock (your|the) (full )?potential
   - take .* to the next level
   - transform(ative|ing)? (your|the)
-### **Message**
+#### **Message**
 AI hype word detected. These are empty calories.
-### **Fix Action**
+#### **Fix Action**
 Show the impact with specifics instead of claiming it with adjectives.
-### **Applies To**
+#### **Applies To**
   - *.md
   - *.mdx
   - *.txt
 
-## AI Giveaway - Comprehensive/Ultimate Claims
+### AI Giveaway - Comprehensive/Ultimate Claims
 
-### **Id**
+#### **Id**
 blog-ai-comprehensive-guide
-### **Severity**
+#### **Severity**
 warning
-### **Type**
+#### **Type**
 regex
-### **Pattern**
+#### **Pattern**
   - (comprehensive|ultimate|complete|definitive) guide
   - everything you need to know
   - all you need to know
   - the only guide you
   - look no further
-### **Message**
+#### **Message**
 AI comprehensiveness claim detected. Let the content prove its value.
-### **Fix Action**
+#### **Fix Action**
 Remove the claim. If it's truly comprehensive, readers will notice.
-### **Applies To**
+#### **Applies To**
   - *.md
   - *.mdx
   - *.txt
 
-## AI Giveaway - Excessive Hedging
+### AI Giveaway - Excessive Hedging
 
-### **Id**
+#### **Id**
 blog-ai-hedging-phrases
-### **Severity**
+#### **Severity**
 warning
-### **Type**
+#### **Type**
 regex
-### **Pattern**
+#### **Pattern**
   - it can be argued that
   - some might say
   - it('s| is) (possible|worth noting|important to note) that
   - there are various (factors|reasons|ways)
   - this could potentially
   - it('s| is) widely (believed|accepted|known)
-### **Message**
+#### **Message**
 AI hedging phrase detected. AI hedges to seem balanced. Humans have opinions.
-### **Fix Action**
+#### **Fix Action**
 Take a stance. Say what you actually think.
-### **Applies To**
+#### **Applies To**
   - *.md
   - *.mdx
   - *.txt
 
-## AI Giveaway - Importance Claims
+### AI Giveaway - Importance Claims
 
-### **Id**
+#### **Id**
 blog-ai-cannot-overstated
-### **Severity**
+#### **Severity**
 warning
-### **Type**
+#### **Type**
 regex
-### **Pattern**
+#### **Pattern**
   - cannot be overstated
   - cannot be understated
   - the importance of .* is (clear|evident|crucial)
   - it goes without saying
   - needless to say
   - this is (crucial|vital|essential|critical) (for|to)
-### **Message**
+#### **Message**
 AI importance inflation detected. If it's important, show why.
-### **Fix Action**
+#### **Fix Action**
 Remove the claim. Demonstrate importance through examples and evidence.
-### **Applies To**
+#### **Applies To**
   - *.md
   - *.mdx
   - *.txt
 
-## AI Giveaway - Audience Spanning
+### AI Giveaway - Audience Spanning
 
-### **Id**
+#### **Id**
 blog-ai-whether-beginner
-### **Severity**
+#### **Severity**
 info
-### **Type**
+#### **Type**
 regex
-### **Pattern**
+#### **Pattern**
   - whether you('re| are) a (beginner|novice|expert|seasoned)
   - no matter (your|what) (level|experience)
   - for (beginners and experts|everyone from)
   - regardless of (your|skill) (level|experience)
-### **Message**
+#### **Message**
 AI audience-spanning phrase. Pick a specific audience and write for them.
-### **Fix Action**
+#### **Fix Action**
 Choose your reader. You can't write for everyone well.
-### **Applies To**
+#### **Applies To**
   - *.md
   - *.mdx
   - *.txt
 
-## AI Giveaway - Robotic Enumeration
+### AI Giveaway - Robotic Enumeration
 
-### **Id**
+#### **Id**
 blog-ai-firstly-secondly
-### **Severity**
+#### **Severity**
 info
-### **Type**
+#### **Type**
 regex
-### **Pattern**
+#### **Pattern**
   - \b(firstly|secondly|thirdly|fourthly|lastly)\b
   - \bfirst and foremost\b
   - \blast but not least\b
-### **Message**
+#### **Message**
 Robotic enumeration detected. This reads like a term paper.
-### **Fix Action**
+#### **Fix Action**
 Use natural transitions or just number your points (1. 2. 3.)
-### **Applies To**
+#### **Applies To**
   - *.md
   - *.mdx
   - *.txt
 
-## AI Giveaway - Corporate Verbs
+### AI Giveaway - Corporate Verbs
 
-### **Id**
+#### **Id**
 blog-ai-embrace-leverage
-### **Severity**
+#### **Severity**
 warning
-### **Type**
+#### **Type**
 regex
-### **Pattern**
+#### **Pattern**
   - \bleverage\b
   - \bembrace\b
   - \bsupercharge\b
@@ -511,24 +511,24 @@ regex
   - \boptimize\b
   - \bstreamline\b
   - \butilize\b
-### **Message**
+#### **Message**
 Corporate verb detected. Use normal human words.
-### **Fix Action**
+#### **Fix Action**
 leverage → use, embrace → try/adopt, utilize → use, empower → help
-### **Applies To**
+#### **Applies To**
   - *.md
   - *.mdx
   - *.txt
 
-## AI Giveaway - AI Adjectives
+### AI Giveaway - AI Adjectives
 
-### **Id**
+#### **Id**
 blog-ai-robust-seamless
-### **Severity**
+#### **Severity**
 info
-### **Type**
+#### **Type**
 regex
-### **Pattern**
+#### **Pattern**
   - \brobust\b
   - \bseamless(ly)?\b
   - \bholistic\b
@@ -536,24 +536,24 @@ regex
   - \bactionable\b
   - \bscalable\b
   - \binnovative\b
-### **Message**
+#### **Message**
 AI-favorite adjective detected. These words are so overused they mean nothing.
-### **Fix Action**
+#### **Fix Action**
 Be specific about what makes it good. 'Robust' → 'handles 10k requests/second'
-### **Applies To**
+#### **Applies To**
   - *.md
   - *.mdx
   - *.txt
 
-## Experience Fabrication - Claiming Personal Experiences
+### Experience Fabrication - Claiming Personal Experiences
 
-### **Id**
+#### **Id**
 blog-experience-fabrication
-### **Severity**
+#### **Severity**
 error
-### **Type**
+#### **Type**
 regex
-### **Pattern**
+#### **Pattern**
   - \bI've seen\b
   - \bI've been on (the|a) call
   - \bI remember when\b
@@ -564,24 +564,24 @@ regex
   - \bWhen I first started\b
   - \bIn my career\b
   - \bI've personally\b
-### **Message**
+#### **Message**
 Experience fabrication detected. Voice is HOW you write, not WHAT you claim.
-### **Fix Action**
+#### **Fix Action**
 Transform to third-person authority: 'I've seen X' → 'X happens. Here's what it looks like.'
-### **Applies To**
+#### **Applies To**
   - *.md
   - *.mdx
   - *.txt
 
-## Fabricated Statistics Without Citations
+### Fabricated Statistics Without Citations
 
-### **Id**
+#### **Id**
 blog-fake-statistics
-### **Severity**
+#### **Severity**
 error
-### **Type**
+#### **Type**
 regex
-### **Pattern**
+#### **Pattern**
   - [0-9]+% of developers
   - [0-9]+% of teams
   - [0-9]+% of companies
@@ -591,48 +591,48 @@ regex
   - studies show(?! \()
   - research indicates(?! \()
   - data shows(?! \()
-### **Message**
+#### **Message**
 Uncited statistic detected. Fabricated numbers destroy credibility when fact-checked.
-### **Fix Action**
+#### **Fix Action**
 Cite the source, use qualitative language ('most teams'), or name specific examples
-### **Applies To**
+#### **Applies To**
   - *.md
   - *.mdx
   - *.txt
 
-## AI Fingerprint - Negation Before Affirmation
+### AI Fingerprint - Negation Before Affirmation
 
-### **Id**
+#### **Id**
 blog-negation-affirmation
-### **Severity**
+#### **Severity**
 warning
-### **Type**
+#### **Type**
 regex
-### **Pattern**
+#### **Pattern**
   - It's not just about
   - This isn't merely
   - It's not only about
   - more than just a
   - This is more than
   - not simply a
-### **Message**
+#### **Message**
 AI pattern detected: saying what it ISN'T before what it IS. State your point directly.
-### **Fix Action**
+#### **Fix Action**
 Delete the negation. 'It's not just about X—it's about Y' → 'Y matters more than X'
-### **Applies To**
+#### **Applies To**
   - *.md
   - *.mdx
   - *.txt
 
-## AI Fingerprint - Setup Phrases
+### AI Fingerprint - Setup Phrases
 
-### **Id**
+#### **Id**
 blog-setup-phrases
-### **Severity**
+#### **Severity**
 warning
-### **Type**
+#### **Type**
 regex
-### **Pattern**
+#### **Pattern**
   - Here's the thing:
   - The reality is(,|:)
   - What's interesting is
@@ -641,24 +641,24 @@ regex
   - What matters (here )?is
   - The bottom line is
   - At the end of the day,
-### **Message**
+#### **Message**
 Setup phrase detected. These are verbal tics that delay your actual point.
-### **Fix Action**
+#### **Fix Action**
 Delete the setup phrase. Start with your content directly.
-### **Applies To**
+#### **Applies To**
   - *.md
   - *.mdx
   - *.txt
 
-## AI Fingerprint - Empty Conclusion Phrases
+### AI Fingerprint - Empty Conclusion Phrases
 
-### **Id**
+#### **Id**
 blog-platitude-endings
-### **Severity**
+#### **Severity**
 info
-### **Type**
+#### **Type**
 regex
-### **Pattern**
+#### **Pattern**
   - and that's what makes it
   - which is exactly why
   - and that's why (it|this) matters
@@ -666,35 +666,35 @@ regex
   - this is why it's (so )?(important|valuable)
   - and that makes all the difference
   - which is what really counts
-### **Message**
+#### **Message**
 Platitude ending detected. If it could attach to any paragraph, it adds nothing.
-### **Fix Action**
+#### **Fix Action**
 End with specifics or just stop. 'saves time, and that's valuable' → 'saves time.'
-### **Applies To**
+#### **Applies To**
   - *.md
   - *.mdx
   - *.txt
 
-## False Authority - Claiming Credentials
+### False Authority - Claiming Credentials
 
-### **Id**
+#### **Id**
 blog-false-authority-claims
-### **Severity**
+#### **Severity**
 error
-### **Type**
+#### **Type**
 regex
-### **Pattern**
+#### **Pattern**
   - As a (security|software|senior|lead) engineer
   - In my role as
   - Having worked at (Google|Meta|Microsoft|Amazon|Apple)
   - As someone who has
   - Speaking from experience
   - From my time at
-### **Message**
+#### **Message**
 False authority claim detected. Never claim credentials or job history.
-### **Fix Action**
+#### **Fix Action**
 State facts directly without claiming personal authority: 'Engineers report...' or just state it
-### **Applies To**
+#### **Applies To**
   - *.md
   - *.mdx
   - *.txt

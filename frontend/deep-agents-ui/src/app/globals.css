@@ -14,24 +14,24 @@
   }
 
   :root {
-    --color-primary: #1c3c3c;
-    --color-user-message: #076699;
-    --color-user-message-bg: #e8f4f8;
-    --color-avatar-bg: #e8ebeb;
-    --color-secondary: #1c3c3c;
-    --color-success: #10b981;
-    --color-warning: #f59e0b;
-    --color-error: #ef4444;
-    --color-background: #f9f9f9;
-    --color-subagent-hover: #bbc4c4;
-    --color-surface: #f9fafb;
-    --color-border: #e5e7eb;
-    --color-border-light: #f3f4f6;
-    --color-text-primary: #111827;
-    --color-text-secondary: #6b7280;
-    --color-text-tertiary: #9ca3af;
-    --color-file-button: #ffffff;
-    --color-file-button-hover: #e5e7eb;
+    --color-primary: #c2381b;
+    --color-user-message: #9c2c13;
+    --color-user-message-bg: #f1e3d4;
+    --color-avatar-bg: #e8ddcb;
+    --color-secondary: #1b1813;
+    --color-success: #5b7a3a;
+    --color-warning: #b07d2a;
+    --color-error: #c2381b;
+    --color-background: #f3ece0;
+    --color-subagent-hover: #ece1cd;
+    --color-surface: #f7f1e8;
+    --color-border: #ddd2bf;
+    --color-border-light: #ece4d6;
+    --color-text-primary: #1b1813;
+    --color-text-secondary: #4a443b;
+    --color-text-tertiary: #8c8475;
+    --color-file-button: #f7f1e8;
+    --color-file-button-hover: #ece1cd;
 
     --color-primary-dark: #2dd4bf;
     --color-user-message-dark: #076699;
@@ -105,26 +105,26 @@
 
     /* Tailwind/Radix UI component variables */
     --radius: 0.5rem;
-    --background: 0 0% 98%;
-    --foreground: 220 13% 13%;
-    --card: 0 0% 100%;
-    --card-foreground: 220 13% 13%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 220 13% 13%;
-    --primary: 180 35% 17%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 220 13% 91%;
-    --secondary-foreground: 220 13% 13%;
-    --muted: 220 13% 95%;
-    --muted-foreground: 220 9% 46%;
-    --accent: 220 13% 95%;
-    --accent-foreground: 220 13% 13%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 180 35% 17%;
-    --sidebar: 220 13% 95%;
+    --background: 38 38% 91%;
+    --foreground: 36 16% 9%;
+    --card: 36 45% 94%;
+    --card-foreground: 36 16% 9%;
+    --popover: 36 45% 94%;
+    --popover-foreground: 36 16% 9%;
+    --primary: 11 76% 44%;
+    --primary-foreground: 38 40% 95%;
+    --secondary: 36 30% 86%;
+    --secondary-foreground: 36 16% 12%;
+    --muted: 36 28% 88%;
+    --muted-foreground: 36 9% 38%;
+    --accent: 36 30% 86%;
+    --accent-foreground: 36 16% 12%;
+    --destructive: 11 76% 44%;
+    --destructive-foreground: 38 40% 95%;
+    --border: 36 26% 80%;
+    --input: 36 26% 80%;
+    --ring: 11 76% 44%;
+    --sidebar: 38 38% 89%;
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
@@ -134,16 +134,16 @@
 
   .dark {
       /* App-specific color variables */
-      --color-primary: #1c3c3c;
-      --color-user-message: #065a8a;
+      --color-primary: #e0683f;
+      --color-user-message: #e0683f;
       --color-user-message-bg: #2d2d2d;
-      --color-avatar-bg: #1c3c3c;
-      --color-secondary: #bbc4c4;
+      --color-avatar-bg: #3a241c;
+      --color-secondary: #d8b89a;
       --color-success: #34d399;
       --color-warning: #fbbf24;
       --color-error: #f87171;
       --color-background: #202020;
-      --color-subagent-hover: #1e3f3f;
+      --color-subagent-hover: #3a241c;
       --color-surface: #2a2a2a;
       --color-border: #404040;
       --color-border-light: #353535;
@@ -161,7 +161,7 @@
       --card-foreground: 220 13% 95%;
       --popover: 0 0% 18%;
       --popover-foreground: 220 13% 95%;
-      --primary: 174 72% 56%;
+      --primary: 14 74% 56%;
       --primary-foreground: 0 0% 13%;
       --secondary: 0 0% 25%;
       --secondary-foreground: 220 13% 95%;
@@ -173,7 +173,7 @@
       --destructive-foreground: 0 0% 13%;
       --border: 0 0% 28%;
       --input: 0 0% 28%;
-      --ring: 174 72% 56%;
+      --ring: 14 74% 56%;
       --sidebar: 0 0% 18%;
       --chart-1: 220 70% 50%;
       --chart-2: 160 60% 45%;
@@ -312,6 +312,18 @@ button {
   &:disabled {
     cursor: not-allowed;
   }
+}
+
+.font-display {
+  font-family: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  font-optical-sizing: auto;
+  letter-spacing: -0.02em;
+}
+
+.font-mono-label {
+  font-family: var(--font-plex-mono), ui-monospace, "SF Mono", monospace;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
 }
 
 .sr-only {

@@ -123,15 +123,15 @@ function HomePageInner({
         <header className="flex h-14 items-center justify-between border-b border-border px-5">
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
-              <PenLine className="h-5 w-5 text-[#2F6868]" />
-              <h1 className="text-lg font-bold tracking-tight text-[#1c3c3c] dark:text-[#2dd4bf]">
+              <PenLine className="h-5 w-5 text-[#c2381b]" />
+              <h1 className="font-display text-2xl font-semibold text-[#1b1813] dark:text-[#e0683f]">
                 BlogCrew
               </h1>
-              <span className="hidden text-xs text-muted-foreground sm:inline-block">
-                Multi-Agent Blog Writing System
+              <span className="font-mono-label hidden text-[10px] text-muted-foreground sm:inline-block">
+                Multi-Agent Press
               </span>
             </div>
-            {!sidebar && (
+            {/* {!sidebar && (
               <Button
                 variant="ghost"
                 size="sm"
@@ -146,7 +146,7 @@ function HomePageInner({
                   </span>
                 )}
               </Button>
-            )}
+            )} */}
           </div>
           <div className="flex items-center gap-2">
             <Button
@@ -179,7 +179,7 @@ function HomePageInner({
               size="sm"
               onClick={() => setThreadId(null)}
               disabled={!threadId}
-              className="border-[#2F6868] bg-[#2F6868] text-white hover:bg-[#2F6868]/80"
+              className="border-[#c2381b] bg-[#c2381b] text-white hover:bg-[#c2381b]/80"
             >
               <SquarePen className="mr-1.5 h-4 w-4" />
               New Thread
@@ -278,21 +278,24 @@ function HomePageContent() {
           onOpenChange={setConfigDialogOpen}
           onSave={handleSaveConfig}
         />
-        <div className="flex h-screen items-center justify-center bg-gradient-to-b from-background to-[#f0f7f7] dark:from-background dark:to-[#0f1a1a]">
+        <div className="flex h-screen items-center justify-center bg-gradient-to-b from-background to-[#efe6d6] dark:from-background dark:to-[#211c15]">
           <div className="text-center">
-            <PenLine className="mx-auto mb-4 h-10 w-10 text-[#2F6868]" />
-            <h1 className="text-3xl font-bold tracking-tight text-[#1c3c3c] dark:text-[#2dd4bf]">
+            <PenLine className="mx-auto mb-4 h-10 w-10 text-[#c2381b]" />
+            <p className="font-mono-label mb-3 text-[11px] text-[#c2381b]">
+              A Multi-Agent Press
+            </p>
+            <h1 className="font-display text-5xl font-semibold text-[#1b1813] dark:text-[#e0683f]">
               Welcome to BlogCrew
             </h1>
-            <p className="mt-2 text-muted-foreground">
-              Multi-Agent AI Blog Writing System
+            <p className="mt-3 text-muted-foreground">
+              Research, write, edit &amp; illustrate — end to end.
             </p>
             <p className="mt-1 text-sm text-muted-foreground">
               Configure your LangGraph deployment to get started
             </p>
             <Button
               onClick={() => setConfigDialogOpen(true)}
-              className="mt-6 border-[#2F6868] bg-[#2F6868] text-white hover:bg-[#2F6868]/80"
+              className="mt-6 border-[#c2381b] bg-[#c2381b] text-white hover:bg-[#c2381b]/80"
             >
               Open Configuration
             </Button>
@@ -321,9 +324,9 @@ export default function HomePage() {
   return (
       <Suspense
         fallback={
-          <div className="flex h-screen items-center justify-center bg-gradient-to-b from-background to-[#f0f7f7] dark:from-background dark:to-[#0f1a1a]">
+          <div className="flex h-screen items-center justify-center bg-gradient-to-b from-background to-[#efe6d6] dark:from-background dark:to-[#211c15]">
             <div className="text-center">
-              <PenLine className="mx-auto mb-3 h-8 w-8 animate-pulse text-[#2F6868]" />
+              <PenLine className="mx-auto mb-3 h-8 w-8 animate-pulse text-[#c2381b]" />
               <p className="text-muted-foreground">Loading BlogCrew...</p>
             </div>
           </div>

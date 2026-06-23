@@ -1,4 +1,4 @@
-# Agent Bricks, reviewed honestly: where Databricks' agent platform wins, where it costs you, and how to choose
+## Agent Bricks, reviewed honestly: where Databricks' agent platform wins, where it costs you, and how to choose
 
 
 AstraZeneca parsed more than 400,000 clinical trial documents in under an hour. No code. No fine-tuning. That single line from Databricks' June 2025 launch made Agent Bricks the most talked about addition to the Mosaic AI stack, and the most argued about.
@@ -68,32 +68,3 @@ A useful litmus test: if you would otherwise build a LangChain agent and a custo
 Agent Bricks is the most opinionated agent platform on the market. That is both the appeal and the cost. For teams already deep in the Databricks stack, with strong domain expertise and a queue of internal-knowledge or document-extraction problems, it's the fastest path from idea to production that exists today. For everyone else, the lock-in tax will eventually come due, and the abstraction will get in the way of the 20% of work that doesn't fit the template.
 
 The product will keep improving. MLflow 3.0 is GA, the Supervisor Agent is GA, and the rest of the beta features will likely follow in 2026. But the fundamental tradeoff, automated optimization in exchange for architectural control, won't change. Make sure you know which side of that tradeoff you're on before you commit.
-
----
-
-```
-BlogPost:
-  slug: agent-bricks-databricks-guide
-  title: "Agent Bricks, reviewed honestly: where Databricks' agent platform wins, where it costs you, and how to choose"
-  excerpt: A working engineer's breakdown of Databricks Agent Bricks: what it does well, where it locks you in, and how it stacks up against LangChain, Azure AI Foundry, AWS Bedrock, and Vertex AI Agents.
-  date: 2026-03-15
-  readTime: 9
-  category: AI Platforms
-  author: Editorial Team
-  image: /Blog/agent-bricks-databricks-guide/cover.png
-  seo:
-    description: Independent technical review of Databricks Agent Bricks. Covers evaluation, governance, pricing, and head-to-head comparisons with LangChain, Azure AI Foundry, AWS Bedrock AgentCore, and Vertex AI Agents.
-    keywords:
-      - Agent Bricks
-      - Databricks
-      - Mosaic AI
-      - AI agents
-      - LangChain
-      - LangGraph
-      - Azure AI Foundry
-      - AWS Bedrock AgentCore
-      - Vertex AI Agents
-      - agent evaluation
-      - Unity Catalog
-      - enterprise AI
-```

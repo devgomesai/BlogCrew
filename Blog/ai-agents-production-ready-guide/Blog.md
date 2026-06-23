@@ -1,4 +1,4 @@
-### Introduction
+## Introduction
 
 AI agents are moving from experimental demos into production infrastructure. That shift matters because the bar for production is much higher than the bar for a chatbot.
 

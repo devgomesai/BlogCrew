@@ -120,9 +120,9 @@ export const ChatMessage = React.memo<ChatMessageProps>(
                 ) : hasContent ? (
                   <>
                     {(!isUser && messageContent.includes("slug") && messageContent.includes("BlogPost") && messageContent.includes("---")) && (
-                      <div className="mb-4 flex items-center gap-2 rounded-md border border-[#2F6868]/20 bg-[#2F6868]/5 px-3 py-2">
-                        <FileText className="h-4 w-4 text-[#2F6868]" />
-                        <span className="text-xs font-medium text-[#1c3c3c] dark:text-[#2dd4bf]">
+                      <div className="mb-4 flex items-center gap-2 rounded-md border border-[#c2381b]/20 bg-[#c2381b]/5 px-3 py-2">
+                        <FileText className="h-4 w-4 text-[#c2381b]" />
+                        <span className="text-xs font-medium text-[#1b1813] dark:text-[#e0683f]">
                           Blog Post Generated
                         </span>
                       </div>

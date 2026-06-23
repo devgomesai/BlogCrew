@@ -210,8 +210,8 @@ export function ThreadList({
     <div className="absolute inset-0 flex flex-col">
       <div className="grid flex-shrink-0 grid-cols-[1fr_auto] items-center gap-3 border-b border-border p-4">
         <div className="flex items-center gap-2">
-          <PenLine className="h-4 w-4 text-[#2F6868]" />
-          <h2 className="text-base font-bold tracking-tight text-[#1c3c3c] dark:text-[#2dd4bf]">
+          <PenLine className="h-4 w-4 text-[#c2381b]" />
+          <h2 className="text-base font-bold tracking-tight text-[#1b1813] dark:text-[#e0683f]">
             Blog Posts
           </h2>
         </div>

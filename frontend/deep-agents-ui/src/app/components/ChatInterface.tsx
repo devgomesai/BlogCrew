@@ -293,10 +293,10 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
             </div>
           ) : isEmpty ? (
             <div className="flex flex-col items-center justify-center py-16">
-              <div className="mb-6 rounded-full bg-[#2F6868]/10 p-4">
-                <PenLine className="h-8 w-8 text-[#2F6868]" />
+              <div className="mb-6 rounded-full bg-[#c2381b]/10 p-4">
+                <PenLine className="h-8 w-8 text-[#c2381b]" />
               </div>
-              <h2 className="text-xl font-bold tracking-tight text-[#1c3c3c] dark:text-[#2dd4bf]">
+              <h2 className="font-display text-3xl font-semibold text-[#1b1813] dark:text-[#e0683f]">
                 What should we write about?
               </h2>
               <p className="mt-1 max-w-md text-center text-sm text-muted-foreground">
@@ -312,9 +312,9 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
                       key={topic}
                       type="button"
                       onClick={() => handleTopicClick(topic)}
-                      className="group inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm text-muted-foreground shadow-xs transition-all hover:border-[#2F6868]/40 hover:bg-[#2F6868]/5 hover:text-[#1c3c3c] dark:hover:text-[#2dd4bf]"
+                      className="group inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm text-muted-foreground shadow-xs transition-all hover:border-[#c2381b]/40 hover:bg-[#c2381b]/5 hover:text-[#1b1813] dark:hover:text-[#e0683f]"
                     >
-                      <Icon className="h-3.5 w-3.5 text-[#2F6868]/60 group-hover:text-[#2F6868]" />
+                      <Icon className="h-3.5 w-3.5 text-[#c2381b]/60 group-hover:text-[#c2381b]" />
                       {topic}
                     </button>
                   );
@@ -323,7 +323,7 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
 
               <div className="mt-10 flex items-center gap-6 text-xs text-muted-foreground">
                 <div className="flex items-center gap-1.5">
-                  <div className="h-1.5 w-1.5 rounded-full bg-[#2F6868]" />
+                  <div className="h-1.5 w-1.5 rounded-full bg-[#c2381b]" />
                   Planner
                 </div>
                 <div className="flex items-center gap-1.5">
@@ -478,7 +478,7 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
                         >
                           <FileIcon size={16} />
                           Files (State)
-                          <span className="h-4 min-w-4 rounded-full bg-[#2F6868] px-0.5 text-center text-[10px] leading-[16px] text-white">
+                          <span className="h-4 min-w-4 rounded-full bg-[#c2381b] px-0.5 text-center text-[10px] leading-[16px] text-white">
                             {Object.keys(files).length}
                           </span>
                         </button>
@@ -524,7 +524,7 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
                         aria-expanded={metaOpen === "files"}
                       >
                         Files (State)
-                        <span className="h-4 min-w-4 rounded-full bg-[#2F6868] px-0.5 text-center text-[10px] leading-[16px] text-white">
+                        <span className="h-4 min-w-4 rounded-full bg-[#c2381b] px-0.5 text-center text-[10px] leading-[16px] text-white">
                           {Object.keys(files).length}
                         </span>
                       </button>

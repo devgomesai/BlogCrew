@@ -1,4 +1,4 @@
-# Building the 7 Layers of a Production-Grade Agentic AI System
+## Building the 7 Layers of a Production-Grade Agentic AI System
 
 ### Introduction
 The development of Agentic AI has become crucial as organizations strive to enhance their operational efficiency through advanced technology. This blog will explore the foundational components necessary for constructing a robust production-grade Agentic AI system. Understanding these seven layers will help professionals design, implement, and maintain effective AI solutions.

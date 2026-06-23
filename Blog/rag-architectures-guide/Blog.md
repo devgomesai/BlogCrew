@@ -1,4 +1,4 @@
-### Introduction
+## Introduction
 In the rapidly evolving field of artificial intelligence, RAG (Retrieval-Augmented Generation) architectures have emerged as powerful frameworks that combine the strengths of retrieval and generative models. These architectures empower AI developers to create systems that can not only generate text but also pull relevant information from vast datasets, enhancing the quality and relevance of generated outputs. In this guide, we will delve into nine essential RAG architectures that every AI developer should be familiar with, providing practical examples to illustrate their applications and benefits.
 
 ### 1. RAG Model Overview 

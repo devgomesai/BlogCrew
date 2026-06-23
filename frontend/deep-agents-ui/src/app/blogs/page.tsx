@@ -1,79 +1,145 @@
 import Link from "next/link";
-import { ArrowLeft, BookOpen } from "lucide-react";
 import { getAllBlogs } from "@/lib/blogs";
 
 export const dynamic = "force-dynamic";
 
 export default function BlogsPage() {
   const blogs = getAllBlogs();
+  const issue = new Date()
+    .toLocaleDateString("en-US", { month: "long", year: "numeric" })
+    .toUpperCase();
+
+  if (blogs.length === 0) {
+    return (
+      <>
+        <Topbar />
+        <div className="blog-empty">
+          <p className="blog-kicker">Nothing in print — yet</p>
+          <h2>The presses are quiet.</h2>
+          <p>
+            No posts have been published. Send the crew a topic from the
+            workshop and the first edition will land right here.
+          </p>
+          <Link href="/" className="blog-btn">
+            Open the Workshop
+          </Link>
+        </div>
+      </>
+    );
+  }
+
+  const [lead, ...rest] = blogs;
 
   return (
-    <div className="min-h-screen bg-[var(--color-background)] text-[var(--color-text-primary)]">
-      <header className="flex items-center gap-3 border-b border-[var(--color-border)] px-6 py-4">
-        <Link
-          href="/"
-          className="flex items-center gap-1.5 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back to Chat
-        </Link>
-        <div className="h-5 w-px bg-[var(--color-border)]" />
-        <BookOpen className="h-5 w-5 text-[var(--color-primary)]" />
-        <h1 className="text-lg font-semibold">Published Blogs</h1>
-        <span className="text-sm text-[var(--color-text-tertiary)]">
-          {blogs.length} post{blogs.length !== 1 ? "s" : ""}
-        </span>
+    <>
+      <Topbar />
+
+      <header className="blog-masthead">
+        <p className="blog-kicker">A multi-agent publication</p>
+        <h1 className="blog-masthead__title">
+          The&nbsp;<em>Press</em>
+        </h1>
+        <p className="blog-masthead__sub">
+          Researched, written, edited and illustrated end-to-end by the
+          BlogCrew agents.
+        </p>
+        <div className="blog-masthead__meta">
+          <span>Issue · {issue}</span>
+          <span>
+            {blogs.length} Article{blogs.length !== 1 ? "s" : ""}
+          </span>
+        </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-6 py-8">
-        {blogs.length === 0 ? (
-          <div className="flex flex-col items-center gap-4 py-20 text-center">
-            <BookOpen className="h-12 w-12 text-[var(--color-text-tertiary)]" />
-            <p className="text-lg text-[var(--color-text-secondary)]">No blog posts yet</p>
-            <p className="text-sm text-[var(--color-text-tertiary)]">
-              Generate a blog post from the chat interface to see it here.
-            </p>
-            <Link
-              href="/"
-              className="mt-2 rounded-md bg-[var(--color-primary)] px-4 py-2 text-sm font-medium text-white hover:opacity-90 transition-opacity"
-            >
-              Go to Chat
-            </Link>
+      <main className="blog-index">
+        {/* Lead story */}
+        <Link href={`/blogs/${lead.slug}`} className="blog-lead">
+          <div className="blog-lead__media">
+            {lead.hasImage ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={`/api/blogs/${lead.slug}/image`} alt={lead.title} />
+            ) : (
+              <Glyph />
+            )}
           </div>
-        ) : (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {blogs.map((blog) => (
-              <Link
-                key={blog.slug}
-                href={`/blogs/${blog.slug}`}
-                className="group flex flex-col overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] transition-all hover:border-[var(--color-primary)] hover:shadow-lg"
-              >
-                {blog.hasImage ? (
-                  <div className="aspect-[2/1] overflow-hidden bg-[var(--color-background)]">
-                    <img
-                      src={`/api/blogs/${blog.slug}/image`}
-                      alt={blog.title}
-                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                  </div>
-                ) : (
-                  <div className="flex aspect-[2/1] items-center justify-center bg-[var(--color-background)]">
-                    <BookOpen className="h-10 w-10 text-[var(--color-text-tertiary)]" />
-                  </div>
-                )}
-                <div className="flex flex-1 flex-col p-4">
-                  <h2 className="line-clamp-2 text-base font-semibold leading-snug group-hover:text-[var(--color-primary)] transition-colors">
-                    {blog.title}
-                  </h2>
-                  <p className="mt-auto pt-3 text-xs text-[var(--color-text-tertiary)]">
-                    Read more →
-                  </p>
-                </div>
-              </Link>
-            ))}
+          <div className="blog-lead__body">
+            <p className="blog-kicker">Lead Story · No. 01</p>
+            <h2 className="blog-lead__title">{lead.title}</h2>
+            <span className="blog-lead__readmore">
+              <span className="bar" /> Read the feature
+            </span>
           </div>
+        </Link>
+
+        {rest.length > 0 && (
+          <>
+            <div className="blog-section-label">
+              <span className="blog-kicker">More from this issue</span>
+            </div>
+
+            <section className="blog-grid">
+              {rest.map((blog, i) => (
+                <Link
+                  key={blog.slug}
+                  href={`/blogs/${blog.slug}`}
+                  className="blog-card"
+                  style={{ animationDelay: `${i * 70}ms` }}
+                >
+                  <div className="blog-card__index">
+                    <span>No. {String(i + 2).padStart(2, "0")}</span>
+                    <span>{blog.hasImage ? "ILLUSTRATED" : "TEXT"}</span>
+                  </div>
+                  <div
+                    className={`blog-card__media${
+                      blog.hasImage ? "" : " blog-card__media--empty"
+                    }`}
+                  >
+                    {blog.hasImage ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={`/api/blogs/${blog.slug}/image`}
+                        alt={blog.title}
+                      />
+                    ) : (
+                      <Glyph />
+                    )}
+                  </div>
+                  <h3 className="blog-card__title">{blog.title}</h3>
+                  <span className="blog-card__cta">Read →</span>
+                </Link>
+              ))}
+            </section>
+          </>
         )}
       </main>
+    </>
+  );
+}
+
+function Topbar() {
+  return (
+    <div className="blog-topbar">
+      <Link href="/" className="blog-link-back">
+        ← The Workshop
+      </Link>
+      <span className="blog-topbar__mark">BlogCrew</span>
     </div>
+  );
+}
+
+function Glyph() {
+  return (
+    <svg
+      viewBox="0 0 48 48"
+      width="44"
+      height="44"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.25"
+      aria-hidden="true"
+    >
+      <path d="M10 6h20l8 8v28H10z" />
+      <path d="M30 6v8h8M16 24h16M16 30h16M16 36h10" />
+    </svg>
   );
 }

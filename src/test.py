@@ -8,3 +8,8 @@
 
 # if len(respose) != 0:
 #     print(respose)
+
+# from llm_service import get_llm
+
+# llm = get_llm()
+# print(llm.invoke("Intorduce your self !"))

@@ -1,5 +1,5 @@
 _defaults:
-  model: &model "ollama:minimax-m3:cloud"
+  model: &model "ollama:gemma4:latest"
 
 planner:
   name: planner-agent

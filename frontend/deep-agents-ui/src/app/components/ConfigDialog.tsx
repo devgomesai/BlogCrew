@@ -77,7 +77,7 @@ export function ConfigDialog({
             <Label htmlFor="deploymentUrl">Deployment URL</Label>
             <Input
               id="deploymentUrl"
-              placeholder="http://localhost:8123"
+               placeholder="http://localhost:2024"
               value={deploymentUrl}
               onChange={(e) => setDeploymentUrl(e.target.value)}
             />

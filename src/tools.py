@@ -31,6 +31,22 @@ SLUG_RE = re.compile(r"^[a-zA-Z0-9_-]+$")
 
 _HTTPX_TIMEOUT = 30.0
 
+# Cap fetched page content to keep research notes (and downstream LLM input)
+# small. Full pages are often 20k+ tokens; the first few thousand chars carry
+# the substance we need (stats, quotes, named examples).
+_MAX_PAGE_CHARS = 6000
+
+# Collapse 3+ consecutive blank lines (markdownify leaves many) into one.
+_BLANK_LINES_RE = re.compile(r"\n\s*\n\s*\n+")
+
+
+def _compact_markdown(text: str) -> str:
+    """Trim whitespace bloat and cap length to control token usage."""
+    text = _BLANK_LINES_RE.sub("\n\n", text).strip()
+    if len(text) > _MAX_PAGE_CHARS:
+        text = text[:_MAX_PAGE_CHARS].rstrip() + "\n\n[...truncated...]"
+    return text
+
 
 def _is_retryable_httpx(exc: Exception) -> bool:
     """True for network errors and 5xx HTTP errors, False for 4xx."""
@@ -75,7 +91,7 @@ def fetch_webpage_content(url: str, timeout: float = _HTTPX_TIMEOUT) -> str:
     try:
         response = httpx.get(url, headers=headers, timeout=timeout)
         response.raise_for_status()
-        converted = markdownify(response.text)
+        converted = _compact_markdown(markdownify(response.text))
         _web_cache.set(url, converted, expire=86400)  # cache for 24 hours
         return converted
     except httpx.HTTPStatusError as e:
@@ -129,10 +145,15 @@ def web_search(
         url = result["url"]
         title = result["title"]
 
+        # Tavily's own `content` is a relevance-ranked snippet — use it as the
+        # lead. The full (capped) page follows for additional detail.
+        snippet = (result.get("content") or "").strip()
         content = fetch_webpage_content(url)
 
         result_text = f"""## {title}
 **URL:** {url}
+**Summary:** {snippet}
+
 {content}
 ---
 """

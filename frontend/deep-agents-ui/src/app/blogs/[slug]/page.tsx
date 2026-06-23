@@ -5,7 +5,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { getBlog } from "@/lib/blogs";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { oneDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 export const dynamic = "force-dynamic";
 
@@ -41,7 +41,7 @@ export default async function BlogPostPage({
           </div>
         )}
 
-        <h1 className="mb-2 text-3xl font-bold leading-tight">{blog.title}</h1>
+        {/* <h1 className="mb-2 text-3xl font-bold leading-tight">{blog.title}</h1> */}
 
         <div className="mb-8 flex items-center gap-2 text-sm text-[var(--color-text-tertiary)]">
           <Calendar className="h-4 w-4" />

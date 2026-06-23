@@ -22,6 +22,8 @@ import {
   FileText,
   Globe,
   Lightbulb,
+  Mic,
+  MicOff,
 } from "lucide-react";
 import { ChatMessage } from "@/app/components/ChatMessage";
 import type {
@@ -36,6 +38,7 @@ import { useChatContext } from "@/providers/ChatProvider";
 import { cn } from "@/lib/utils";
 import { useStickToBottom } from "use-stick-to-bottom";
 import { FilesPopover } from "@/app/components/TasksFilesSidebar";
+import { useSpeechRecognition } from "@/app/hooks/useSpeechRecognition";
 
 interface ChatInterfaceProps {
   assistant: Assistant | null;
@@ -93,6 +96,18 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
       stopStream,
       resumeInterrupt,
     } = useChatContext();
+
+    const handleVoiceResult = useCallback(
+      (transcript: string) => {
+        setInput(transcript);
+        if (textareaRef.current) {
+          textareaRef.current.focus();
+        }
+      },
+      [setInput]
+    );
+
+    const voice = useSpeechRecognition(handleVoiceResult);
 
     const submitDisabled = isLoading || !assistant;
     const isEmpty = messages.length === 0 && !isThreadLoading;
@@ -583,8 +598,34 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
               className="font-inherit field-sizing-content flex-1 resize-none border-0 bg-transparent px-[18px] pb-[13px] pt-[14px] text-sm leading-7 text-primary outline-none placeholder:text-tertiary"
               rows={1}
             />
-            <div className="flex justify-between gap-2 p-3">
-              <div className="flex justify-end gap-2">
+            <div className="flex items-center justify-between gap-2 p-3">
+              <div className="flex items-center gap-2">
+                {voice.isSupported && (
+                  <button
+                    type="button"
+                    onClick={voice.toggle}
+                    disabled={isLoading}
+                    className={cn(
+                      "flex size-[36px] items-center justify-center rounded-lg border transition-colors",
+                      voice.state === "listening"
+                        ? "border-red-400 bg-red-50 text-red-500 dark:border-red-500 dark:bg-red-950 dark:text-red-400"
+                        : "border-border text-tertiary hover:bg-accent hover:text-primary"
+                    )}
+                    title={
+                      voice.state === "listening"
+                        ? "Stop recording"
+                        : "Voice input"
+                    }
+                  >
+                    {voice.state === "listening" ? (
+                      <MicOff size={16} />
+                    ) : (
+                      <Mic size={16} />
+                    )}
+                  </button>
+                )}
+              </div>
+              <div className="flex gap-2">
                 <Button
                   type={isLoading ? "button" : "submit"}
                   variant={isLoading ? "destructive" : "default"}

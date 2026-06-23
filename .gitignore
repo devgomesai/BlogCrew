@@ -13,3 +13,4 @@ wheels/
 
 # Disk cache (tools.py web/image cache)
 .cache/
+session.txt

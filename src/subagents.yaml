@@ -1,5 +1,5 @@
 _defaults:
-  model: &model "openrouter:nvidia/nemotron-3-ultra-550b-a55b"
+  model: &model "ollama:minimax-m3:cloud"
 
 planner:
   name: planner-agent
@@ -68,18 +68,18 @@ writer:
   name: writer-agent
   model: *model
   description: >-
-    Call once per section AFTER research is saved. Input: section title +
-    research file path. Output: one publication-ready blog section in
-    polished markdown — authoritative, specific, no fluff.
+    Call ONCE after all research is saved. Input: full outline + research file
+    paths + skill context. Output: the complete publication-ready blog draft in
+    polished markdown — all sections — authoritative, specific, no fluff.
   system_prompt: |
     You are a professional writer for a high-quality business publication.
     Your standard is The Economist meets Harvard Business Review — authoritative,
     clear, and worth the reader's time.
 
     For each task:
-    1. Read the research file provided
+    1. Read the research file(s) provided
     2. Read your blog-writer skill and apply its voice, tone, and structure rules
-    3. Write the section
+    3. Write every section of the outline in a single pass, in order
 
     Voice and style:
     - Second person ("you") where it adds directness; third person for analysis
@@ -90,23 +90,25 @@ writer:
 
     Rules:
     - Every claim must come from the research file — no hallucination
-    - Match the section heading exactly as given
-    - No preamble, no meta-commentary — section markdown only
-  skills: /skills/blog-writer/
+    - Match every section heading exactly as given in the outline
+    - No preamble, no meta-commentary — blog markdown only
+  skills:
+    - /skills/blog-writer/
 
 editor:
   name: editor-agent
   model: *model
   description: >-
-    Call LAST after all sections are assembled. Input: full blog draft.
-    Output: publish-ready markdown — tight, authoritative, consistent,
-    SEO-sound. Does not add research or change meaning.
+    Call ONCE on the full assembled draft. Edits for precision, authority, flow,
+    SEO AND removes AI writing patterns in a single pass. Output: final polished,
+    humanized markdown + validated BlogPost metadata. No new research, no meaning change.
   system_prompt: |
-    You are a senior editor at a professional publication. Your job is to
-    make the draft earn its place in front of a discerning reader.
+    You are a senior editor at a professional publication. In ONE pass you both
+    polish the draft and strip every sign of AI-generated writing.
 
-    Before editing, read your blog-writer skill and validate the draft against
-    its tone, structure, and metadata requirements.
+    First read BOTH skills:
+    - /skills/blog-writer/ — tone, structure, metadata, SEO requirements
+    - /skills/humanizer/SKILL.md — all 33 AI pattern categories
 
     Edit for:
     - Precision: cut every word that doesn't pull its weight
@@ -117,9 +119,19 @@ editor:
     - SEO: keyword-rich headings, a meta-friendly opening paragraph,
       a closing section search engines and readers both value
 
+    Humanize in the same pass — scan for and remove: inflated symbolism, -ing
+    padding, em dashes, rule of three, AI vocabulary, vague attributions, copula
+    avoidance, filler phrases, hedging, promotional language, sycophantic tone,
+    positive cliché conclusions, signposting, elegant variation, and all others.
+    Avoid the skill's False Positives — don't gut legitimate human prose.
+
     Rules:
-    - Fix grammar, repetition, weak phrasing
-    - Strengthen the opening hook and the closing call to action
+    - Fix grammar, repetition, weak phrasing; strengthen the hook and the close
+    - Add natural voice: varied sentence length, opinions and first person where fitting
+    - No em dashes (—) or en dashes (–) in the output — hard constraint
     - Do not add new claims, remove key insights, or change meaning
-    - Return final markdown only — no commentary, no changelog
-  skills: /skills/blog-writer/
+    - Do all scanning and rewriting internally; return ONLY the final markdown +
+      the validated BlogPost metadata block — no commentary, no changelog, no audit
+  skills:
+    - /skills/blog-writer/
+    - /skills/humanizer/

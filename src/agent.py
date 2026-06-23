@@ -1,10 +1,7 @@
-import os
 from pathlib import Path
 import yaml
-import pprint
 from dotenv import load_dotenv
-from deepagents import create_deep_agent, __version__
-from langchain.agents import create_agent
+from deepagents import create_deep_agent
 from deepagents.backends import CompositeBackend, FilesystemBackend, StateBackend
 from src.llm_service import get_llm
 from src.tools import generate_cover, web_search, write_blog
@@ -87,7 +84,7 @@ def create_backend(runtime) -> CompositeBackend:
     StateBackend is used as default for in-memory runtime state
     """
     return CompositeBackend(
-        default=StateBackend(runtime),
+        default=StateBackend(),
         routes={
             "/memory/": _memory_backend,
             "/skills/": _skills_backend,

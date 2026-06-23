@@ -37,9 +37,15 @@ const PIPELINE_CONFIG: Record<string, { icon: React.ElementType; color: string; 
     bgColor: "bg-violet-200 dark:bg-violet-900/40",
     label: "Editor",
   },
+  "humanizer-agent": {
+    icon: PenLine,
+    color: "text-rose-600 dark:text-rose-400",
+    bgColor: "bg-rose-100 dark:bg-rose-900/30",
+    label: "Humanizer",
+  },
 };
 
-const PIPELINE_ORDER = ["planner-agent", "researcher-agent", "writer-agent", "editor-agent"];
+const PIPELINE_ORDER = ["planner-agent", "researcher-agent", "writer-agent", "editor-agent", "humanizer-agent"];
 
 export const SubAgentIndicator = React.memo<SubAgentIndicatorProps>(
   ({ subAgent, onClick, isExpanded = true }) => {

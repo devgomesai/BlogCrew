@@ -47,7 +47,7 @@ This agent system produces publish-ready blog posts using a structured multi-age
 
 - **Input:** Topic
 - **Output:** `/Blog/<slug>/Blog.md` + `/Blog/<slug>/cover.png`
-- **Pipeline:** read-skill → plan → research → write → verify → edit → finalize
+- **Pipeline:** read-skill → plan → research → write → verify → edit+humanize → finalize
 
 ---
 
@@ -59,14 +59,14 @@ This agent system produces publish-ready blog posts using a structured multi-age
 | `planner-agent`    | Breaks the topic into an H2/H3 outline                     | topic + skill context                          | structured outline          |
 | `researcher-agent` | Gathers stats, examples, and insights via web search       | 1–3 focused sections + outline                 | structured research notes   |
 | `writer-agent`     | Turns outline + research into prose                        | outline + research notes + skill context       | draft section               |
-| `editor-agent`     | Improves clarity, grammar, flow, SEO; validates metadata   | full draft + skill context                     | polished draft + metadata   |
+| `editor-agent`     | Polishes clarity/grammar/flow/SEO, validates metadata, AND removes AI writing patterns — one pass | full draft + skill context | polished, humanized draft + metadata |
 
 
 **Delegation rules:**
 
 - **Always delegate web research** to `researcher-agent` — never search yourself
 - **Always delegate writing** to `writer-agent` — never write blog prose yourself
-- **Always delegate editing** to `editor-agent` — never polish or validate metadata yourself
+- **Always delegate editing + humanizing** to `editor-agent` — it polishes and removes AI patterns in one pass; never do either yourself
 - Pass the extracted `--- SKILL CONTEXT ---` block on every subagent call — never strip it
 
 ---
@@ -93,16 +93,16 @@ Delegate to `researcher-agent`. Group 2–3 related sections per call. Up to 6 c
 Parallelize research for independent sections; never parallelize with dependent steps.
 
 **Step 6 — Write**
-Delegate to `writer-agent` one section at a time.
-Pass: outline section + research notes for that section + skill context.
+Delegate to `writer-agent` **once** with the full outline + all research file paths + skill context. The writer drafts every section in a single pass.
+Only split into a second call if a section is flagged incomplete at Verify (Step 7). Per-section calls multiply system-prompt + skill-context overhead — avoid them.
 
 **Step 7 — Verify**
 After all sections return, verify the content is sufficient and complete.
 If there are gaps, make one extra research or writing call to fill them — then proceed regardless.
 
-**Step 8 — Edit**
-Delegate the full combined draft to `editor-agent` with skill context.
-Receive: polished draft + validated `BlogPost` metadata block.
+**Step 8 — Edit + Humanize (single pass)**
+Delegate the full combined draft to `editor-agent` with skill context. In one pass it polishes (precision, authority, flow, SEO), validates the `BlogPost` metadata, AND strips AI tells (inflated symbolism, -ing padding, em dashes, rule of three, AI vocabulary, etc.) while preserving meaning and length.
+Receive: polished, humanized draft + validated `BlogPost` metadata block.
 
 **Step 9 — Finalize and Return**
 Run the Final Checklist. Write output files. Return to the user.
@@ -117,7 +117,7 @@ Read **once at startup** by the orchestrator. Individual agents do **not** re-re
 
 #### Extracted context format
 
-After reading the skill files, construct this block and include it verbatim in every subagent call:
+After reading the skill files, construct this block and include it verbatim in every subagent call. The humanizer skill is read by the editor-agent during the edit+humanize step, not at startup.
 
 ```
 --- SKILL CONTEXT (blog-writer) ---
@@ -156,11 +156,9 @@ Call `write_todos` after every workflow step. Statuses: `pending` | `in_progress
 [ ] Research: Section 1          → pending
 [ ] Research: Section 2          → pending
 [ ] Research: Section N          → pending
-[ ] Write: Section 1             → pending
-[ ] Write: Section 2             → pending
-[ ] Write: Section N             → pending
+[ ] Write full draft (one call)  → pending
 [ ] Verify coverage              → pending
-[ ] Edit full draft              → pending
+[ ] Edit + humanize draft        → pending
 [ ] Validate BlogPost fields     → pending
 [ ] Finalize & generate          → pending
 ```
@@ -212,14 +210,17 @@ Must:
 2. Write in second person ("you") with a confident, advisory tone
 3. Follow the content template: H2 title → H3 subheads → action steps as numbered list or bolded lead-ins
 4. Cite sources inline with numbered references matching the Sources section
-5. Return one section at a time — do not combine sections
+5. Draft all sections in one pass and return the full assembled draft — do not request per-section calls
 
-#### Editor Agent
+#### Editor Agent (edits + humanizes in one pass)
 
 Receives: full combined draft + skill context.
 
+Reads BOTH `/skills/blog-writer/` and `/skills/humanizer/SKILL.md` first.
+
 Must:
 
+0. Humanize as part of the same pass — scan for and remove inflated symbolism, -ing padding, em dashes (replace all — no exceptions), rule of three, AI vocabulary, vague attributions, copula avoidance, filler phrases, hedging, promotional language, sycophantic tone, positive cliché conclusions, signposting, elegant variation, and all other patterns in the humanizer skill. Add natural voice: varied sentence rhythm, opinions and first person where fitting. **Hard constraint:** zero em dashes (`—` or `–`) in the output.
 1. Validate every `BlogPost` field:
   - `slug`: lowercase, hyphenated topic (e.g. `python-for-data-science`); letters, numbers, hyphens, underscores only
   - `title`: clear, professional, keyword-rich for the topic
@@ -299,6 +300,7 @@ Before saving any learning, ask: **would this apply in a new conversation on a d
 | ------------------------------------------------- | ------------------------------------------------- |
 | Workflow, delegation strategy, general procedure  | `/memory/AGENTS.md`                               |
 | Writing patterns, blog structure, SEO rules       | `/skills/blog-writer/SKILL.md`                    |
+| AI-humanization patterns and fixes                | `/skills/humanizer/SKILL.md`                      |
 | Style patterns, section templates, voice examples | `/skills/blog-writer/references/` |
 
 
@@ -336,4 +338,5 @@ edit_file /skills/blog-writer/references/
 2. All `BlogPost` fields validated by editor-agent
 3. `write_blog` → `Blog/<slug>/Blog.md` confirmed written
 4. `generate_cover` → `Blog/<slug>/cover.png` confirmed written
-5. Output contains no self-referential language, workflow references, or meta-commentary
+5. Humanization applied — zero em dashes remain in output
+6. Output contains no self-referential language, workflow references, or meta-commentary

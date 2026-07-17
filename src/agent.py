@@ -59,7 +59,7 @@ def load_subagents(config_path: Path) -> list[dict]:
             "name": str(merged["name"]),
             "description": str(merged["description"]),
             "system_prompt": str(merged["system_prompt"]),
-            "model": str(merged["model"]),
+            "model": get_llm(),  # ponytail: LM Studio for all subagents; re-read YAML model if per-agent models ever needed
         }
 
         if tools:
@@ -73,23 +73,13 @@ def load_subagents(config_path: Path) -> list[dict]:
     return agents
 
 
-def create_backend(runtime) -> CompositeBackend:
-    """
-    Create a CompositeBackend for the agent
-
-    CompositeBackend routes virtual paths like:
-        /memory/ -> _memory_backend
-        /skills/ -> _skills_backend
-
-    StateBackend is used as default for in-memory runtime state
-    """
-    return CompositeBackend(
-        default=StateBackend(),
-        routes={
-            "/memory/": _memory_backend,
-            "/skills/": _skills_backend,
-        },
-    )
+backend = CompositeBackend(
+    default=StateBackend(),
+    routes={
+        "/memory/": _memory_backend,
+        "/skills/": _skills_backend,
+    },
+)
 
 
 blog_agent = create_deep_agent(
@@ -99,7 +89,7 @@ blog_agent = create_deep_agent(
     skills=["/skills/"],  # All the skills,
     system_prompt="You are a Blog writer",
     subagents=load_subagents(BASE_DIR / "subagents.yaml"),  # Load subagents config
-    backend=create_backend,  # Backend function providing virtual path routing
+    backend=backend,
 )
 
 # See the Subagents

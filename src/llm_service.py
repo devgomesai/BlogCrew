@@ -5,5 +5,7 @@ import os
 load_dotenv()
 
 def get_llm():
-    model = init_chat_model(os.environ["LLM_CHOICE"])
+    model = init_chat_model(
+        model=os.environ["LLM_CHOICE"]
+    )
     return model

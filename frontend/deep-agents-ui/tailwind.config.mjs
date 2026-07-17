@@ -12,58 +12,28 @@ export default {
   darkMode: ["class", '[data-joy-color-scheme="dark"]'],
   theme: {
     extend: {
-      fontSize: {
-        xxs: [
-          "0.75rem", // 12px
-          {
-            lineHeight: "1.125rem", // 18px
-          },
-        ],
-        xs: [
-          "0.8125rem", // 13px
-          {
-            lineHeight: "1.125rem", // 18px
-          },
-        ],
-        sm: [
-          "0.875rem", // 14px
-          {
-            lineHeight: "1.25rem", // 20px
-          },
-        ],
-        base: [
-          "1rem", // 16px
-          {
-            lineHeight: "1.5rem", // 24px
-          },
-        ],
-        lg: [
-          "1.125rem", // 18px
-          {
-            lineHeight: "1.75rem", // 28px
-            letterSpacing: "-0.01em", // tracking-tight
-          },
-        ],
-        xl: [
-          "1.25rem", // 20px
-          {
-            lineHeight: "1.875rem", // 30px
-            letterSpacing: "-0.01em", // tracking-tight
-          },
+      fontFamily: {
+        sans: [`var(--font-outfit)`, `"Outfit"`, `ui-sans-serif`, `system-ui`, `sans-serif`],
+        mono: [
+          `"SF Mono"`, `Monaco`, `"Cascadia Code"`, `"Roboto Mono"`,
+          `Consolas`, `"Courier New"`, `monospace`,
         ],
       },
-      fontFamily: {
-        mono: [
-          `"Fira Code"`,
-          `ui-monospace`,
-          `SFMono-Regular`,
-          `Menlo`,
-          `Monaco`,
-          `Consolas`,
-          `"Liberation Mono"`,
-          `"Courier New"`,
-          `monospace`,
-        ],
+      fontSize: {
+        xxs: ["0.75rem", { lineHeight: "1.125rem" }],
+        xs: ["0.8125rem", { lineHeight: "1.125rem" }],
+        sm: ["0.875rem", { lineHeight: "1.25rem" }],
+        base: ["1rem", { lineHeight: "1.5rem" }],
+        lg: ["1.125rem", { lineHeight: "1.75rem", letterSpacing: "-0.01em" }],
+        xl: ["1.25rem", { lineHeight: "1.875rem", letterSpacing: "-0.01em" }],
+        "2xl": ["1.5rem", { lineHeight: "1.375rem" }],
+        "3xl": ["1.875rem", { lineHeight: "1.125" }],
+        "4xl": ["2.25rem", { lineHeight: "1" }],
+        "5xl": ["3rem", { lineHeight: "0.95" }],
+        "6xl": ["3.75rem", { lineHeight: "0.9" }],
+        "7xl": ["4.5rem", { lineHeight: "0.9" }],
+        "8xl": ["6rem", { lineHeight: "0.85" }],
+        "9xl": ["8rem", { lineHeight: "0.85" }],
       },
       letterSpacing: {
         tighter: "-0.04em",
@@ -71,21 +41,43 @@ export default {
         snug: "-0.02em",
         normal: "0",
         wide: "0.03em",
+        wider: "0.06em",
+        widest: "0.1em",
       },
       lineHeight: {
         tight: "1.20",
-      },
-      backgroundImage: {
-        navMenu: "linear-gradient(132deg, #4499F7 0%, #3FCDD6 100%)",
+        tighter: "1.10",
+        none: "1",
       },
       borderRadius: {
+        none: "0",
+        full: "9999px",
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
         xs: "3px",
       },
+      borderWidth: {
+        DEFAULT: "2px",
+        0: "0",
+        2: "2px",
+        3: "3px",
+        4: "4px",
+        6: "6px",
+        8: "8px",
+      },
       boxShadow: {
-        xs: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+        "hard-xs": "2px 2px 0px 0px #121212",
+        "hard-sm": "3px 3px 0px 0px #121212",
+        "hard": "4px 4px 0px 0px #121212",
+        "hard-md": "6px 6px 0px 0px #121212",
+        "hard-lg": "8px 8px 0px 0px #121212",
+        "hard-blue": "4px 4px 0px 0px #1040C0",
+        "hard-red": "4px 4px 0px 0px #D02020",
+        "hard-yellow": "4px 4px 0px 0px #F0C020",
+      },
+      dropShadow: {
+        hard: "3px 3px 0px rgba(0,0,0,1)",
       },
       backgroundColor: {
         primary: "var(--bg-primary)",
@@ -94,13 +86,11 @@ export default {
         "secondary-hover": "var(--bg-secondary_hover)",
         tertiary: "var(--bg-tertiary)",
         quaternary: "var(--bg-quaternary)",
-
         "brand-primary": "var(--bg-brand-primary)",
         "brand-primary-hover": "var(--bg-brand-primary_hover)",
         "brand-secondary": "var(--bg-brand-secondary)",
         "brand-tertiary": "var(--bg-brand-tertiary)",
         purple: "var(--bg-purple)",
-
         "success-primary": "var(--bg-success-primary)",
         "success-secondary": "var(--bg-success-secondary)",
         "success-strong": "var(--bg-success-strong)",
@@ -195,85 +185,12 @@ export default {
           4: "hsl(var(--chart-4))",
           5: "hsl(var(--chart-5))",
         },
-        ls: {
-          blue: "hsl(211.5, 91.8%, 61.8%)",
-          black: "hsl(var(--ls-black))",
-          green: {
-            600: "hsl(122, 63%, 38%)",
-          },
-          white: "var(--white)",
-          black: "var(--black)",
-          red: {
-            25: "var(--red-25)",
-            50: "var(--red-50)",
-            100: "var(--red-100)",
-            200: "var(--red-200)",
-            300: "var(--red-300)",
-            400: "var(--red-400)",
-            500: "var(--red-500)",
-            600: "var(--red-600)",
-            700: "var(--red-700)",
-            800: "var(--red-800)",
-            900: "var(--red-900)",
-            950: "var(--red-950)",
-          },
-          orange: {
-            25: "var(--orange-25)",
-            50: "var(--orange-50)",
-            100: "var(--orange-100)",
-            200: "var(--orange-200)",
-            300: "var(--orange-300)",
-            400: "var(--orange-400)",
-            500: "var(--orange-500)",
-            600: "var(--orange-600)",
-            700: "var(--orange-700)",
-            800: "var(--orange-800)",
-            900: "var(--orange-900)",
-            950: "var(--orange-950)",
-          },
-          gray: {
-            50: "var(--gray-50)",
-            100: "var(--gray-100)",
-            200: "var(--gray-200)",
-            300: "var(--gray-300)",
-            400: "var(--gray-400)",
-            500: "var(--gray-500)",
-            600: "var(--gray-600)",
-            700: "var(--gray-700)",
-            800: "var(--gray-800)",
-            900: "var(--gray-900)",
-            950: "var(--gray-950)",
-          },
-          green: {
-            25: "var(--green-25)",
-            50: "var(--green-50)",
-            100: "var(--green-100)",
-            200: "var(--green-200)",
-            300: "var(--green-300)",
-            400: "var(--green-400)",
-            500: "var(--green-500)",
-            600: "var(--green-600)",
-            700: "var(--green-700)",
-            800: "var(--green-800)",
-            900: "var(--green-900)",
-            950: "var(--green-950)",
-          },
-        },
-        brand: {
-          green: {
-            25: "var(--brand-25)",
-            50: "var(--brand-50)",
-            100: "var(--brand-100)",
-            200: "var(--brand-200)",
-            300: "var(--brand-300)",
-            400: "var(--brand-400)",
-            500: "var(--brand-500)",
-            600: "var(--brand-600)",
-            700: "var(--brand-700)",
-            800: "var(--brand-800)",
-            900: "var(--brand-900)",
-            950: "var(--brand-950)",
-          },
+        bauhaus: {
+          red: "#D02020",
+          blue: "#1040C0",
+          yellow: "#F0C020",
+          black: "#121212",
+          white: "#F0F0F0",
         },
       },
       keyframes: {
@@ -282,9 +199,7 @@ export default {
           to: { opacity: 0 },
         },
         slideIn: {
-          from: {
-            transform: "translateX(calc(100% + var(--viewport-padding)))",
-          },
+          from: { transform: "translateX(calc(100% + var(--viewport-padding)))" },
           to: { transform: "translateX(0)" },
         },
         swipeOut: {
@@ -298,72 +213,6 @@ export default {
         swipeOut: "swipeOut 100ms ease-out",
       },
     },
-    typography: {
-      playground: {
-        css: {
-          "h1, h2, h3, h4, h5, h6": {
-            fontWeight: "bold",
-          },
-          h1: {
-            fontSize: "24px",
-          },
-          h2: {
-            fontSize: "20px",
-          },
-          h3: {
-            fontSize: "18px",
-          },
-          h4: {
-            fontSize: "16px",
-          },
-          h5: {
-            fontSize: "14px",
-          },
-          h6: {
-            fontSize: "12px",
-          },
-          ul: {
-            marginLeft: "20px !important",
-            listStyleType: "disc !important",
-          },
-          ol: {
-            marginLeft: "20px !important",
-            listStyleType: "decimal !important",
-          },
-          a: {
-            color: "#287977",
-            textDecoration: "underline",
-            "&:hover": {
-              textDecoration: "underline",
-            },
-          },
-          table: {
-            width: "100%",
-            borderCollapse: "collapse",
-            th: {
-              padding: "0.5rem",
-              border: "1px solid var(--gray-100)",
-              fontWeight: "bold",
-              textAlign: "left",
-            },
-            td: {
-              padding: "0.5rem",
-              border: "1px solid var(--gray-100)",
-            },
-          },
-          blockquote: {
-            borderLeft: "2px solid var(--gray-100)",
-            paddingLeft: "1rem",
-            marginLeft: "0",
-            fontStyle: "italic",
-          },
-
-          "s, strike, del": {
-            textDecoration: "line-through",
-          },
-        },
-      },
-    },
   },
   plugins: [
     containerQueries,
@@ -373,114 +222,38 @@ export default {
     headlessui,
     plugin(({ addUtilities, addBase }) => {
       addBase({
-        input: {
-          borderWidth: "0",
-          padding: "0",
-        },
-        // Global scrollbar styles for all scrollable elements
+        input: { borderWidth: "0", padding: "0" },
         "html, body, *": {
           "scrollbar-width": "thin",
           "scrollbar-color": "var(--scrollbar-thumb) var(--bg-primary)",
         },
         "html::-webkit-scrollbar, body::-webkit-scrollbar, *::-webkit-scrollbar":
-          {
-            width: "8px",
-            background: "var(--bg-primary)",
-          },
+          { width: "8px", background: "var(--bg-primary)" },
         "html::-webkit-scrollbar-track, body::-webkit-scrollbar-track, *::-webkit-scrollbar-track":
-          {
-            background: "var(--bg-primary)",
-          },
+          { background: "var(--bg-primary)" },
         "html::-webkit-scrollbar-thumb, body::-webkit-scrollbar-track, *::-webkit-scrollbar-thumb":
-          {
-            background: "var(--scrollbar-thumb)",
-            "border-radius": "4px",
-          },
+          { background: "var(--scrollbar-thumb)", "border-radius": "4px" },
         "html::-webkit-scrollbar-thumb:hover, body::-webkit-scrollbar-thumb:hover, *::-webkit-scrollbar-thumb:hover":
-          {
-            background: "var(--scrollbar-thumb-hover)",
-          },
+          { background: "var(--scrollbar-thumb-hover)" },
       });
       addUtilities({
         ".no-scrollbar": {
           "scrollbar-width": "none",
-          "&::-webkit-scrollbar": {
-            display: "none",
-          },
+          "&::-webkit-scrollbar": { display: "none" },
         },
-      });
-
-      // https://github.com/tailwindlabs/tailwindcss/discussions/12127
-      addUtilities({
         ".break-anywhere": {
-          "@supports (overflow-wrap: anywhere)": {
-            "overflow-wrap": "anywhere",
-          },
-          "@supports not (overflow-wrap: anywhere)": {
-            "word-break": "break-word",
-          },
+          "@supports (overflow-wrap: anywhere)": { "overflow-wrap": "anywhere" },
+          "@supports not (overflow-wrap: anywhere)": { "word-break": "break-word" },
         },
-      });
-
-      addUtilities({
         ".no-number-spinner": {
           MozAppearance: "textfield",
-          "&::-webkit-outer-spin-button": {
-            WebkitAppearance: "none !important",
-            margin: 0,
-          },
-          "&::-webkit-inner-spin-button": {
-            WebkitAppearance: "none !important",
-            margin: 0,
-          },
+          "&::-webkit-outer-spin-button": { WebkitAppearance: "none !important", margin: 0 },
+          "&::-webkit-inner-spin-button": { WebkitAppearance: "none !important", margin: 0 },
         },
-      });
-
-      addUtilities({
         ".text-security": {
           textSecurity: "disc",
           WebkitTextSecurity: "disc",
           MozTextSecurity: "disc",
-        },
-      });
-
-      addUtilities({
-        ".display-sm": {
-          fontSize: "1rem", // 16px
-          lineHeight: "1.5rem", // 24px
-          fontWeight: "600", // semibold
-        },
-        ".display-base": {
-          fontSize: "1.5rem", // 24px
-          lineHeight: "2rem", // 32px
-          letterSpacing: "-0.01em", // tracking-tight
-        },
-        ".display-lg": {
-          fontSize: "1.875rem", // 30px
-          lineHeight: "2.375rem", // 38px
-          letterSpacing: "-0.01em", // tracking-tight
-        },
-        ".display-xl": {
-          fontSize: "2.25rem", // 36px
-          lineHeight: "2.75rem", // 44px
-          letterSpacing: "-0.01em", // tracking-tight
-        },
-        ".display-2xl": {
-          fontSize: "3rem", // 48px
-          lineHeight: "3.75rem", // 60px
-          letterSpacing: "-0.01em", // tracking-tight
-        },
-        ".caps-label-sm": {
-          fontSize: "0.875rem", // 14px
-          lineHeight: "1.25rem", // 20px
-          letterSpacing: "0.02625rem", // 0.42px
-          textTransform: "uppercase",
-        },
-        ".caps-label-xs": {
-          fontSize: "0.75rem", // 14px
-          lineHeight: "1.125rem", // 20px
-          letterSpacing: "0.0225rem", // 0.42px
-          textTransform: "uppercase",
         },
       });
     }),

@@ -33,7 +33,7 @@ const GROUP_LABELS = {
 
 const STATUS_COLORS: Record<ThreadItem["status"], string> = {
   idle: "bg-green-500",
-  busy: "bg-blue-500",
+  busy: "bg-yellow-500",
   interrupted: "bg-orange-500",
   error: "bg-red-600",
 };
@@ -210,8 +210,8 @@ export function ThreadList({
     <div className="absolute inset-0 flex flex-col">
       <div className="grid flex-shrink-0 grid-cols-[1fr_auto] items-center gap-3 border-b border-border p-4">
         <div className="flex items-center gap-2">
-          <PenLine className="h-4 w-4 text-[#c2381b]" />
-          <h2 className="text-base font-bold tracking-tight text-[#1b1813] dark:text-[#e0683f]">
+          <PenLine className="h-4 w-4 text-[#eab308]" />
+          <h2 className="text-base font-bold tracking-tight text-[var(--color-secondary)]">
             Blog Posts
           </h2>
         </div>

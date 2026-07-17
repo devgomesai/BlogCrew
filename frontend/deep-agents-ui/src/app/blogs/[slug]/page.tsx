@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { getBlog } from "@/lib/blogs";
+import { ThemeToggle } from "../ThemeToggle";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
@@ -26,55 +27,61 @@ export default async function BlogPostPage({
         <Link href="/blogs" className="blog-link-back">
           ← All Articles
         </Link>
-        <span className="blog-topbar__mark">The Press</span>
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          <span className="blog-topbar__mark">The Press</span>
+          <ThemeToggle />
+        </div>
       </div>
 
-      <article className="blog-article">
-        <header className="blog-article__head">
-          <p className="blog-kicker">Feature · BlogCrew</p>
-          <div className="blog-article__meta">
-            <span>{minutes} min read</span>
-            <span>{words.toLocaleString()} words</span>
-            <span>{slug}</span>
-          </div>
-          {blog.hasImage && (
-            <figure className="blog-article__hero">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={`/api/blogs/${blog.slug}/image`} alt={blog.title} />
-            </figure>
-          )}
-        </header>
+      <div className="blog-article-wrapper">
+        <article className="blog-article">
+          <header className="blog-article__head">
+            <p className="blog-kicker">Feature · BlogCrew</p>
+            <h1 className="blog-article__title">{blog.title}</h1>
+            <div className="blog-article__meta">
+              <span>{minutes} min read</span>
+              <span>{words.toLocaleString()} words</span>
+              <span>{slug}</span>
+            </div>
+            {blog.hasImage && (
+              <figure className="blog-article__hero">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={`/api/blogs/${blog.slug}/image`} alt={blog.title} />
+              </figure>
+            )}
+          </header>
 
-        <div className="blog-prose">
-          <ReactMarkdown
-            remarkPlugins={[remarkGfm]}
-            components={{
-              code({ className, children, ...props }) {
-                const match = /language-(\w+)/.exec(className || "");
-                const codeString = String(children).replace(/\n$/, "");
-                if (match) {
+          <div className="blog-prose">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                code({ className, children, ...props }) {
+                  const match = /language-(\w+)/.exec(className || "");
+                  const codeString = String(children).replace(/\n$/, "");
+                  if (match) {
+                    return (
+                      <SyntaxHighlighter
+                        style={oneDark}
+                        language={match[1]}
+                        PreTag="div"
+                      >
+                        {codeString}
+                      </SyntaxHighlighter>
+                    );
+                  }
                   return (
-                    <SyntaxHighlighter
-                      style={oneDark}
-                      language={match[1]}
-                      PreTag="div"
-                    >
-                      {codeString}
-                    </SyntaxHighlighter>
+                    <code className={className} {...props}>
+                      {children}
+                    </code>
                   );
-                }
-                return (
-                  <code className={className} {...props}>
-                    {children}
-                  </code>
-                );
-              },
-            }}
-          >
-            {blog.markdown}
-          </ReactMarkdown>
-        </div>
-      </article>
+                },
+              }}
+            >
+              {blog.markdown}
+            </ReactMarkdown>
+          </div>
+        </article>
+      </div>
 
       <footer className="blog-article__foot">
         <span className="blog-kicker">End of article</span>

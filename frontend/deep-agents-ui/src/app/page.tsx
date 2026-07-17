@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Assistant } from "@langchain/langgraph-sdk";
 import { ClientProvider, useClient } from "@/providers/ClientProvider";
 import Link from "next/link";
-import { Settings, MessagesSquare, SquarePen, PenLine, Sun, Moon, BookOpen } from "lucide-react";
+import { Settings, MessagesSquare, SquarePen, Sun, Moon, BookOpen } from "lucide-react";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -27,6 +27,33 @@ const SUGGESTED_TOPICS = [
   "Climate tech startups to watch this year",
   "A practical guide to Kubernetes for small teams",
 ];
+
+function GeometricLogo() {
+  return (
+    <div className="flex items-center gap-1">
+      <span className="block w-3 h-3 rounded-full bg-[#D02020]" />
+      <span className="block w-3 h-3 bg-[#1040C0]" />
+      <span
+        className="block w-0 h-0"
+        style={{
+          borderLeft: "6px solid transparent",
+          borderRight: "6px solid transparent",
+          borderBottom: "12px solid #F0C020",
+        }}
+      />
+    </div>
+  );
+}
+
+function BauhausDecoSquares() {
+  return (
+    <div className="flex gap-1.5">
+      <span className="block w-2 h-2 bg-[#D02020]" />
+      <span className="block w-2 h-2 bg-[#1040C0]" />
+      <span className="block w-2 h-2 bg-[#F0C020]" />
+    </div>
+  );
+}
 
 interface HomePageInnerProps {
   config: StandaloneConfig;
@@ -48,7 +75,10 @@ function HomePageInner({
   const [mutateThreads, setMutateThreads] = useState<(() => void) | null>(null);
   const [interruptCount, setInterruptCount] = useState(0);
   const [assistant, setAssistant] = useState<Assistant | null>(null);
+  const [mounted, setMounted] = useState(false);
   const { theme, toggleTheme } = useTheme();
+
+  useEffect(() => setMounted(true), []);
 
   const fetchAssistant = useCallback(async () => {
     const isUUID =
@@ -111,6 +141,13 @@ function HomePageInner({
     fetchAssistant();
   }, [fetchAssistant]);
 
+  useEffect(() => {
+    if (sidebar === null) {
+      setSidebar("1");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <>
       <ConfigDialog
@@ -120,52 +157,49 @@ function HomePageInner({
         initialConfig={config}
       />
       <div className="flex h-screen flex-col">
-        <header className="flex h-14 items-center justify-between border-b border-border px-5">
-          <div className="flex items-center gap-3">
+        {/* Bauhaus Header */}
+        <header className="sticky top-0 z-20 flex h-14 items-center justify-between border-b-4 border-black bg-white px-5 dark:bg-[#0a0a0a] dark:border-gray-500">
+          <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <PenLine className="h-5 w-5 text-[#c2381b]" />
-              <h1 className="font-display text-2xl font-semibold text-[#1b1813] dark:text-[#e0683f]">
+              <GeometricLogo />
+              <h1 className="font-black text-xl uppercase tracking-tighter text-black dark:text-white">
                 BlogCrew
               </h1>
-              <span className="font-mono-label hidden text-[10px] text-muted-foreground sm:inline-block">
-                Multi-Agent Press
-              </span>
+              <BauhausDecoSquares />
             </div>
-            {/* {!sidebar && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setSidebar("1")}
-                className="ml-2 rounded-md border border-border bg-card px-3 text-foreground hover:bg-accent"
-              >
-                <MessagesSquare className="mr-1.5 h-4 w-4" />
-                Threads
-                {interruptCount > 0 && (
-                  <span className="ml-1.5 inline-flex min-h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[10px] text-destructive-foreground">
-                    {interruptCount}
-                  </span>
-                )}
-              </Button>
-            )} */}
+            <Button
+              variant="outline"
+              size="sm"
+              shape="pill"
+              onClick={() => setSidebar(sidebar ? null : "1")}
+              aria-pressed={!!sidebar}
+            >
+              <MessagesSquare className="mr-1.5 h-4 w-4" />
+              Newsroom
+              {interruptCount > 0 && (
+                <span className="ml-1.5 inline-flex min-h-4 min-w-4 items-center justify-center rounded-full bg-[#D02020] px-1 text-[10px] text-white font-bold">
+                  {interruptCount}
+                </span>
+              )}
+            </Button>
           </div>
           <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
+            <button
+              type="button"
               onClick={toggleTheme}
-              className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
-              aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-black hover:bg-gray-100 transition-colors dark:border-gray-400 dark:hover:bg-white/10"
+              aria-label={mounted ? (theme === "dark" ? "Switch to light mode" : "Switch to dark mode") : "Toggle theme"}
             >
-              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-            </Button>
+              {mounted ? (theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />) : <span className="block w-3 h-3 bg-black/20 rounded-full dark:bg-white/20" />}
+            </button>
             <Link
               href="/blogs"
-              className="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold uppercase tracking-widest text-black hover:text-[#D02020] transition-colors dark:text-white dark:hover:text-[#D02020]"
             >
               <BookOpen className="h-4 w-4" />
               Blogs
             </Link>
-            <div className="h-5 w-px bg-border" />
+            <div className="h-5 w-px bg-black dark:bg-gray-500" />
             <Button
               variant="outline"
               size="sm"
@@ -175,19 +209,18 @@ function HomePageInner({
               Settings
             </Button>
             <Button
-              variant="outline"
+              variant="primary"
               size="sm"
               onClick={() => setThreadId(null)}
               disabled={!threadId}
-              className="border-[#c2381b] bg-[#c2381b] text-white hover:bg-[#c2381b]/80"
             >
               <SquarePen className="mr-1.5 h-4 w-4" />
-              New Thread
+              New Story
             </Button>
           </div>
         </header>
 
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 overflow-hidden border-black dark:border-gray-500">
           <ResizablePanelGroup
             direction="horizontal"
             autoSaveId="standalone-chat"
@@ -199,7 +232,7 @@ function HomePageInner({
                   order={1}
                   defaultSize={25}
                   minSize={20}
-                  className="relative min-w-[380px]"
+                  className="relative min-w-[380px] border-r-4 border-black dark:border-gray-500"
                 >
                   <ThreadList
                     onThreadSelect={async (id) => {
@@ -210,7 +243,7 @@ function HomePageInner({
                     onInterruptCountChange={setInterruptCount}
                   />
                 </ResizablePanel>
-                <ResizableHandle />
+                <ResizableHandle className="w-1 bg-black dark:bg-gray-500" />
               </>
             )}
 
@@ -241,7 +274,6 @@ function HomePageContent() {
   const [configDialogOpen, setConfigDialogOpen] = useState(false);
   const [assistantId, setAssistantId] = useQueryState("assistantId");
 
-  // On mount, check for saved config, otherwise show config dialog
   useEffect(() => {
     const savedConfig = getConfig();
     if (savedConfig) {
@@ -255,7 +287,6 @@ function HomePageContent() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // If config changes, update the assistantId
   useEffect(() => {
     if (config && !assistantId) {
       setAssistantId(config.assistantId);
@@ -271,38 +302,11 @@ function HomePageContent() {
     config?.langsmithApiKey || process.env.NEXT_PUBLIC_LANGSMITH_API_KEY || "";
 
   if (!config) {
-    return (
-      <>
-        <ConfigDialog
-          open={configDialogOpen}
-          onOpenChange={setConfigDialogOpen}
-          onSave={handleSaveConfig}
-        />
-        <div className="flex h-screen items-center justify-center bg-gradient-to-b from-background to-[#efe6d6] dark:from-background dark:to-[#211c15]">
-          <div className="text-center">
-            <PenLine className="mx-auto mb-4 h-10 w-10 text-[#c2381b]" />
-            <p className="font-mono-label mb-3 text-[11px] text-[#c2381b]">
-              A Multi-Agent Press
-            </p>
-            <h1 className="font-display text-5xl font-semibold text-[#1b1813] dark:text-[#e0683f]">
-              Welcome to BlogCrew
-            </h1>
-            <p className="mt-3 text-muted-foreground">
-              Research, write, edit &amp; illustrate — end to end.
-            </p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Configure your LangGraph deployment to get started
-            </p>
-            <Button
-              onClick={() => setConfigDialogOpen(true)}
-              className="mt-6 border-[#c2381b] bg-[#c2381b] text-white hover:bg-[#c2381b]/80"
-            >
-              Open Configuration
-            </Button>
-          </div>
-        </div>
-      </>
-    );
+    return <BauhausWelcomeScreen
+      configDialogOpen={configDialogOpen}
+      setConfigDialogOpen={setConfigDialogOpen}
+      handleSaveConfig={handleSaveConfig}
+    />;
   }
 
   return (
@@ -320,18 +324,100 @@ function HomePageContent() {
   );
 }
 
+function BauhausWelcomeScreen({
+  configDialogOpen,
+  setConfigDialogOpen,
+  handleSaveConfig,
+}: {
+  configDialogOpen: boolean;
+  setConfigDialogOpen: (open: boolean) => void;
+  handleSaveConfig: (config: StandaloneConfig) => void;
+}) {
+  return (
+    <>
+      <ConfigDialog
+        open={configDialogOpen}
+        onOpenChange={setConfigDialogOpen}
+        onSave={handleSaveConfig}
+      />
+      <div className="relative flex h-screen items-center justify-center bg-[#F0F0F0] overflow-hidden dark:bg-[#0a0a0a]">
+        {/* Geometric background decoration */}
+        <div className="absolute top-[-10vh] right-[-5vw] w-[50vmin] h-[50vmin] rounded-full border-8 border-black/10 dark:border-white/5" />
+        <div className="absolute bottom-[-8vh] left-[-8vw] w-[40vmin] h-[40vmin] border-8 border-black/10 rotate-45 dark:border-white/5" />
+        <div
+          className="absolute top-[20vh] left-[10vw] w-0 h-0 opacity-10"
+          style={{
+            borderLeft: "8vmin solid transparent",
+            borderRight: "8vmin solid transparent",
+            borderBottom: "14vmin solid #121212",
+          }}
+        />
+
+        <div className="relative text-center">
+          <div className="flex justify-center gap-2 mb-6">
+            <span className="block w-4 h-4 rounded-full bg-[#D02020]" />
+            <span className="block w-4 h-4 bg-[#1040C0]" />
+            <span
+              className="block w-0 h-0"
+              style={{
+                borderLeft: "8px solid transparent",
+                borderRight: "8px solid transparent",
+                borderBottom: "16px solid #F0C020",
+              }}
+            />
+          </div>
+
+          <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/50 dark:text-white/50 mb-4">
+            A Multi-Agent Press
+          </p>
+          <h1 className="text-[clamp(3rem,12vw,8rem)] font-black uppercase tracking-tighter leading-[0.85] text-black dark:text-white">
+            BlogCrew
+          </h1>
+          <p className="mt-4 text-lg font-medium text-black/60 dark:text-white/60 max-w-md mx-auto">
+            Research, write, edit &amp; illustrate — end to end.
+          </p>
+          <p className="mt-1 text-sm font-medium text-black/40 dark:text-white/40">
+            Configure your LangGraph deployment to get started
+          </p>
+          <div className="mt-8 flex justify-center gap-4">
+            <Button
+              onClick={() => setConfigDialogOpen(true)}
+              variant="primary"
+              size="lg"
+            >
+              Open Configuration
+            </Button>
+            <Link href="/blogs">
+              <Button variant="outline" size="lg">
+                <BookOpen className="mr-2 h-4 w-4" />
+                Read Blogs
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
 export default function HomePage() {
   return (
-      <Suspense
-        fallback={
-          <div className="flex h-screen items-center justify-center bg-gradient-to-b from-background to-[#efe6d6] dark:from-background dark:to-[#211c15]">
-            <div className="text-center">
-              <PenLine className="mx-auto mb-3 h-8 w-8 animate-pulse text-[#c2381b]" />
-              <p className="text-muted-foreground">Loading BlogCrew...</p>
+    <Suspense
+      fallback={
+        <div className="flex h-screen items-center justify-center bg-[#F0F0F0] dark:bg-[#0a0a0a]">
+          <div className="text-center">
+            <div className="flex justify-center gap-1.5 mb-4">
+              <span className="block w-3 h-3 rounded-full bg-[#D02020] animate-pulse" />
+              <span className="block w-3 h-3 bg-[#1040C0] animate-pulse" style={{ animationDelay: "150ms" }} />
+              <span className="block w-3 h-3 rounded-full bg-[#F0C020] animate-pulse" style={{ animationDelay: "300ms" }} />
             </div>
+            <p className="text-sm font-bold uppercase tracking-widest text-black/50 dark:text-white/50">
+              Loading BlogCrew...
+            </p>
           </div>
-        }
-      >
+        </div>
+      }
+    >
       <HomePageContent />
     </Suspense>
   );

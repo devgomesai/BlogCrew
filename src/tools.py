@@ -105,13 +105,13 @@ def fetch_webpage_content(url: str, timeout: float = _HTTPX_TIMEOUT) -> str:
 @tool(parse_docstring=True)
 @retry(
     stop=stop_after_attempt(3),
-    wait=wait_exponential(multiplier=1, min=1, max=10),
+    wait=wait_exponential(multiplier=1, min=3, max=10),
     retry=retry_if_exception_type((httpx.HTTPError, httpx.TimeoutException)),
     reraise=True,
 )
 def web_search(
     query: str,
-    max_results: Annotated[int, InjectedToolArg] = 1,
+    max_results: Annotated[int, InjectedToolArg] = 3,
     topic: Annotated[
         Literal["general", "news", "finance"], InjectedToolArg
     ] = "general",

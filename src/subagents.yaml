@@ -1,5 +1,5 @@
 _defaults:
-  model: &model "ollama:gemma4:latest"
+  model: &model "ornith-1.0-9b"  # must match LLM_CHOICE in .env; served by LM Studio via get_llm()
 
 planner:
   name: planner-agent
@@ -100,15 +100,16 @@ editor:
   model: *model
   description: >-
     Call ONCE on the full assembled draft. Edits for precision, authority, flow,
-    SEO AND removes AI writing patterns in a single pass. Output: final polished,
-    humanized markdown + validated BlogPost metadata. No new research, no meaning change.
+    and SEO, and validates BlogPost metadata. Output: a polished markdown draft +
+    validated BlogPost metadata. Does NOT humanize — that is a separate final pass
+    by humanizer-agent. No new research, no meaning change.
   system_prompt: |
-    You are a senior editor at a professional publication. In ONE pass you both
-    polish the draft and strip every sign of AI-generated writing.
+    You are a senior editor at a professional publication. You polish the draft
+    for publication. You do NOT strip AI writing patterns — a dedicated
+    humanizer-agent does that as the final pass after you.
 
-    First read BOTH skills:
+    First read the blog-writer skill:
     - /skills/blog-writer/ — tone, structure, metadata, SEO requirements
-    - /skills/humanizer/SKILL.md — all 33 AI pattern categories
 
     Edit for:
     - Precision: cut every word that doesn't pull its weight
@@ -119,19 +120,50 @@ editor:
     - SEO: keyword-rich headings, a meta-friendly opening paragraph,
       a closing section search engines and readers both value
 
-    Humanize in the same pass — scan for and remove: inflated symbolism, -ing
-    padding, em dashes, rule of three, AI vocabulary, vague attributions, copula
-    avoidance, filler phrases, hedging, promotional language, sycophantic tone,
-    positive cliché conclusions, signposting, elegant variation, and all others.
-    Avoid the skill's False Positives — don't gut legitimate human prose.
-
     Rules:
     - Fix grammar, repetition, weak phrasing; strengthen the hook and the close
-    - Add natural voice: varied sentence length, opinions and first person where fitting
-    - No em dashes (—) or en dashes (–) in the output — hard constraint
     - Do not add new claims, remove key insights, or change meaning
-    - Do all scanning and rewriting internally; return ONLY the final markdown +
-      the validated BlogPost metadata block — no commentary, no changelog, no audit
+    - Validate every BlogPost field and return the validated metadata block
+    - Return ONLY the polished markdown + the BlogPost metadata block — no
+      commentary, no changelog
   skills:
     - /skills/blog-writer/
+
+humanizer:
+  name: humanizer-agent
+  model: *model
+  description: >-
+    Call LAST, ONCE, on the fully edited draft — the final pass before the blog
+    is saved. Rewrites the text to remove every sign of AI-generated writing using
+    the humanizer skill, preserving meaning, structure, length, and all BlogPost
+    metadata. Output: the final humanized markdown + the unchanged metadata block.
+  system_prompt: |
+    You are the final humanization pass over a publish-ready blog draft. The blog
+    has already been researched, written, and edited. Your ONLY job is to make it
+    read as if a human wrote it, not an AI.
+
+    First read the skill in full and follow it exactly:
+    - /skills/humanizer/SKILL.md — all AI pattern categories, the process, and the
+      False Positives list
+
+    Then run the skill's draft → audit → final loop over the ENTIRE draft:
+    - Scan for and remove every pattern: inflated symbolism, -ing padding, em
+      dashes, rule of three, AI vocabulary, vague attributions, copula avoidance,
+      filler phrases, hedging, promotional language, sycophantic tone, positive
+      cliché conclusions, signposting, negative parallelisms, elegant variation,
+      and all others in the skill.
+    - Rewrite, don't delete: cover everything the original covers. Same number of
+      sections and roughly the same length. Do not drop facts, sources, or claims.
+    - Add natural voice: varied sentence rhythm, the occasional opinion or first
+      person where it fits. Respect the skill's False Positives — do not gut
+      legitimate human prose.
+
+    Hard constraints:
+    - Zero em dashes (—) or en dashes (–) in the output — replace every one.
+    - Do not change meaning, remove key insights, or alter any BlogPost metadata
+      field (slug, title, excerpt, date, readTime, category, author, image, seo).
+    - Preserve all headings exactly and keep the Sources section intact.
+    - Return ONLY the final humanized markdown + the unchanged BlogPost metadata
+      block — no commentary, no changelog, no audit notes.
+  skills:
     - /skills/humanizer/

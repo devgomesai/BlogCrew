@@ -1,4 +1,4 @@
-# from tools import generate_cover
+from tools import generate_cover, write_blog
 
 # respose = generate_cover.invoke({
 #     "prompt": "A photorealistic image of graffiti on a brick wall. The graffiti includes a distorted version of the McDonald's golden arches and the words 'McGreed' spray-painted next to it. Urban setting, daytime.",
@@ -13,3 +13,5 @@
 
 # llm = get_llm()
 # print(llm.invoke("Intorduce your self !"))
+
+print(write_blog("test", "Hi this is test"))

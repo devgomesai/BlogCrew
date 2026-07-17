@@ -21,8 +21,8 @@ const PIPELINE_CONFIG: Record<string, { icon: React.ElementType; color: string; 
   },
   "researcher-agent": {
     icon: Globe,
-    color: "text-blue-600 dark:text-blue-400",
-    bgColor: "bg-blue-100 dark:bg-blue-900/30",
+    color: "text-yellow-600 dark:text-yellow-400",
+    bgColor: "bg-yellow-100 dark:bg-yellow-900/30",
     label: "Researcher",
   },
   "writer-agent": {
@@ -106,7 +106,7 @@ export const SubAgentIndicator = React.memo<SubAgentIndicatorProps>(
               </div>
               {(isActive) && (
                 <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#c2381b]" />
+                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#eab308]" />
                   Working...
                 </span>
               )}

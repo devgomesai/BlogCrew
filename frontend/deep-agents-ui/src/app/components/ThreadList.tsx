@@ -71,7 +71,7 @@ function StatusFilterItem({
       />
       {label}
       {badge !== undefined && badge > 0 && (
-        <span className="ml-1 inline-flex items-center justify-center rounded-full bg-red-600 px-1.5 py-0.5 text-xs font-bold leading-none text-white">
+        <span className="ml-1 inline-flex items-center justify-center rounded-full bg-destructive px-1.5 py-0.5 text-xs font-bold leading-none text-destructive-foreground">
           {badge}
         </span>
       )}
@@ -82,7 +82,7 @@ function StatusFilterItem({
 function ErrorState({ message }: { message: string }) {
   return (
     <div className="flex flex-col items-center justify-center p-8 text-center">
-      <p className="text-sm text-red-600">Failed to load threads</p>
+      <p className="text-sm text-destructive">Failed to load threads</p>
       <p className="mt-1 text-xs text-muted-foreground">{message}</p>
     </div>
   );
@@ -104,7 +104,7 @@ function LoadingState() {
 function EmptyState() {
   return (
     <div className="flex flex-col items-center justify-center p-8 text-center">
-      <MessageSquare className="mb-2 h-12 w-12 text-gray-300" />
+      <MessageSquare className="mb-2 h-12 w-12 text-muted-foreground/30" />
       <p className="text-sm text-muted-foreground">No threads found</p>
     </div>
   );
@@ -140,7 +140,6 @@ export function ThreadList({
   const isEmpty = threads.data?.at(0)?.length === 0;
   const isReachingEnd = isEmpty || (threads.data?.at(-1)?.length ?? 0) < 20;
 
-  // Group threads by time and status
   const grouped = useMemo(() => {
     const now = new Date();
     const groups: Record<keyof typeof GROUP_LABELS, ThreadItem[]> = {
@@ -178,8 +177,6 @@ export function ThreadList({
     return flattened.filter((t) => t.status === "interrupted").length;
   }, [flattened]);
 
-  // Expose thread list revalidation to parent component
-  // Use refs to create a stable callback that always calls the latest mutate function
   const onMutateReadyRef = useRef(onMutateReady);
   const mutateRef = useRef(threads.mutate);
 
@@ -197,11 +194,9 @@ export function ThreadList({
 
   useEffect(() => {
     onMutateReadyRef.current?.(mutateFn);
-    // Only run once on mount to avoid infinite loops
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Notify parent of interrupt count changes
   useEffect(() => {
     onInterruptCountChange?.(interruptedCount);
   }, [interruptedCount, onInterruptCountChange]);
@@ -210,9 +205,9 @@ export function ThreadList({
     <div className="absolute inset-0 flex flex-col">
       <div className="grid flex-shrink-0 grid-cols-[1fr_auto] items-center gap-3 border-b border-border p-4">
         <div className="flex items-center gap-2">
-          <PenLine className="h-4 w-4 text-[#eab308]" />
-          <h2 className="text-base font-bold tracking-tight text-[var(--color-secondary)]">
-            Blog Posts
+          <PenLine className="h-4 w-4 text-primary" />
+          <h2 className="text-base font-semibold tracking-tight text-foreground">
+            Threads
           </h2>
         </div>
         <div className="flex items-center gap-2">
@@ -309,13 +304,12 @@ export function ThreadList({
                           "grid w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-3 text-left transition-colors duration-200",
                           "hover:bg-accent",
                           currentThreadId === thread.id
-                            ? "border border-primary bg-accent hover:bg-accent"
+                            ? "border border-primary/30 bg-accent"
                             : "border border-transparent bg-transparent"
                         )}
                         aria-current={currentThreadId === thread.id}
                       >
                         <div className="min-w-0 flex-1">
-                          {/* Title + Timestamp Row */}
                           <div className="mb-1 flex items-center justify-between">
                             <h3 className="truncate text-sm font-semibold">
                               {thread.title}
@@ -324,7 +318,6 @@ export function ThreadList({
                               {formatTime(thread.updatedAt)}
                             </span>
                           </div>
-                          {/* Description + Status Row */}
                           <div className="flex items-center justify-between">
                             <p className="flex-1 truncate text-sm text-muted-foreground">
                               {thread.description}

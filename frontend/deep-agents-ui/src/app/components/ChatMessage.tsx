@@ -120,9 +120,9 @@ export const ChatMessage = React.memo<ChatMessageProps>(
                 ) : hasContent ? (
                   <>
                     {(!isUser && messageContent.includes("slug") && messageContent.includes("BlogPost") && messageContent.includes("---")) && (
-                      <div className="mb-4 flex items-center gap-2 rounded-md border border-[#eab308]/20 bg-[#eab308]/5 px-3 py-2">
-                        <FileText className="h-4 w-4 text-[#eab308]" />
-                        <span className="text-xs font-medium text-[#1a1a1a] dark:text-[#fde047]">
+                      <div className="mb-4 flex items-center gap-2 rounded-md border border-primary/20 bg-primary/5 px-3 py-2">
+                        <FileText className="h-4 w-4 text-primary" />
+                        <span className="text-xs font-medium text-foreground">
                           Blog Post Generated
                         </span>
                       </div>
@@ -176,8 +176,8 @@ export const ChatMessage = React.memo<ChatMessageProps>(
                   </div>
                   {isSubAgentExpanded(subAgent.id) && (
                     <div className="w-full max-w-full">
-                      <div className="bg-surface border-border-light rounded-md border p-4">
-                        <h4 className="text-primary/70 mb-2 text-xs font-semibold uppercase tracking-wider">
+                      <div className="rounded-lg border border-border bg-card p-4">
+                        <h4 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                           Input
                         </h4>
                         <div className="mb-4">
@@ -187,7 +187,7 @@ export const ChatMessage = React.memo<ChatMessageProps>(
                         </div>
                         {subAgent.output && (
                           <>
-                            <h4 className="text-primary/70 mb-2 text-xs font-semibold uppercase tracking-wider">
+                            <h4 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                               Output
                             </h4>
                             <MarkdownContent

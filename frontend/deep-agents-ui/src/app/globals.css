@@ -14,84 +14,61 @@
   }
 
   :root {
-    /* ===== BAUHAUS THEME (light) ===========================================
-       Constructivist geometric design. Pure primaries, stark black/white,
-       thick borders, hard offset shadows, binary radius. */
+    --radius: 0.5rem;
 
-    /* Bauhaus hex tokens */
-    --bh-red: #D02020;
-    --bh-blue: #1040C0;
-    --bh-yellow: #F0C020;
-    --bh-black: #121212;
-    --bh-white: #F0F0F0;
-    --bh-muted: #E0E0E0;
-    --bh-card: #FFFFFF;
-
-    /* shadcn/ui HSL compatibility layer */
-    --radius: 0;
-    --background: 0 0% 94%;
-    --foreground: 0 0% 7%;
+    --background: 0 0% 98%;
+    --foreground: 0 0% 9%;
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 7%;
+    --card-foreground: 0 0% 9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 7%;
-    --primary: 0 73% 47%;
+    --popover-foreground: 0 0% 9%;
+    --primary: 221 83% 53%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 223 85% 41%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 0 0% 88%;
-    --muted-foreground: 0 0% 40%;
-    --accent: 46 87% 53%;
-    --accent-foreground: 0 0% 7%;
-    --destructive: 0 73% 47%;
+    --secondary: 0 0% 92%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 94%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 0 0% 92%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 7%;
-    --input: 0 0% 7%;
-    --ring: 0 73% 47%;
+    --border: 0 0% 85%;
+    --input: 0 0% 85%;
+    --ring: 221 83% 53%;
     --sidebar: 0 0% 100%;
-    --chart-1: 0 73% 47%;
-    --chart-2: 223 85% 41%;
-    --chart-3: 46 87% 53%;
-    --chart-4: 0 0% 7%;
-    --chart-5: 0 0% 50%;
+    --chart-1: 221 83% 53%;
+    --chart-2: 0 0% 50%;
+    --chart-3: 0 0% 30%;
+    --chart-4: 0 0% 70%;
+    --chart-5: 0 0% 60%;
   }
 
   .dark {
-    /* BAUHAUS DARK: black canvas, same primaries pop, lighter borders */
-    --bh-red: #E04040;
-    --bh-blue: #3060E0;
-    --bh-yellow: #F5D040;
-    --bh-black: #0a0a0a;
-    --bh-white: #e8e8e8;
-    --bh-muted: #2a2a2a;
-    --bh-card: #1a1a1a;
-
-    --radius: 0;
     --background: 0 0% 4%;
-    --foreground: 0 0% 91%;
+    --foreground: 0 0% 93%;
     --card: 0 0% 10%;
-    --card-foreground: 0 0% 91%;
+    --card-foreground: 0 0% 93%;
     --popover: 0 0% 10%;
-    --popover-foreground: 0 0% 91%;
-    --primary: 0 73% 56%;
+    --popover-foreground: 0 0% 93%;
+    --primary: 217 91% 60%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 223 70% 54%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 0 0% 15%;
+    --secondary: 0 0% 16%;
+    --secondary-foreground: 0 0% 93%;
+    --muted: 0 0% 13%;
     --muted-foreground: 0 0% 60%;
-    --accent: 46 85% 60%;
-    --accent-foreground: 0 0% 7%;
-    --destructive: 0 73% 56%;
+    --accent: 0 0% 16%;
+    --accent-foreground: 0 0% 93%;
+    --destructive: 0 63% 50%;
     --destructive-foreground: 0 0% 100%;
     --border: 0 0% 20%;
     --input: 0 0% 20%;
-    --ring: 0 73% 56%;
+    --ring: 217 91% 60%;
     --sidebar: 0 0% 10%;
-    --chart-1: 0 73% 56%;
-    --chart-2: 223 70% 54%;
-    --chart-3: 46 85% 60%;
-    --chart-4: 0 0% 91%;
-    --chart-5: 0 0% 50%;
+    --chart-1: 217 91% 60%;
+    --chart-2: 0 0% 50%;
+    --chart-3: 0 0% 70%;
+    --chart-4: 0 0% 30%;
+    --chart-5: 0 0% 40%;
   }
 }
 
@@ -105,7 +82,7 @@ html,
 body {
   height: 100%;
   font-size: 1rem;
-  line-height: 1.5;
+  line-height: 1.6;
   color: hsl(var(--foreground));
   background-color: hsl(var(--background));
   -webkit-font-smoothing: antialiased;
@@ -113,18 +90,16 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-weight: 900;
-  line-height: 0.9;
-  letter-spacing: -0.04em;
-  text-transform: uppercase;
+  font-weight: 600;
+  line-height: 1.3;
   color: hsl(var(--foreground));
 }
 
-h1 { font-size: clamp(2.5rem, 8vw, 6rem); }
-h2 { font-size: clamp(2rem, 6vw, 4rem); }
-h3 { font-size: clamp(1.5rem, 4vw, 2.5rem); }
-h4 { font-size: 1.5rem; }
-h5 { font-size: 1.25rem; }
+h1 { font-size: clamp(2rem, 5vw, 3.5rem); }
+h2 { font-size: clamp(1.5rem, 4vw, 2.5rem); }
+h3 { font-size: clamp(1.25rem, 3vw, 2rem); }
+h4 { font-size: 1.25rem; }
+h5 { font-size: 1.1rem; }
 h6 { font-size: 1rem; }
 
 p {
@@ -140,12 +115,12 @@ a {
 }
 
 code {
-  font-family: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
+  font-family: "Anthropic Mono", "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
   font-size: 0.9em;
 }
 
 pre {
-  font-family: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
+  font-family: "Anthropic Mono", "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
   font-size: 0.875rem;
   line-height: 1.75;
   padding: 1rem;
@@ -188,98 +163,6 @@ button {
   border-width: 0;
 }
 
-/* ---- BAUHAUS UTILITY CLASSES ------------------------------------------- */
-
-.bauhaus-dot-grid {
-  background-image: radial-gradient(#121212 1.5px, transparent 1.5px);
-  background-size: 20px 20px;
-}
-.dark .bauhaus-dot-grid {
-  background-image: radial-gradient(#444 1.5px, transparent 1.5px);
-}
-
-.bauhaus-deco-circle {
-  width: 12px;
-  height: 12px;
-  border-radius: 9999px;
-}
-.bauhaus-deco-square {
-  width: 12px;
-  height: 12px;
-}
-.bauhaus-deco-triangle {
-  width: 0;
-  height: 0;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-bottom: 12px solid currentColor;
-}
-
-/* Section dividers */
-.bauhaus-divider {
-  border-bottom: 4px solid #121212;
-}
-.dark .bauhaus-divider {
-  border-bottom: 4px solid #333;
-}
-
-/* Hard shadow by border */
-.shadow-hard {
-  box-shadow: 4px 4px 0px 0px #121212;
-}
-.dark .shadow-hard {
-  box-shadow: 4px 4px 0px 0px #333;
-}
-
-.shadow-hard-lg {
-  box-shadow: 8px 8px 0px 0px #121212;
-}
-.dark .shadow-hard-lg {
-  box-shadow: 8px 8px 0px 0px #333;
-}
-
-/* Button press effect */
-.btn-press:active {
-  transform: translate(2px, 2px);
-  box-shadow: none !important;
-}
-
-/* Geometric card decoration */
-.geo-dot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 9999px;
-}
-
-/* Image treatment */
-.bauhaus-img {
-  filter: grayscale(100%);
-  transition: filter 300ms ease;
-}
-.bauhaus-img:hover,
-.bauhaus-img-wrapper:hover .bauhaus-img {
-  filter: grayscale(0%);
-}
-
-/* Color blocks for sections */
-.bg-bauhaus-red { background-color: #D02020; }
-.bg-bauhaus-blue { background-color: #1040C0; }
-.bg-bauhaus-yellow { background-color: #F0C020; }
-.bg-bauhaus-black { background-color: #121212; }
-.bg-bauhaus-white { background-color: #F0F0F0; }
-
-.dark .bg-bauhaus-red { background-color: #E04040; }
-.dark .bg-bauhaus-blue { background-color: #3060E0; }
-.dark .bg-bauhaus-yellow { background-color: #F5D040; }
-.dark .bg-bauhaus-black { background-color: #0a0a0a; }
-.dark .bg-bauhaus-white { background-color: #1a1a1a; }
-
-/* Text on colored backgrounds */
-.text-on-primary { color: white; }
-.text-on-yellow { color: #121212; }
-.dark .text-on-yellow { color: #0a0a0a; }
-
 /* --- scrollbar ------------------------------------------------------------ */
 .scrollbar-pretty {
   overflow-y: scroll;
@@ -287,10 +170,10 @@ button {
 .scrollbar-pretty::-webkit-scrollbar { width: 6px; }
 .scrollbar-pretty::-webkit-scrollbar-track { background: transparent; }
 .scrollbar-pretty::-webkit-scrollbar-thumb {
-  background-color: #888;
-  border-radius: 0;
+  background-color: #bbb;
+  border-radius: 3px;
 }
-.scrollbar-pretty::-webkit-scrollbar-thumb:hover { background-color: #555; }
+.scrollbar-pretty::-webkit-scrollbar-thumb:hover { background-color: #888; }
 
 /* Global diff highlighting */
 .word-added {

@@ -1,14 +1,7 @@
-import { Outfit } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import "./globals.css";
-
-const outfit = Outfit({
-  subsets: ["latin"],
-  variable: "--font-outfit",
-  display: "swap",
-});
 
 export default function RootLayout({
   children,
@@ -20,7 +13,17 @@ export default function RootLayout({
       lang="en"
       suppressHydrationWarning
     >
-      <body className={`${outfit.variable} font-sans`} suppressHydrationWarning>
+      <head>
+        <link
+          rel="preconnect"
+          href="https://cdn.jsdelivr.net"
+        />
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/gh/devchauhann/fonts@v1.1.0/cdn/v1/css/all.css"
+        />
+      </head>
+      <body className="font-sans" suppressHydrationWarning>
         <ThemeProvider>
           <NuqsAdapter>{children}</NuqsAdapter>
         </ThemeProvider>

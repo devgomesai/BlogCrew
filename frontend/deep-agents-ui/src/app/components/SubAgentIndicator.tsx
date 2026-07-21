@@ -16,31 +16,31 @@ const PIPELINE_CONFIG: Record<string, { icon: React.ElementType; color: string; 
   "planner-agent": {
     icon: Sparkles,
     color: "text-emerald-600 dark:text-emerald-400",
-    bgColor: "bg-emerald-100 dark:bg-emerald-900/30",
+    bgColor: "bg-emerald-50 dark:bg-emerald-950/40",
     label: "Planner",
   },
   "researcher-agent": {
     icon: Globe,
-    color: "text-yellow-600 dark:text-yellow-400",
-    bgColor: "bg-yellow-100 dark:bg-yellow-900/30",
+    color: "text-sky-600 dark:text-sky-400",
+    bgColor: "bg-sky-50 dark:bg-sky-950/40",
     label: "Researcher",
   },
   "writer-agent": {
     icon: PenLine,
     color: "text-amber-600 dark:text-amber-400",
-    bgColor: "bg-amber-100 dark:bg-amber-900/30",
+    bgColor: "bg-amber-50 dark:bg-amber-950/40",
     label: "Writer",
   },
   "editor-agent": {
     icon: CheckSquare,
-    color: "text-violet-700 dark:text-violet-300",
-    bgColor: "bg-violet-200 dark:bg-violet-900/40",
+    color: "text-violet-600 dark:text-violet-400",
+    bgColor: "bg-violet-50 dark:bg-violet-950/40",
     label: "Editor",
   },
   "humanizer-agent": {
     icon: PenLine,
     color: "text-rose-600 dark:text-rose-400",
-    bgColor: "bg-rose-100 dark:bg-rose-900/30",
+    bgColor: "bg-rose-50 dark:bg-rose-950/40",
     label: "Humanizer",
   },
 };
@@ -63,7 +63,7 @@ export const SubAgentIndicator = React.memo<SubAgentIndicatorProps>(
     const isCompleted = subAgent.status === "completed";
 
     return (
-      <div className="w-full max-w-full overflow-hidden rounded-lg border border-border/60 bg-card shadow-xs outline-none">
+      <div className="w-full max-w-full overflow-hidden rounded-lg border border-border bg-card">
         <Button
           variant="ghost"
           size="sm"
@@ -71,7 +71,6 @@ export const SubAgentIndicator = React.memo<SubAgentIndicatorProps>(
           className="flex w-full items-center justify-between gap-2 border-none px-4 py-2.5 text-left shadow-none outline-none transition-colors duration-200 hover:bg-accent/50"
         >
           <div className="flex w-full items-center gap-3">
-            {/* Pipeline indicator dots */}
             <div className="flex items-center gap-1.5">
               {PIPELINE_ORDER.map((agent, i) => {
                 const agentConfig = PIPELINE_CONFIG[agent];
@@ -86,7 +85,7 @@ export const SubAgentIndicator = React.memo<SubAgentIndicatorProps>(
                       "flex h-6 w-6 items-center justify-center rounded-full transition-all duration-300",
                       isPast && isCompleted ? "bg-green-500 text-white" : "",
                       isPast && !isCompleted ? "text-muted-foreground" : "",
-                      isCurrent && isActive ? `${agentConfig.bgColor} ${agentConfig.color} ring-2 ring-offset-1 ring-offset-card` : "",
+                      isCurrent && isActive ? `${agentConfig.bgColor} ${agentConfig.color} ring-2 ring-ring/30` : "",
                       isCurrent && !isActive ? `${agentConfig.bgColor} ${agentConfig.color}` : "",
                       isFuture ? "bg-muted text-muted-foreground/40" : ""
                     )}
@@ -100,13 +99,13 @@ export const SubAgentIndicator = React.memo<SubAgentIndicatorProps>(
             <div className="flex items-center gap-2">
               <div className={cn("flex items-center gap-1.5 rounded-full px-2.5 py-0.5", config.bgColor)}>
                 <Icon className={cn("h-3.5 w-3.5", config.color)} />
-                <span className={cn("text-xs font-semibold tracking-wide", config.color)}>
+                <span className={cn("text-xs font-medium", config.color)}>
                   {config.label}
                 </span>
               </div>
               {(isActive) && (
                 <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#eab308]" />
+                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
                   Working...
                 </span>
               )}

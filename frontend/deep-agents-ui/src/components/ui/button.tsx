@@ -4,26 +4,24 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap font-bold uppercase tracking-wider transition-all duration-200 ease-out border-2 border-black disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive btn-press",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium text-sm transition-all duration-200 ease-out rounded-lg border border-border disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
   {
     variants: {
       variant: {
         default:
-          "bg-[#D02020] text-white border-black shadow-[4px_4px_0px_0px_#121212] hover:bg-[#D02020]/90",
+          "bg-primary text-primary-foreground border-primary hover:bg-primary/90 shadow-sm",
         primary:
-          "bg-[#D02020] text-white border-black shadow-[4px_4px_0px_0px_#121212] hover:bg-[#D02020]/90",
+          "bg-primary text-primary-foreground border-primary hover:bg-primary/90 shadow-sm",
         secondary:
-          "bg-[#1040C0] text-white border-black shadow-[4px_4px_0px_0px_#121212] hover:bg-[#1040C0]/90",
-        yellow:
-          "bg-[#F0C020] text-black border-black shadow-[4px_4px_0px_0px_#121212] hover:bg-[#F0C020]/90",
+          "bg-secondary text-secondary-foreground border-secondary hover:bg-secondary/80",
         outline:
-          "bg-white text-black border-black shadow-[4px_4px_0px_0px_#121212] hover:bg-gray-100",
+          "bg-transparent text-foreground border-border hover:bg-accent hover:text-accent-foreground",
         ghost:
-          "border-none text-black shadow-none hover:bg-gray-200 dark:text-white dark:hover:bg-white/10",
+          "border-transparent text-foreground hover:bg-accent hover:text-accent-foreground",
         destructive:
-          "bg-[#D02020] text-white border-black shadow-[4px_4px_0px_0px_#121212] hover:bg-[#D02020]/80",
+          "bg-destructive text-destructive-foreground border-destructive hover:bg-destructive/90 shadow-sm",
         link:
-          "border-none text-[#D02020] underline-offset-4 hover:underline shadow-none",
+          "border-transparent text-primary underline-offset-4 hover:underline",
       },
       size: {
         default: "h-10 px-5 py-2 has-[>svg]:px-3",
@@ -32,7 +30,7 @@ const buttonVariants = cva(
         icon: "h-10 w-10 p-0",
       },
       shape: {
-        square: "rounded-none",
+        square: "rounded-lg",
         pill: "rounded-full",
       },
     },

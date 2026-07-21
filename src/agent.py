@@ -87,7 +87,6 @@ blog_agent = create_deep_agent(
     memory=["/memory/AGENTS.md"],  # Memory file(s) agent can read/write
     tools=[write_blog, generate_cover],  # Tools exposed to the agent
     skills=["/skills/"],  # All the skills,
-    system_prompt="You are a Blog writer",
     subagents=load_subagents(BASE_DIR / "subagents.yaml"),  # Load subagents config
     backend=backend,
 )

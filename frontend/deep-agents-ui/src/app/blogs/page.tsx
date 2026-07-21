@@ -59,7 +59,7 @@ export default function BlogsPage() {
           <div className="blog-lead__media">
             {lead.hasImage ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={`/api/blogs/${lead.slug}/image`} alt={lead.title} className="bauhaus-img" />
+              <img src={`/api/blogs/${lead.slug}/image`} alt={lead.title} />
             ) : (
               <Glyph />
             )}
@@ -68,7 +68,7 @@ export default function BlogsPage() {
             <p className="blog-kicker">Lead Story · No. 01</p>
             <h2 className="blog-lead__title">{lead.title}</h2>
             <span className="blog-lead__readmore">
-              <span className="bar" /> Read the feature
+              Read the feature
             </span>
           </div>
         </Link>

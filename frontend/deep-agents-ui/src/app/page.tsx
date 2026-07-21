@@ -28,33 +28,6 @@ const SUGGESTED_TOPICS = [
   "A practical guide to Kubernetes for small teams",
 ];
 
-function GeometricLogo() {
-  return (
-    <div className="flex items-center gap-1">
-      <span className="block w-3 h-3 rounded-full bg-[#D02020]" />
-      <span className="block w-3 h-3 bg-[#1040C0]" />
-      <span
-        className="block w-0 h-0"
-        style={{
-          borderLeft: "6px solid transparent",
-          borderRight: "6px solid transparent",
-          borderBottom: "12px solid #F0C020",
-        }}
-      />
-    </div>
-  );
-}
-
-function BauhausDecoSquares() {
-  return (
-    <div className="flex gap-1.5">
-      <span className="block w-2 h-2 bg-[#D02020]" />
-      <span className="block w-2 h-2 bg-[#1040C0]" />
-      <span className="block w-2 h-2 bg-[#F0C020]" />
-    </div>
-  );
-}
-
 interface HomePageInnerProps {
   config: StandaloneConfig;
   configDialogOpen: boolean;
@@ -157,27 +130,23 @@ function HomePageInner({
         initialConfig={config}
       />
       <div className="flex h-screen flex-col">
-        {/* Bauhaus Header */}
-        <header className="sticky top-0 z-20 flex h-14 items-center justify-between border-b-4 border-black bg-white px-5 dark:bg-[#0a0a0a] dark:border-gray-500">
+        <header className="sticky top-0 z-20 flex h-14 items-center justify-between border-b border-border bg-background px-5">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <GeometricLogo />
-              <h1 className="font-black text-xl uppercase tracking-tighter text-black dark:text-white">
+              <span className="text-lg font-bold tracking-tight text-foreground">
                 BlogCrew
-              </h1>
-              <BauhausDecoSquares />
+              </span>
             </div>
             <Button
-              variant="outline"
+              variant="ghost"
               size="sm"
-              shape="pill"
               onClick={() => setSidebar(sidebar ? null : "1")}
               aria-pressed={!!sidebar}
             >
               <MessagesSquare className="mr-1.5 h-4 w-4" />
-              Newsroom
+              Threads
               {interruptCount > 0 && (
-                <span className="ml-1.5 inline-flex min-h-4 min-w-4 items-center justify-center rounded-full bg-[#D02020] px-1 text-[10px] text-white font-bold">
+                <span className="ml-1.5 inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-destructive px-1.5 text-[10px] font-bold text-destructive-foreground">
                   {interruptCount}
                 </span>
               )}
@@ -187,19 +156,19 @@ function HomePageInner({
             <button
               type="button"
               onClick={toggleTheme}
-              className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-black hover:bg-gray-100 transition-colors dark:border-gray-400 dark:hover:bg-white/10"
+              className="flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent transition-colors"
               aria-label={mounted ? (theme === "dark" ? "Switch to light mode" : "Switch to dark mode") : "Toggle theme"}
             >
-              {mounted ? (theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />) : <span className="block w-3 h-3 bg-black/20 rounded-full dark:bg-white/20" />}
+              {mounted ? (theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />) : <span className="block h-4 w-4 rounded bg-muted-foreground/20" />}
             </button>
             <Link
               href="/blogs"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold uppercase tracking-widest text-black hover:text-[#D02020] transition-colors dark:text-white dark:hover:text-[#D02020]"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               <BookOpen className="h-4 w-4" />
               Blogs
             </Link>
-            <div className="h-5 w-px bg-black dark:bg-gray-500" />
+            <div className="h-5 w-px bg-border" />
             <Button
               variant="outline"
               size="sm"
@@ -209,18 +178,18 @@ function HomePageInner({
               Settings
             </Button>
             <Button
-              variant="primary"
+              variant="default"
               size="sm"
               onClick={() => setThreadId(null)}
               disabled={!threadId}
             >
               <SquarePen className="mr-1.5 h-4 w-4" />
-              New Story
+              New Thread
             </Button>
           </div>
         </header>
 
-        <div className="flex-1 overflow-hidden border-black dark:border-gray-500">
+        <div className="flex-1 overflow-hidden">
           <ResizablePanelGroup
             direction="horizontal"
             autoSaveId="standalone-chat"
@@ -232,7 +201,7 @@ function HomePageInner({
                   order={1}
                   defaultSize={25}
                   minSize={20}
-                  className="relative min-w-[380px] border-r-4 border-black dark:border-gray-500"
+                  className="relative min-w-[380px] border-r border-border"
                 >
                   <ThreadList
                     onThreadSelect={async (id) => {
@@ -243,7 +212,7 @@ function HomePageInner({
                     onInterruptCountChange={setInterruptCount}
                   />
                 </ResizablePanel>
-                <ResizableHandle className="w-1 bg-black dark:bg-gray-500" />
+                <ResizableHandle className="w-px bg-border" />
               </>
             )}
 
@@ -302,7 +271,7 @@ function HomePageContent() {
     config?.langsmithApiKey || process.env.NEXT_PUBLIC_LANGSMITH_API_KEY || "";
 
   if (!config) {
-    return <BauhausWelcomeScreen
+    return <WelcomeScreen
       configDialogOpen={configDialogOpen}
       setConfigDialogOpen={setConfigDialogOpen}
       handleSaveConfig={handleSaveConfig}
@@ -324,7 +293,7 @@ function HomePageContent() {
   );
 }
 
-function BauhausWelcomeScreen({
+function WelcomeScreen({
   configDialogOpen,
   setConfigDialogOpen,
   handleSaveConfig,
@@ -340,49 +309,27 @@ function BauhausWelcomeScreen({
         onOpenChange={setConfigDialogOpen}
         onSave={handleSaveConfig}
       />
-      <div className="relative flex h-screen items-center justify-center bg-[#F0F0F0] overflow-hidden dark:bg-[#0a0a0a]">
-        {/* Geometric background decoration */}
-        <div className="absolute top-[-10vh] right-[-5vw] w-[50vmin] h-[50vmin] rounded-full border-8 border-black/10 dark:border-white/5" />
-        <div className="absolute bottom-[-8vh] left-[-8vw] w-[40vmin] h-[40vmin] border-8 border-black/10 rotate-45 dark:border-white/5" />
-        <div
-          className="absolute top-[20vh] left-[10vw] w-0 h-0 opacity-10"
-          style={{
-            borderLeft: "8vmin solid transparent",
-            borderRight: "8vmin solid transparent",
-            borderBottom: "14vmin solid #121212",
-          }}
-        />
-
-        <div className="relative text-center">
-          <div className="flex justify-center gap-2 mb-6">
-            <span className="block w-4 h-4 rounded-full bg-[#D02020]" />
-            <span className="block w-4 h-4 bg-[#1040C0]" />
-            <span
-              className="block w-0 h-0"
-              style={{
-                borderLeft: "8px solid transparent",
-                borderRight: "8px solid transparent",
-                borderBottom: "16px solid #F0C020",
-              }}
-            />
+      <div className="flex h-screen items-center justify-center bg-background">
+        <div className="text-center max-w-md mx-auto px-6">
+          <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10">
+            <span className="text-2xl font-bold text-primary">BC</span>
           </div>
-
-          <p className="text-xs font-bold uppercase tracking-[0.3em] text-black/50 dark:text-white/50 mb-4">
+          <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground mb-3">
             A Multi-Agent Press
           </p>
-          <h1 className="text-[clamp(3rem,12vw,8rem)] font-black uppercase tracking-tighter leading-[0.85] text-black dark:text-white">
+          <h1 className="text-4xl font-bold tracking-tight text-foreground">
             BlogCrew
           </h1>
-          <p className="mt-4 text-lg font-medium text-black/60 dark:text-white/60 max-w-md mx-auto">
+          <p className="mt-3 text-muted-foreground">
             Research, write, edit &amp; illustrate — end to end.
           </p>
-          <p className="mt-1 text-sm font-medium text-black/40 dark:text-white/40">
+          <p className="mt-1 text-sm text-muted-foreground/70">
             Configure your LangGraph deployment to get started
           </p>
-          <div className="mt-8 flex justify-center gap-4">
+          <div className="mt-8 flex justify-center gap-3">
             <Button
               onClick={() => setConfigDialogOpen(true)}
-              variant="primary"
+              variant="default"
               size="lg"
             >
               Open Configuration
@@ -404,14 +351,12 @@ export default function HomePage() {
   return (
     <Suspense
       fallback={
-        <div className="flex h-screen items-center justify-center bg-[#F0F0F0] dark:bg-[#0a0a0a]">
+        <div className="flex h-screen items-center justify-center bg-background">
           <div className="text-center">
-            <div className="flex justify-center gap-1.5 mb-4">
-              <span className="block w-3 h-3 rounded-full bg-[#D02020] animate-pulse" />
-              <span className="block w-3 h-3 bg-[#1040C0] animate-pulse" style={{ animationDelay: "150ms" }} />
-              <span className="block w-3 h-3 rounded-full bg-[#F0C020] animate-pulse" style={{ animationDelay: "300ms" }} />
+            <div className="mb-4 inline-flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10">
+              <span className="text-lg font-bold text-primary">BC</span>
             </div>
-            <p className="text-sm font-bold uppercase tracking-widest text-black/50 dark:text-white/50">
+            <p className="text-sm text-muted-foreground">
               Loading BlogCrew...
             </p>
           </div>

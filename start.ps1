@@ -26,13 +26,13 @@ Write-Host ""
 
 $Root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $Frontend = Join-Path $Root "frontend\deep-agents-ui"
+$VenvActivate = Join-Path $Root ".venv\Scripts\Activate.ps1"
 
 Write-Color "Project Root :" DarkGray
 Write-Color "  $Root" White
 
 Write-Color "Frontend :" DarkGray
 Write-Color "  $Frontend" White
-
 Write-Host ""
 
 # ------------------------------------------------------------
@@ -55,10 +55,20 @@ function Test-Tool {
 
 Write-Color "Checking dependencies..." Yellow
 
-$langgraph = Test-Tool "langgraph"
+# Only yarn must exist globally
 $yarn = Test-Tool "yarn"
 
-if (-not $langgraph -or -not $yarn) {
+if (-not (Test-Path $VenvActivate)) {
+    Write-Host ""
+    Write-Color "✖ Virtual environment not found." Red
+    Write-Color "Expected:" Yellow
+    Write-Color "  $VenvActivate" White
+    exit 1
+}
+
+Write-Color "✔ Virtual environment found" Green
+
+if (-not $yarn) {
     Write-Host ""
     Write-Color "Missing required tools." Red
     exit 1
@@ -76,15 +86,24 @@ Start-Process powershell `
     -WorkingDirectory $Root `
     -ArgumentList @(
         "-NoExit",
+        "-ExecutionPolicy", "Bypass",
         "-Command",
 @"
 `$Host.UI.RawUI.WindowTitle = '🚀 LangGraph Backend'
 Clear-Host
+
 Write-Host ''
 Write-Host '=========================================' -ForegroundColor Cyan
 Write-Host '        🚀 LANGGRAPH BACKEND' -ForegroundColor Green
 Write-Host '=========================================' -ForegroundColor Cyan
 Write-Host ''
+
+. '$VenvActivate'
+
+Write-Host 'Python :' (Get-Command python).Source -ForegroundColor Yellow
+Write-Host 'LangGraph:' (Get-Command langgraph).Source -ForegroundColor Yellow
+Write-Host ''
+
 langgraph dev
 "@
 )
@@ -101,22 +120,23 @@ Start-Process powershell `
     -WorkingDirectory $Frontend `
     -ArgumentList @(
         "-NoExit",
+        "-ExecutionPolicy", "Bypass",
         "-Command",
 @"
 `$Host.UI.RawUI.WindowTitle = '🌐 Frontend'
 Clear-Host
+
 Write-Host ''
 Write-Host '=========================================' -ForegroundColor Green
 Write-Host '           🌐 FRONTEND' -ForegroundColor Cyan
 Write-Host '=========================================' -ForegroundColor Green
 Write-Host ''
+
 & '$YarnPath' dev
 "@
 )
 
 Write-Host ""
-
 Write-Color "✔ Backend launched." Green
 Write-Color "✔ Frontend launched." Green
 Write-Host ""
-Write-Color "Happy Coding! 😎" Magenta

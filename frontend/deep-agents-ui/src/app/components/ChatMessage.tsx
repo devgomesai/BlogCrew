@@ -105,7 +105,7 @@ export const ChatMessage = React.memo<ChatMessageProps>(
                   "mt-4 overflow-hidden break-words text-sm font-normal leading-[150%]",
                   isUser
                     ? "rounded-xl rounded-br-none border border-border px-3 py-2 text-foreground"
-                    : "text-primary"
+                    : "text-foreground"
                 )}
                 style={
                   isUser
@@ -120,8 +120,8 @@ export const ChatMessage = React.memo<ChatMessageProps>(
                 ) : hasContent ? (
                   <>
                     {(!isUser && messageContent.includes("slug") && messageContent.includes("BlogPost") && messageContent.includes("---")) && (
-                      <div className="mb-4 flex items-center gap-2 rounded-md border border-primary/20 bg-primary/5 px-3 py-2">
-                        <FileText className="h-4 w-4 text-primary" />
+                      <div className="mb-4 flex items-center gap-2 rounded-md border border-border bg-card px-3 py-2">
+                        <FileText className="h-4 w-4 text-foreground" />
                         <span className="text-xs font-medium text-foreground">
                           Blog Post Generated
                         </span>

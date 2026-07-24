@@ -331,6 +331,10 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
                     <div className="h-1.5 w-1.5 rounded-full bg-violet-500" />
                     Editor
                   </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="h-1.5 w-1.5 rounded-full bg-rose-500" />
+                    Humanizer
+                  </div>
                 </div>
               </div>
             ) : (

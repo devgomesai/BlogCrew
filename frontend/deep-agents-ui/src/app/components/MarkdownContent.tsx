@@ -87,7 +87,7 @@ export const MarkdownContent = React.memo<MarkdownContentProps>(
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-primary no-underline hover:underline"
+                  className="text-foreground underline hover:no-underline"
                 >
                   {children}
                 </a>
@@ -95,7 +95,7 @@ export const MarkdownContent = React.memo<MarkdownContentProps>(
             },
             blockquote({ children }: { children?: React.ReactNode }) {
               return (
-                <blockquote className="text-primary/50 my-4 border-l-4 border-border pl-4 italic">
+                <blockquote className="text-foreground/50 my-4 border-l-4 border-border pl-4 italic">
                   {children}
                 </blockquote>
               );

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 36" fill="none">
+  <!-- crew mark: four nodes orbiting a hub -->
+  <g transform="translate(18, 18)">
+    <!-- orbit ring -->
+    <circle cx="0" cy="0" r="14" stroke="#000" stroke-opacity="0.2" stroke-width="1.5" fill="none" />
+    <!-- hub -->
+    <circle cx="0" cy="0" r="5" fill="#CC785C" />
+    <!-- planner (top) -->
+    <circle cx="0" cy="-10" r="3" fill="#CC785C" fill-opacity="0.65" />
+    <!-- researcher (right) -->
+    <circle cx="10" cy="0" r="3" fill="#CC785C" fill-opacity="0.65" />
+    <!-- writer (bottom) -->
+    <circle cx="0" cy="10" r="3" fill="#CC785C" fill-opacity="0.65" />
+    <!-- editor (left) -->
+    <circle cx="-10" cy="0" r="3" fill="#CC785C" fill-opacity="0.65" />
+  </g>
+  <!-- wordmark -->
+  <text x="46" y="24" font-family="Anthropic Sans, system-ui, -apple-system, sans-serif" font-size="16" font-weight="700" letter-spacing="-0.3" fill="#141413">BlogCrew</text>
+</svg>

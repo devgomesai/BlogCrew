@@ -4,6 +4,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { getBlog } from "@/lib/blogs";
 import { ThemeToggle } from "../ThemeToggle";
+import { Logo } from "@/app/components/Logo";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
@@ -28,7 +29,9 @@ export default async function BlogPostPage({
           ← All Articles
         </Link>
         <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-          <span className="blog-topbar__mark">The Press</span>
+          <Link href="/blogs" className="blog-topbar__mark">
+            <Logo height={28} />
+          </Link>
           <ThemeToggle />
         </div>
       </div>

@@ -13,11 +13,21 @@ Produce a blog post that reads like a person wrote it. Everything below serves t
 
 ---
 
+## Sandbox workspace
+
+All work happens inside `/memory/sandbox/`. Before anything else, create and cd into it. Never write draft files, notes, or intermediate artifacts outside this directory. The only files written outside sandbox are the final `Blog/<slug>/Blog.md` and `Blog/<slug>/cover.png`.
+
+```bash
+mkdir -p /memory/sandbox && cd /memory/sandbox   # create & enter sandbox
+ls -la                                            # verify empty
+```
+
 ## Startup (always first)
 
 ```bash
-ls -la                                        # working directory
-ls /skills/ && ls /memory/                    # confirm paths
+pwd                                             # must be /memory/sandbox
+ls -la                                          # working directory
+ls /skills/ && ls /memory/                      # confirm paths
 cat /memory/AGENTS.md
 cat /skills/blog-writer/SKILL.md
 cat /skills/blog-writer/references/
@@ -32,13 +42,13 @@ cat /skills/blog-writer/references/
 Five steps, strictly in order. Track each with `write_todos` and mark all completed before returning.
 
 **1. Plan** — `planner-agent`
-Topic + skill context → H2/H3 outline, slug, category, readTime estimate, sections needing research.
+Topic + skill context → H2/H3 outline, slug, category, readTime estimate, sections needing research. Scope the outline so the final post lands between 800 and 1,200 words.
 
 **2. Research** — `researcher-agent`
-Group 2–3 related sections per call (max 6 calls, max 3 in parallel). Returns raw notes only: `fact | source URL | relevance`. Never search yourself.
+Group 2–3 related sections per call (max 6 calls, max 3 in parallel). Returns raw notes only: `fact | source URL | relevance`. Saves all research notes in a dedicated folder named after the blog's slug inside the sandbox directory (i.e., `/sandbox/<slug>/research_<n>.md` and `/memory/sandbox/<slug>/research_<n>.md`). Never search yourself.
 
 **3. Write** — `writer-agent`, one call
-The writer first reads `/skills/blog-writer/SKILL.md` in full, then writes based on them — voice, tone, structure, and template all come from the skill, not from defaults. Input: full outline + all research + skill context → complete draft in a single pass. Second person, confident and advisory, inline numbered citations matching a Sources section. Never write prose yourself. If a gap surfaces, one extra research or write call — then move on.
+The writer first reads `/skills/blog-writer/SKILL.md` in full, then writes based on them — voice, tone, structure, and template all come from the skill, not from defaults. Input: full outline + all research + skill context → complete draft in a single pass. **Word count: 800–1,200 words — hard constraint, no exceptions.** Second person, confident and advisory, inline numbered citations matching a Sources section. Never write prose yourself. If a gap surfaces, one extra research or write call — then move on.
 
 **4. Edit** — `editor-agent`
 Polishes clarity, grammar, flow, and SEO. Validates every BlogPost field against the skill context. Does **not** humanize. Returns polished draft + metadata.
@@ -69,6 +79,7 @@ The humanizer must:
 4. Zero em dashes remain
 5. Both output files written
 6. No self-referential language, workflow references, or meta-commentary in the post
+7. Word count between 800 and 1,200 — verify before saving
 
 ---
 

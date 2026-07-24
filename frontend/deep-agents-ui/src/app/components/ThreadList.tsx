@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils";
 import type { ThreadItem } from "@/app/hooks/useThreads";
 import { useThreads } from "@/app/hooks/useThreads";
 
-type StatusFilter = "all" | "idle" | "busy" | "interrupted" | "error";
+type StatusFilter = "all" | "idle" | "busy" | "interrupted";
 
 const GROUP_LABELS = {
   interrupted: "Requiring Attention",
@@ -246,12 +246,6 @@ export function ThreadList({
                     badge={interruptedCount}
                   />
                 </SelectItem>
-                <SelectItem value="error">
-                  <StatusFilterItem
-                    status="error"
-                    label="Error"
-                  />
-                </SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -270,7 +264,15 @@ export function ThreadList({
       </div>
 
       <ScrollArea className="h-0 flex-1">
-        {threads.error && <ErrorState message={threads.error.message} />}
+        {threads.error && (
+          <ErrorState
+            message={
+              typeof threads.error === "string"
+                ? threads.error
+                : threads.error?.message ?? "An unknown error occurred"
+            }
+          />
+        )}
 
         {!threads.error && !threads.data && threads.isLoading && (
           <LoadingState />

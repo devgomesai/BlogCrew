@@ -2,13 +2,13 @@
 
 import React, { useState, useEffect, useCallback, Suspense } from "react";
 import { useQueryState } from "nuqs";
-import { getConfig, saveConfig, StandaloneConfig } from "@/lib/config";
-import { ConfigDialog } from "@/app/components/ConfigDialog";
+import { getConfig, StandaloneConfig } from "@/lib/config";
 import { Button } from "@/components/ui/button";
 import { Assistant } from "@langchain/langgraph-sdk";
 import { ClientProvider, useClient } from "@/providers/ClientProvider";
 import Link from "next/link";
-import { Settings, MessagesSquare, SquarePen, Sun, Moon, BookOpen } from "lucide-react";
+import { Logo } from "@/app/components/Logo";
+import { MessagesSquare, SquarePen, Sun, Moon, BookOpen } from "lucide-react";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -28,19 +28,7 @@ const SUGGESTED_TOPICS = [
   "A practical guide to Kubernetes for small teams",
 ];
 
-interface HomePageInnerProps {
-  config: StandaloneConfig;
-  configDialogOpen: boolean;
-  setConfigDialogOpen: (open: boolean) => void;
-  handleSaveConfig: (config: StandaloneConfig) => void;
-}
-
-function HomePageInner({
-  config,
-  configDialogOpen,
-  setConfigDialogOpen,
-  handleSaveConfig,
-}: HomePageInnerProps) {
+function HomePageInner({ config }: { config: StandaloneConfig }) {
   const client = useClient();
   const [threadId, setThreadId] = useQueryState("threadId");
   const [sidebar, setSidebar] = useQueryState("sidebar");
@@ -118,143 +106,112 @@ function HomePageInner({
     if (sidebar === null) {
       setSidebar("1");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <>
-      <ConfigDialog
-        open={configDialogOpen}
-        onOpenChange={setConfigDialogOpen}
-        onSave={handleSaveConfig}
-        initialConfig={config}
-      />
-      <div className="flex h-screen flex-col">
-        <header className="sticky top-0 z-20 flex h-14 items-center justify-between border-b border-border bg-background px-5">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <span className="text-lg font-bold tracking-tight text-foreground">
-                BlogCrew
-              </span>
-            </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setSidebar(sidebar ? null : "1")}
-              aria-pressed={!!sidebar}
-            >
-              <MessagesSquare className="mr-1.5 h-4 w-4" />
-              Threads
-              {interruptCount > 0 && (
-                <span className="ml-1.5 inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-destructive px-1.5 text-[10px] font-bold text-destructive-foreground">
-                  {interruptCount}
-                </span>
-              )}
-            </Button>
-          </div>
+    <div className="flex h-screen flex-col">
+      <header className="sticky top-0 z-20 flex h-14 items-center justify-between border-b border-border bg-background px-5">
+        <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={toggleTheme}
-              className="flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent transition-colors"
-              aria-label={mounted ? (theme === "dark" ? "Switch to light mode" : "Switch to dark mode") : "Toggle theme"}
-            >
-              {mounted ? (theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />) : <span className="block h-4 w-4 rounded bg-muted-foreground/20" />}
-            </button>
-            <Link
-              href="/blogs"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <BookOpen className="h-4 w-4" />
-              Blogs
+            <Link href="/blogs">
+              <Logo height={24} />
             </Link>
-            <div className="h-5 w-px bg-border" />
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setConfigDialogOpen(true)}
-            >
-              <Settings className="mr-1.5 h-4 w-4" />
-              Settings
-            </Button>
-            <Button
-              variant="default"
-              size="sm"
-              onClick={() => setThreadId(null)}
-              disabled={!threadId}
-            >
-              <SquarePen className="mr-1.5 h-4 w-4" />
-              New Thread
-            </Button>
           </div>
-        </header>
-
-        <div className="flex-1 overflow-hidden">
-          <ResizablePanelGroup
-            direction="horizontal"
-            autoSaveId="standalone-chat"
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setSidebar(sidebar ? null : "1")}
+            aria-pressed={!!sidebar}
           >
-            {sidebar && (
-              <>
-                <ResizablePanel
-                  id="thread-history"
-                  order={1}
-                  defaultSize={25}
-                  minSize={20}
-                  className="relative min-w-[380px] border-r border-border"
-                >
-                  <ThreadList
-                    onThreadSelect={async (id) => {
-                      await setThreadId(id);
-                    }}
-                    onMutateReady={(fn) => setMutateThreads(() => fn)}
-                    onClose={() => setSidebar(null)}
-                    onInterruptCountChange={setInterruptCount}
-                  />
-                </ResizablePanel>
-                <ResizableHandle className="w-px bg-border" />
-              </>
+            <MessagesSquare className="mr-1.5 h-4 w-4" />
+            Threads
+            {interruptCount > 0 && (
+              <span className="ml-1.5 inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-destructive px-1.5 text-[10px] font-bold text-destructive-foreground">
+                {interruptCount}
+              </span>
             )}
-
-            <ResizablePanel
-              id="chat"
-              className="relative flex flex-col"
-              order={2}
-            >
-              <ChatProvider
-                activeAssistant={assistant}
-                onHistoryRevalidate={() => mutateThreads?.()}
-              >
-                <ChatInterface
-                  assistant={assistant}
-                  suggestedTopics={SUGGESTED_TOPICS}
-                />
-              </ChatProvider>
-            </ResizablePanel>
-          </ResizablePanelGroup>
+          </Button>
         </div>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent transition-colors"
+            aria-label={mounted ? (theme === "dark" ? "Switch to light mode" : "Switch to dark mode") : "Toggle theme"}
+          >
+            {mounted ? (theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />) : <span className="block h-4 w-4 rounded bg-muted-foreground/20" />}
+          </button>
+          <Link
+            href="/blogs"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <BookOpen className="h-4 w-4" />
+            Blogs
+          </Link>
+          <div className="h-5 w-px bg-border" />
+          <Button
+            variant="default"
+            size="sm"
+            onClick={() => setThreadId(null)}
+            disabled={!threadId}
+          >
+            <SquarePen className="mr-1.5 h-4 w-4" />
+            New Thread
+          </Button>
+        </div>
+      </header>
+
+      <div className="flex-1 overflow-hidden">
+        <ResizablePanelGroup
+          direction="horizontal"
+          autoSaveId="standalone-chat"
+        >
+          {sidebar && (
+            <>
+              <ResizablePanel
+                id="thread-history"
+                order={1}
+                defaultSize={25}
+                minSize={20}
+                className="relative min-w-[380px] border-r border-border"
+              >
+                <ThreadList
+                  onThreadSelect={async (id) => {
+                    await setThreadId(id);
+                  }}
+                  onMutateReady={(fn) => setMutateThreads(() => fn)}
+                  onClose={() => setSidebar(null)}
+                  onInterruptCountChange={setInterruptCount}
+                />
+              </ResizablePanel>
+              <ResizableHandle className="w-px bg-border" />
+            </>
+          )}
+
+          <ResizablePanel
+            id="chat"
+            className="relative flex flex-col"
+            order={2}
+          >
+            <ChatProvider
+              activeAssistant={assistant}
+              onHistoryRevalidate={() => mutateThreads?.()}
+            >
+              <ChatInterface
+                assistant={assistant}
+                suggestedTopics={SUGGESTED_TOPICS}
+              />
+            </ChatProvider>
+          </ResizablePanel>
+        </ResizablePanelGroup>
       </div>
-    </>
+    </div>
   );
 }
 
 function HomePageContent() {
-  const [config, setConfig] = useState<StandaloneConfig | null>(null);
-  const [configDialogOpen, setConfigDialogOpen] = useState(false);
   const [assistantId, setAssistantId] = useQueryState("assistantId");
-
-  useEffect(() => {
-    const savedConfig = getConfig();
-    if (savedConfig) {
-      setConfig(savedConfig);
-      if (!assistantId) {
-        setAssistantId(savedConfig.assistantId);
-      }
-    } else {
-      setConfigDialogOpen(true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const config = getConfig();
 
   useEffect(() => {
     if (config && !assistantId) {
@@ -262,58 +219,13 @@ function HomePageContent() {
     }
   }, [config, assistantId, setAssistantId]);
 
-  const handleSaveConfig = useCallback((newConfig: StandaloneConfig) => {
-    saveConfig(newConfig);
-    setConfig(newConfig);
-  }, []);
-
-  const langsmithApiKey =
-    config?.langsmithApiKey || process.env.NEXT_PUBLIC_LANGSMITH_API_KEY || "";
-
   if (!config) {
-    return <WelcomeScreen
-      configDialogOpen={configDialogOpen}
-      setConfigDialogOpen={setConfigDialogOpen}
-      handleSaveConfig={handleSaveConfig}
-    />;
-  }
-
-  return (
-    <ClientProvider
-      deploymentUrl={config.deploymentUrl}
-      apiKey={langsmithApiKey}
-    >
-      <HomePageInner
-        config={config}
-        configDialogOpen={configDialogOpen}
-        setConfigDialogOpen={setConfigDialogOpen}
-        handleSaveConfig={handleSaveConfig}
-      />
-    </ClientProvider>
-  );
-}
-
-function WelcomeScreen({
-  configDialogOpen,
-  setConfigDialogOpen,
-  handleSaveConfig,
-}: {
-  configDialogOpen: boolean;
-  setConfigDialogOpen: (open: boolean) => void;
-  handleSaveConfig: (config: StandaloneConfig) => void;
-}) {
-  return (
-    <>
-      <ConfigDialog
-        open={configDialogOpen}
-        onOpenChange={setConfigDialogOpen}
-        onSave={handleSaveConfig}
-      />
+    return (
       <div className="flex h-screen items-center justify-center bg-background">
         <div className="text-center max-w-md mx-auto px-6">
-          <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10">
-            <span className="text-2xl font-bold text-primary">BC</span>
-          </div>
+          <Link href="/blogs" className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10">
+            <Logo height={28} />
+          </Link>
           <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground mb-3">
             A Multi-Agent Press
           </p>
@@ -323,27 +235,23 @@ function WelcomeScreen({
           <p className="mt-3 text-muted-foreground">
             Research, write, edit &amp; illustrate — end to end.
           </p>
-          <p className="mt-1 text-sm text-muted-foreground/70">
-            Configure your LangGraph deployment to get started
+          <p className="mt-1 text-sm text-destructive">
+            Missing configuration. Set <code>NEXT_PUBLIC_DEPLOYMENT_URL</code> and <code>NEXT_PUBLIC_ASSISTANT_ID</code> in <code>.env</code>.
           </p>
-          <div className="mt-8 flex justify-center gap-3">
-            <Button
-              onClick={() => setConfigDialogOpen(true)}
-              variant="default"
-              size="lg"
-            >
-              Open Configuration
-            </Button>
-            <Link href="/blogs">
-              <Button variant="outline" size="lg">
-                <BookOpen className="mr-2 h-4 w-4" />
-                Read Blogs
-              </Button>
-            </Link>
-          </div>
         </div>
       </div>
-    </>
+    );
+  }
+
+  const langsmithApiKey = config.langsmithApiKey || process.env.NEXT_PUBLIC_LANGSMITH_API_KEY || "";
+
+  return (
+    <ClientProvider
+      deploymentUrl={config.deploymentUrl}
+      apiKey={langsmithApiKey}
+    >
+      <HomePageInner config={config} />
+    </ClientProvider>
   );
 }
 

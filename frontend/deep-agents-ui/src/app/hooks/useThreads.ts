@@ -28,10 +28,6 @@ export function useThreads(props: {
         process.env.NEXT_PUBLIC_LANGSMITH_API_KEY ||
         "";
 
-      if (!config) {
-        return null;
-      }
-
       // If the previous page returned no items, we've reached the end
       if (previousPageData && previousPageData.length === 0) {
         return null;
@@ -41,8 +37,9 @@ export function useThreads(props: {
         kind: "threads" as const,
         pageIndex,
         pageSize,
-        deploymentUrl: config.deploymentUrl,
-        assistantId: config.assistantId,
+        hasConfig: !!config,
+        deploymentUrl: config?.deploymentUrl ?? "",
+        assistantId: config?.assistantId ?? "",
         apiKey,
         status: props?.status,
       };
@@ -54,15 +51,23 @@ export function useThreads(props: {
       status,
       pageIndex,
       pageSize,
+      hasConfig,
     }: {
       kind: "threads";
       pageIndex: number;
       pageSize: number;
+      hasConfig: boolean;
       deploymentUrl: string;
       assistantId: string;
       apiKey: string;
       status?: Thread["status"];
     }) => {
+      if (!hasConfig) {
+        throw new Error(
+          "Configure your deployment URL and Assistant ID in Settings to view threads."
+        );
+      }
+
       const client = new Client({
         apiUrl: deploymentUrl,
         defaultHeaders: apiKey ? { "X-Api-Key": apiKey } : {},

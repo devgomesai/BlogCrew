@@ -1,12 +1,5 @@
-# The Token Hoarding Problem: Why Your AI Apps are a Cost Trap
-***
-*(Metadata Block placeholder for Editor Agent)*
-
-**Slug:** `the-token-hoarding-problem`  
-**Category:** Product Strategy / AI Infrastructure  
-**Read Time Estimate:** 8–10 minutes
-
-## The 'Tell the AI Everything' Pattern Is a Business Tax
+## The Token Hoarding Problem: Why Your AI Apps are a Cost Trap
+### The 'Tell the AI Everything' Pattern Is a Business Tax
 
 You've seen the initial hype: connect an API, dump all your user data into a single prompt, and expect instant product magic. It works—until it doesn't. You get that moment of delight when the AI spits out something beautiful, accurate, and seemingly magical.
 

@@ -15,7 +15,7 @@ export default {
       fontFamily: {
         sans: [`"Anthropic Sans"`, `ui-sans-serif`, `system-ui`, `-apple-system`, `BlinkMacSystemFont`, `"Segoe UI"`, `Roboto`, `sans-serif`],
         mono: [
-          `"Anthropic Mono"`, `"SF Mono"`, `Monaco`, `"Cascadia Code"`, `"Roboto Mono"`,
+          `"Anthropic Mono"`, `"JetBrains Mono"`, `"SF Mono"`, `Monaco`, `"Cascadia Code"`, `"Roboto Mono"`,
           `Consolas`, `"Courier New"`, `monospace`,
         ],
       },

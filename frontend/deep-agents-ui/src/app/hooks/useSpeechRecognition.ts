@@ -19,12 +19,18 @@ export function useSpeechRecognition(
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const finalTranscriptRef = useRef("");
 
+  const [isSupported, setIsSupported] = useState(false);
+
+  useEffect(() => {
+    setIsSupported(
+      (window.SpeechRecognition || window.webkitSpeechRecognition) != null
+    );
+  }, []);
+
   const SpeechRecognitionAPI =
     (typeof window !== "undefined" &&
       (window.SpeechRecognition || window.webkitSpeechRecognition)) ||
     null;
-
-  const isSupported = SpeechRecognitionAPI !== null;
 
   const stop = useCallback(() => {
     if (recognitionRef.current) {

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getAllBlogs } from "@/lib/blogs";
 import { ThemeToggle } from "./ThemeToggle";
+import { Logo } from "@/app/components/Logo";
 
 export const dynamic = "force-dynamic";
 
@@ -125,7 +126,9 @@ function Topbar() {
         ← The Workshop
       </Link>
       <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-        <span className="blog-topbar__mark">BlogCrew</span>
+        <Link href="/blogs" className="blog-topbar__mark">
+          <Logo height={28} />
+        </Link>
         <ThemeToggle />
       </div>
     </div>

@@ -25,11 +25,15 @@ Write-Host ""
 # ------------------------------------------------------------
 
 $Root = Split-Path -Parent $MyInvocation.MyCommand.Path
-$Frontend = Join-Path $Root "frontend\deep-agents-ui"
-$VenvActivate = Join-Path $Root ".venv\Scripts\Activate.ps1"
+$Backend = Join-Path $Root "backend"
+$Frontend = Join-Path $Root "frontend"
+$VenvActivate = Join-Path $Backend ".venv\Scripts\Activate.ps1"
 
 Write-Color "Project Root :" DarkGray
 Write-Color "  $Root" White
+
+Write-Color "Backend :" DarkGray
+Write-Color "  $Backend" White
 
 Write-Color "Frontend :" DarkGray
 Write-Color "  $Frontend" White
@@ -83,7 +87,7 @@ Write-Host ""
 Write-Color "Starting Backend..." Cyan
 
 Start-Process powershell `
-    -WorkingDirectory $Root `
+    -WorkingDirectory $Backend `
     -ArgumentList @(
         "-NoExit",
         "-ExecutionPolicy", "Bypass",
@@ -104,7 +108,7 @@ Write-Host 'Python :' (Get-Command python).Source -ForegroundColor Yellow
 Write-Host 'LangGraph:' (Get-Command langgraph).Source -ForegroundColor Yellow
 Write-Host ''
 
-langgraph dev
+python -m langgraph_cli dev
 "@
 )
 

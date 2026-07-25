@@ -27,10 +27,10 @@ Deliver what was asked at the scope intended. If the request seems mistaken or a
 
 ## Sandbox workspace
 
-All work happens inside `/memory/sandbox/`. Before anything else, create and cd into its dedicated folder `/memory/sandbox/<blog-title>/`. Never write draft files, notes, or intermediate artifacts outside this directory. The only files written outside sandbox are the final `Blog/<slug>/Blog.md` and `Blog/<slug>/cover.png`.
+All research files go inside `/memory/sandbox/<blog-slug>/`. Before anything else, create and cd into its dedicated folder `/memory/sandbox/<blog-slug>/`. Only research files are stored here — no plan, draft, or edited files. The final output goes to `Blog/<slug>/Blog.md` and `Blog/<slug>/cover.png`.
 
 ```bash
-mkdir -p /memory/sandbox && cd /memory/sandbox   # create & enter sandbox
+mkdir -p /memory/sandbox/<blog-slug> && cd /memory/sandbox/<blog-slug>
 ls -la                                            # verify empty
 ```
 
@@ -39,7 +39,7 @@ ls -la                                            # verify empty
 ## Startup (always first)
 
 ```bash
-pwd                                             # must be /memory/sandbox
+pwd                                             # must be /memory/sandbox/<blog-slug>
 ls -la                                          # working directory
 ls /skills/ && ls /memory/                      # confirm paths
 cat /memory/AGENTS.md
@@ -59,7 +59,7 @@ Five steps, strictly in order. Track each with `write_todos` and mark all comple
 Topic + skill context → H2/H3 outline, slug, category, readTime estimate, sections needing research. Scope the outline so the final post lands between 800 and 1,200 words.
 
 **2. Research** — `researcher-agent`
-Group 2–3 related sections per call (max 6 calls, max 3 in parallel). Returns raw notes only: `fact | source URL | relevance`. Saves all research notes in a dedicated folder named after the blog's slug inside the sandbox directory (i.e., `/sandbox/<slug>/research_<n>.md` and `/memory/sandbox/<slug>/research_<n>.md`). Never search yourself.
+Group 2–3 related sections per call (max 6 calls, max 3 in parallel). Returns raw notes only: `fact | source URL | relevance`. Saves all research notes inside `/memory/sandbox/<blog-slug>/research_<n>.md`. Never search yourself.
 
 **3. Write** — `writer-agent`, one call
 The writer first reads `/skills/blog-writer/SKILL.md` in full, then writes based on them — voice, tone, structure, and template all come from the skill, not from defaults. Input: full outline + all research + skill context → complete draft in a single pass. **Word count: 800–1,200 words — hard constraint, no exceptions.** Second person, confident and advisory, inline numbered citations matching a Sources section. Never write prose yourself. If a gap surfaces, one extra research or write call — then move on.

@@ -48,20 +48,18 @@ def _compact_markdown(text: str) -> str:
     return text
 
 
-def _is_retryable_httpx(exc: Exception) -> bool:
-    """True for network errors and 5xx HTTP errors, False for 4xx."""
-    if isinstance(exc, (httpx.ConnectError, httpx.TimeoutException, httpx.RemoteProtocolError)):
-        return True
-    if isinstance(exc, httpx.HTTPStatusError):
-        return exc.response.status_code >= 500
-    return False
-
-
 @retry(
     stop=stop_after_attempt(3),
     wait=wait_exponential(multiplier=1, min=1, max=10),
-    retry=retry_if_exception_type((httpx.HTTPError, httpx.InvalidURL)),
-    reraise=True,
+    retry=retry_if_exception_type((
+        httpx.ConnectError,
+        httpx.TimeoutException,
+        httpx.RemoteProtocolError,
+    )),
+    retry_error_callback=lambda rs: (
+        f"Failed to fetch URL after {rs.attempt_number} attempts: "
+        f"{rs.outcome.exception()}"
+    ),
 )
 def fetch_webpage_content(url: str, timeout: float = _HTTPX_TIMEOUT) -> str:
     """Fetch and convert webpage content to markdown.
@@ -84,22 +82,36 @@ def fetch_webpage_content(url: str, timeout: float = _HTTPX_TIMEOUT) -> str:
         "User-Agent": (
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
             "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/91.0.4472.124 Safari/537.36"
-        )
+            "Chrome/122.0.0.0 Safari/537.36"
+        ),
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.5",
     }
 
     try:
-        response = httpx.get(url, headers=headers, timeout=timeout)
-        response.raise_for_status()
-        converted = _compact_markdown(markdownify(response.text))
-        _web_cache.set(url, converted, expire=86400)  # cache for 24 hours
-        return converted
+        with httpx.Client(follow_redirects=True, timeout=timeout) as client:
+            response = client.get(url, headers=headers)
+
+            if 400 <= response.status_code < 500:
+                if response.status_code == 429:
+                    return f"Rate limited (429) fetching {url}"
+                return f"Client error {response.status_code} fetching {url}"
+
+            if response.status_code >= 500:
+                response.raise_for_status()
+
+            response.raise_for_status()
+
+            converted = _compact_markdown(markdownify(response.text))
+            _web_cache.set(url, converted, expire=86400)
+            return converted
+
     except httpx.HTTPStatusError as e:
-        if e.response.status_code < 500:
-            return f"Error {e.response.status_code} fetching {url}"
+        return f"Server error {e.response.status_code} fetching {url}"
+    except (httpx.ConnectError, httpx.TimeoutException, httpx.RemoteProtocolError):
         raise
-    except (httpx.ConnectError, httpx.TimeoutException) as e:
-        return f"Network error fetching {url}: {e}"
+    except httpx.HTTPError as e:
+        return f"HTTP error fetching {url}: {e}"
 
 
 @tool(parse_docstring=True)

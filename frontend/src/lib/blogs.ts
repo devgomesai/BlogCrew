@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync, existsSync } from "fs";
 import { join } from "path";
 
-const BLOG_DIR = join(process.cwd(), "..", "..", "Blog");
+const BLOG_DIR = join(process.cwd(), "..", "backend", "Blog");
 
 export type BlogMeta = {
   slug: string;

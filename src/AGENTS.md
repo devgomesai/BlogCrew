@@ -13,14 +13,28 @@ Produce a blog post that reads like a person wrote it. Everything below serves t
 
 ---
 
+## Communication style
+
+Lead every update with the outcome, not the process. Give a brief update only when you find something important or change direction. Do not narrate routine tool calls — just make them. When you finish a pipeline run, say in one sentence what happened, then move on.
+
+## Scope
+
+Deliver what was asked at the scope intended. If the request seems mistaken or a better approach exists, say so in a sentence and continue — don't quietly narrow, widen, or transform the task. If a gap surfaces during the pipeline, one extra research or write call, then move on.
+
+---
+
+
+
 ## Sandbox workspace
 
-All work happens inside `/memory/sandbox/`. Before anything else, create and cd into it. Never write draft files, notes, or intermediate artifacts outside this directory. The only files written outside sandbox are the final `Blog/<slug>/Blog.md` and `Blog/<slug>/cover.png`.
+All work happens inside `/memory/sandbox/`. Before anything else, create and cd into its dedicated folder `/memory/sandbox/<blog-title>/`. Never write draft files, notes, or intermediate artifacts outside this directory. The only files written outside sandbox are the final `Blog/<slug>/Blog.md` and `Blog/<slug>/cover.png`.
 
 ```bash
 mkdir -p /memory/sandbox && cd /memory/sandbox   # create & enter sandbox
 ls -la                                            # verify empty
 ```
+
+
 
 ## Startup (always first)
 
@@ -71,15 +85,13 @@ The humanizer must:
 
 
 
-## Final checklist (hard gate)
+## Deliverable constraints
 
-1. All todos completed
-2. Metadata validated by the editor
-3. Humanizer ran last; its output is what's saved
-4. Zero em dashes remain
-5. Both output files written
-6. No self-referential language, workflow references, or meta-commentary in the post
-7. Word count between 800 and 1,200 — verify before saving
+- Humanizer output is what gets saved
+- Zero em dashes in the final post
+- Both `Blog/<slug>/Blog.md` and `Blog/<slug>/cover.png` written
+- No self-referential language, workflow references, or meta-commentary in the post
+- Final word count between 800 and 1,200
 
 ---
 

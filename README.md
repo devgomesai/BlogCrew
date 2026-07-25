@@ -32,7 +32,7 @@ Production notes — required configuration
 - Python: 3.12+
 - Environment variables (example):
   ```env
-  LLM_CHOICE="provider:model"    # e.g. openrouter:your-model
+  LLM_CHOICE="provider:model"    # e.g. openrouter:anthropic/claude-sonnet-5
   TAVILY_API_KEY=your_tavily_api_key
   GOOGLE_API_KEY=your_google_api_key
   ```

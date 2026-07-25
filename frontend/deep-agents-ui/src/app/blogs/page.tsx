@@ -22,7 +22,7 @@ export default function BlogsPage() {
             No posts have been published. Send the crew a topic from the
             workshop and the first edition will land right here.
           </p>
-          <Link href="/" className="blog-btn">
+          <Link href="/workshop" className="blog-btn">
             Open the Workshop
           </Link>
         </div>
@@ -122,7 +122,7 @@ export default function BlogsPage() {
 function Topbar() {
   return (
     <div className="blog-topbar">
-      <Link href="/" className="blog-link-back">
+      <Link href="/workshop" className="blog-link-back">
         ← The Workshop
       </Link>
       <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>

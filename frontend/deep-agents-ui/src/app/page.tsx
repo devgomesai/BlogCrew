@@ -1,138 +1,27 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, Suspense } from "react";
-import { useQueryState } from "nuqs";
-import { getConfig, StandaloneConfig } from "@/lib/config";
-import { Button } from "@/components/ui/button";
-import { Assistant } from "@langchain/langgraph-sdk";
-import { ClientProvider, useClient } from "@/providers/ClientProvider";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Logo } from "@/app/components/Logo";
-import { MessagesSquare, SquarePen, Sun, Moon, BookOpen } from "lucide-react";
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "@/components/ui/resizable";
-import { ThreadList } from "@/app/components/ThreadList";
-import { ChatProvider } from "@/providers/ChatProvider";
-import { ChatInterface } from "@/app/components/ChatInterface";
+import { Sun, Moon } from "lucide-react";
 import { useTheme } from "@/providers/ThemeProvider";
+import "./landing.css";
 
-const SUGGESTED_TOPICS = [
-  "Explain machine learning in simple terms for beginners",
-  "The future of remote work in 2026",
-  "How to build a personal brand as a developer",
-  "Why Rust is gaining popularity among systems programmers",
-  "Climate tech startups to watch this year",
-  "A practical guide to Kubernetes for small teams",
-];
-
-function HomePageInner({ config }: { config: StandaloneConfig }) {
-  const client = useClient();
-  const [threadId, setThreadId] = useQueryState("threadId");
-  const [sidebar, setSidebar] = useQueryState("sidebar");
-
-  const [mutateThreads, setMutateThreads] = useState<(() => void) | null>(null);
-  const [interruptCount, setInterruptCount] = useState(0);
-  const [assistant, setAssistant] = useState<Assistant | null>(null);
-  const [mounted, setMounted] = useState(false);
+export default function HomePage() {
   const { theme, toggleTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => setMounted(true), []);
 
-  const fetchAssistant = useCallback(async () => {
-    const isUUID =
-      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-        config.assistantId
-      );
-
-    if (isUUID) {
-      try {
-        const data = await client.assistants.get(config.assistantId);
-        setAssistant(data);
-      } catch (error) {
-        console.error("Failed to fetch assistant:", error);
-        setAssistant({
-          assistant_id: config.assistantId,
-          graph_id: config.assistantId,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          config: {},
-          metadata: {},
-          version: 1,
-          name: "Assistant",
-          context: {},
-        });
-      }
-    } else {
-      try {
-        const assistants = await client.assistants.search({
-          graphId: config.assistantId,
-          limit: 100,
-        });
-        const defaultAssistant = assistants.find(
-          (assistant) => assistant.metadata?.["created_by"] === "system"
-        );
-        if (defaultAssistant === undefined) {
-          throw new Error("No default assistant found");
-        }
-        setAssistant(defaultAssistant);
-      } catch (error) {
-        console.error(
-          "Failed to find default assistant from graph_id: try setting the assistant_id directly:",
-          error
-        );
-        setAssistant({
-          assistant_id: config.assistantId,
-          graph_id: config.assistantId,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          config: {},
-          metadata: {},
-          version: 1,
-          name: config.assistantId,
-          context: {},
-        });
-      }
-    }
-  }, [client, config.assistantId]);
-
-  useEffect(() => {
-    fetchAssistant();
-  }, [fetchAssistant]);
-
-  useEffect(() => {
-    if (sidebar === null) {
-      setSidebar("1");
-    }
-  }, []);
-
   return (
-    <div className="flex h-screen flex-col">
-      <header className="sticky top-0 z-20 flex h-14 items-center justify-between border-b border-border bg-background px-5">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <Link href="/blogs">
-              <Logo height={24} />
-            </Link>
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setSidebar(sidebar ? null : "1")}
-            aria-pressed={!!sidebar}
-          >
-            <MessagesSquare className="mr-1.5 h-4 w-4" />
-            Threads
-            {interruptCount > 0 && (
-              <span className="ml-1.5 inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-destructive px-1.5 text-[10px] font-bold text-destructive-foreground">
-                {interruptCount}
-              </span>
-            )}
-          </Button>
-        </div>
-        <div className="flex items-center gap-2">
+    <div className="landing-shell">
+      <div className="landing-topbar">
+        <Link href="/" className="landing-topbar__mark">
+          <Logo height={28} />
+        </Link>
+        <nav className="landing-topbar__nav">
+          <Link href="/workshop" className="landing-topbar__link">Workshop</Link>
+          <Link href="/blogs" className="landing-topbar__link">Blogs</Link>
           <button
             type="button"
             onClick={toggleTheme}
@@ -141,137 +30,122 @@ function HomePageInner({ config }: { config: StandaloneConfig }) {
           >
             {mounted ? (theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />) : <span className="block h-4 w-4 rounded bg-muted-foreground/20" />}
           </button>
-          <Link
-            href="/blogs"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <BookOpen className="h-4 w-4" />
-            Blogs
-          </Link>
-          <div className="h-5 w-px bg-border" />
-          <Button
-            variant="default"
-            size="sm"
-            onClick={() => setThreadId(null)}
-            disabled={!threadId}
-          >
-            <SquarePen className="mr-1.5 h-4 w-4" />
-            New Thread
-          </Button>
-        </div>
-      </header>
-
-      <div className="flex-1 overflow-hidden">
-        <ResizablePanelGroup
-          direction="horizontal"
-          autoSaveId="standalone-chat"
-        >
-          {sidebar && (
-            <>
-              <ResizablePanel
-                id="thread-history"
-                order={1}
-                defaultSize={25}
-                minSize={20}
-                className="relative min-w-[380px] border-r border-border"
-              >
-                <ThreadList
-                  onThreadSelect={async (id) => {
-                    await setThreadId(id);
-                  }}
-                  onMutateReady={(fn) => setMutateThreads(() => fn)}
-                  onClose={() => setSidebar(null)}
-                  onInterruptCountChange={setInterruptCount}
-                />
-              </ResizablePanel>
-              <ResizableHandle className="w-px bg-border" />
-            </>
-          )}
-
-          <ResizablePanel
-            id="chat"
-            className="relative flex flex-col"
-            order={2}
-          >
-            <ChatProvider
-              activeAssistant={assistant}
-              onHistoryRevalidate={() => mutateThreads?.()}
-            >
-              <ChatInterface
-                assistant={assistant}
-                suggestedTopics={SUGGESTED_TOPICS}
-              />
-            </ChatProvider>
-          </ResizablePanel>
-        </ResizablePanelGroup>
+        </nav>
       </div>
-    </div>
-  );
-}
 
-function HomePageContent() {
-  const [assistantId, setAssistantId] = useQueryState("assistantId");
-  const config = getConfig();
-
-  useEffect(() => {
-    if (config && !assistantId) {
-      setAssistantId(config.assistantId);
-    }
-  }, [config, assistantId, setAssistantId]);
-
-  if (!config) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-background">
-        <div className="text-center max-w-md mx-auto px-6">
-          <Link href="/blogs" className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10">
-            <Logo height={28} />
-          </Link>
-          <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground mb-3">
-            A Multi-Agent Press
-          </p>
-          <h1 className="text-4xl font-bold tracking-tight text-foreground">
-            BlogCrew
-          </h1>
-          <p className="mt-3 text-muted-foreground">
-            Research, write, edit &amp; illustrate — end to end.
-          </p>
-          <p className="mt-1 text-sm text-destructive">
-            Missing configuration. Set <code>NEXT_PUBLIC_DEPLOYMENT_URL</code> and <code>NEXT_PUBLIC_ASSISTANT_ID</code> in <code>.env</code>.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  const langsmithApiKey = config.langsmithApiKey || process.env.NEXT_PUBLIC_LANGSMITH_API_KEY || "";
-
-  return (
-    <ClientProvider
-      deploymentUrl={config.deploymentUrl}
-      apiKey={langsmithApiKey}
-    >
-      <HomePageInner config={config} />
-    </ClientProvider>
-  );
-}
-
-export default function HomePage() {
-  return (
-    <Suspense
-      fallback={
-        <div className="flex h-screen items-center justify-center bg-background">
-          <div className="text-center">
-            <div className="mb-4 inline-flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10">
-              <span className="text-lg font-bold text-primary">BC</span>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Loading BlogCrew...
+      <main className="landing-main">
+        <section className="landing-hero">
+          <div className="landing-hero__inner">
+            <p className="landing-kicker">A Multi-Agent Press</p>
+            <h1 className="landing-hero__title">
+              Your blog post,<br />
+              <span className="landing-hero__accent">from idea to publication.</span>
+            </h1>
+            <p className="landing-hero__sub">
+              BlogCrew is an autonomous editorial pipeline — a crew of AI agents
+              that research, write, edit, illustrate, and publish complete blog
+              posts. One topic in. A polished article out.
             </p>
+            <div className="landing-hero__actions">
+              <Link href="/workshop" className="landing-btn landing-btn--primary">
+                <span>Create Blog</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </Link>
+              <Link href="/blogs" className="landing-btn landing-btn--secondary">
+                <span>Browse Published</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </Link>
+            </div>
           </div>
+        </section>
+
+        <section className="landing-pipeline">
+          <div className="landing-pipeline__inner">
+            <h2 className="landing-section-title">The Crew</h2>
+            <p className="landing-section-sub">Five specialised agents working in sequence to produce every article.</p>
+            <div className="landing-pipeline__grid">
+              <div className="landing-agent-card">
+                <div className="landing-agent-card__dot" style={{ background: "hsl(15, 52%, 58%)" }} />
+                <h3>Planner</h3>
+                <p>Researches the topic, outlines the structure, and briefs the team on scope and angle.</p>
+              </div>
+              <div className="landing-agent-arrow">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </div>
+              <div className="landing-agent-card">
+                <div className="landing-agent-card__dot" style={{ background: "hsl(200, 70%, 50%)" }} />
+                <h3>Researcher</h3>
+                <p>Searches the web for sources, data, and context. Gathers evidence and supporting material.</p>
+              </div>
+              <div className="landing-agent-arrow">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </div>
+              <div className="landing-agent-card">
+                <div className="landing-agent-card__dot" style={{ background: "hsl(140, 50%, 45%)" }} />
+                <h3>Writer</h3>
+                <p>Drafts the full article with structure, voice, and SEO. Produces the raw manuscript.</p>
+              </div>
+              <div className="landing-agent-arrow">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </div>
+              <div className="landing-agent-card">
+                <div className="landing-agent-card__dot" style={{ background: "hsl(270, 60%, 55%)" }} />
+                <h3>Editor</h3>
+                <p>Reviews, fact-checks, tightens prose, and ensures every post meets publication standards.</p>
+              </div>
+              <div className="landing-agent-arrow">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </div>
+              <div className="landing-agent-card">
+                <div className="landing-agent-card__dot" style={{ background: "hsl(30, 80%, 55%)" }} />
+                <h3>Illustrator</h3>
+                <p>Generates a cover image using AI, giving every article a unique, publish-ready visual.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="landing-cta">
+          <div className="landing-cta__inner">
+            <h2 className="landing-cta__title">Ready to publish?</h2>
+            <p className="landing-cta__sub">
+              Give the crew a topic and watch your next article come to life.
+            </p>
+            <Link href="/workshop" className="landing-btn landing-btn--primary landing-btn--large">
+              <span>Start Writing</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </Link>
+          </div>
+        </section>
+      </main>
+
+      <footer className="landing-footer">
+        <div className="landing-footer__inner">
+          <span>BlogCrew · A Multi-Agent Press</span>
+          <Link href="/blogs" className="landing-footer__link">Published Articles</Link>
         </div>
-      }
-    >
-      <HomePageContent />
-    </Suspense>
+      </footer>
+    </div>
   );
 }

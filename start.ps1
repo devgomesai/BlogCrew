@@ -59,8 +59,9 @@ function Test-Tool {
 
 Write-Color "Checking dependencies..." Yellow
 
-# Only yarn must exist globally
+# yarn and docker must exist globally
 $yarn = Test-Tool "yarn"
+$docker = Test-Tool "docker"
 
 if (-not (Test-Path $VenvActivate)) {
     Write-Host ""
@@ -72,7 +73,7 @@ if (-not (Test-Path $VenvActivate)) {
 
 Write-Color "✔ Virtual environment found" Green
 
-if (-not $yarn) {
+if (-not $yarn -or -not $docker) {
     Write-Host ""
     Write-Color "Missing required tools." Red
     exit 1
@@ -93,22 +94,16 @@ Start-Process powershell `
         "-ExecutionPolicy", "Bypass",
         "-Command",
 @"
-`$Host.UI.RawUI.WindowTitle = '🚀 LangGraph Backend'
+`$Host.UI.RawUI.WindowTitle = '🐳 LangGraph Backend (Docker)'
 Clear-Host
 
 Write-Host ''
 Write-Host '=========================================' -ForegroundColor Cyan
-Write-Host '        🚀 LANGGRAPH BACKEND' -ForegroundColor Green
+Write-Host '     🐳 LANGGRAPH BACKEND (blog-crew-backend)' -ForegroundColor Green
 Write-Host '=========================================' -ForegroundColor Cyan
 Write-Host ''
 
-. '$VenvActivate'
-
-Write-Host 'Python :' (Get-Command python).Source -ForegroundColor Yellow
-Write-Host 'LangGraph:' (Get-Command langgraph).Source -ForegroundColor Yellow
-Write-Host ''
-
-python -m langgraph_cli dev
+docker start `$(docker ps -a --filter 'name=blog-crew-backend' -q)
 "@
 )
 
@@ -141,6 +136,7 @@ Write-Host ''
 )
 
 Write-Host ""
-Write-Color "✔ Backend launched." Green
+Write-Color "✔ Backend launched (Docker: blog-crew-backend, http://localhost:8123)." Green
 Write-Color "✔ Frontend launched." Green
+Write-Color "  Stop backend containers: docker compose -p blog-crew-backend down" DarkGray
 Write-Host ""

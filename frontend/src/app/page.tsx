@@ -1,18 +1,11 @@
-"use client";
-
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Logo } from "@/app/components/Logo";
-import { Sun, Moon } from "lucide-react";
-import { useTheme } from "@/providers/ThemeProvider";
+import { BlogGlimpse } from "@/app/components/BlogGlimpse";
+import { ThemeToggleButton } from "@/app/components/ThemeToggleButton";
+import { Brain, Search, PenLine, CheckSquare, Image } from "lucide-react";
 import "./landing.css";
 
 export default function HomePage() {
-  const { theme, toggleTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => setMounted(true), []);
-
   return (
     <div className="landing-shell">
       <div className="landing-topbar">
@@ -22,14 +15,7 @@ export default function HomePage() {
         <nav className="landing-topbar__nav">
           <Link href="/workshop" className="landing-topbar__link">Workshop</Link>
           <Link href="/blogs" className="landing-topbar__link">Blogs</Link>
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent transition-colors"
-            aria-label={mounted ? (theme === "dark" ? "Switch to light mode" : "Switch to dark mode") : "Toggle theme"}
-          >
-            {mounted ? (theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />) : <span className="block h-4 w-4 rounded bg-muted-foreground/20" />}
-          </button>
+          <ThemeToggleButton />
         </nav>
       </div>
 
@@ -71,50 +57,65 @@ export default function HomePage() {
             <p className="landing-section-sub">Five specialised agents working in sequence to produce every article.</p>
             <div className="landing-pipeline__grid">
               <div className="landing-agent-card">
+                <div className="landing-agent-card__icon" style={{ background: "hsl(15, 52%, 58%)" }}>
+                  <Brain className="landing-agent-card__icon-svg" />
+                </div>
                 <div className="landing-agent-card__dot" style={{ background: "hsl(15, 52%, 58%)" }} />
                 <h3>Planner</h3>
                 <p>Researches the topic, outlines the structure, and briefs the team on scope and angle.</p>
               </div>
               <div className="landing-agent-arrow">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="5" y1="12" x2="19" y2="12" />
                   <polyline points="12 5 19 12 12 19" />
                 </svg>
               </div>
               <div className="landing-agent-card">
+                <div className="landing-agent-card__icon" style={{ background: "hsl(200, 70%, 50%)" }}>
+                  <Search className="landing-agent-card__icon-svg" />
+                </div>
                 <div className="landing-agent-card__dot" style={{ background: "hsl(200, 70%, 50%)" }} />
                 <h3>Researcher</h3>
                 <p>Searches the web for sources, data, and context. Gathers evidence and supporting material.</p>
               </div>
               <div className="landing-agent-arrow">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="5" y1="12" x2="19" y2="12" />
                   <polyline points="12 5 19 12 12 19" />
                 </svg>
               </div>
               <div className="landing-agent-card">
+                <div className="landing-agent-card__icon" style={{ background: "hsl(140, 50%, 45%)" }}>
+                  <PenLine className="landing-agent-card__icon-svg" />
+                </div>
                 <div className="landing-agent-card__dot" style={{ background: "hsl(140, 50%, 45%)" }} />
                 <h3>Writer</h3>
                 <p>Drafts the full article with structure, voice, and SEO. Produces the raw manuscript.</p>
               </div>
               <div className="landing-agent-arrow">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="5" y1="12" x2="19" y2="12" />
                   <polyline points="12 5 19 12 12 19" />
                 </svg>
               </div>
               <div className="landing-agent-card">
+                <div className="landing-agent-card__icon" style={{ background: "hsl(270, 60%, 55%)" }}>
+                  <CheckSquare className="landing-agent-card__icon-svg" />
+                </div>
                 <div className="landing-agent-card__dot" style={{ background: "hsl(270, 60%, 55%)" }} />
                 <h3>Editor</h3>
                 <p>Reviews, fact-checks, tightens prose, and ensures every post meets publication standards.</p>
               </div>
               <div className="landing-agent-arrow">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="5" y1="12" x2="19" y2="12" />
                   <polyline points="12 5 19 12 12 19" />
                 </svg>
               </div>
               <div className="landing-agent-card">
+                <div className="landing-agent-card__icon" style={{ background: "hsl(30, 80%, 55%)" }}>
+                  <Image className="landing-agent-card__icon-svg" />
+                </div>
                 <div className="landing-agent-card__dot" style={{ background: "hsl(30, 80%, 55%)" }} />
                 <h3>Illustrator</h3>
                 <p>Generates a cover image using AI, giving every article a unique, publish-ready visual.</p>
@@ -129,6 +130,7 @@ export default function HomePage() {
             <p className="landing-cta__sub">
               Give the crew a topic and watch your next article come to life.
             </p>
+            <BlogGlimpse />
             <Link href="/workshop" className="landing-btn landing-btn--primary landing-btn--large">
               <span>Start Writing</span>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

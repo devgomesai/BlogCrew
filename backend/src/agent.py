@@ -3,6 +3,7 @@ import yaml
 from dotenv import load_dotenv
 from deepagents import create_deep_agent
 from deepagents.backends import CompositeBackend, FilesystemBackend, StateBackend
+from langchain.agents.middleware import ToolCallLimitMiddleware
 from src.llm_service import get_llm
 from src.tools import generate_cover, web_search, write_blog
 
@@ -89,6 +90,9 @@ blog_agent = create_deep_agent(
     skills=["/skills/"],  # All the skills,
     subagents=load_subagents(BASE_DIR / "subagents.yaml"),  # Load subagents config
     backend=backend,
+    middleware=[
+        ToolCallLimitMiddleware(tool_name="web_search", thread_limit=5, run_limit=3),
+    ],
 )
 
 # See the Subagents

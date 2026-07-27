@@ -449,3 +449,28 @@
 @media (max-width: 560px) {
   .blog-grid { grid-template-columns: 1fr; }
 }
+
+/* ---- publish to platform ------------------------------------------------- */
+.blog-publish {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid hsl(var(--border));
+}
+.blog-publish__btn {
+  padding: 0.55rem 1.1rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 999px;
+  background: transparent;
+  color: hsl(var(--foreground));
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 200ms ease, border-color 200ms ease;
+}
+.blog-publish__btn:hover {
+  background: hsl(var(--muted));
+  border-color: hsl(var(--foreground));
+}

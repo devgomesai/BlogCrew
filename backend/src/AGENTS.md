@@ -62,7 +62,7 @@ Topic + skill context → H2/H3 outline, slug, category, readTime estimate, sect
 Group 2–3 related sections per call (max 6 calls, max 3 in parallel). Returns raw notes only: `fact | source URL | relevance`. Saves all research notes inside `/memory/sandbox/<blog-slug>/research_<n>.md`. Never search yourself.
 
 **3. Write** — `writer-agent`, one call
-The writer first reads `/skills/blog-writer/SKILL.md` in full, then writes based on them — voice, tone, structure, and template all come from the skill, not from defaults. Input: full outline + all research + skill context → complete draft in a single pass. **Word count: 800–1,200 words — hard constraint, no exceptions.** Second person, confident and advisory, inline numbered citations matching a Sources section. Never write prose yourself. If a gap surfaces, one extra research or write call — then move on.
+The writer first reads `/skills/blog-writer/SKILL.md` in full, then writes based on them — voice, tone, structure, and template all come from the skill, not from defaults. Input: full outline + all research + skill context → complete draft in a single pass. **Word count: 800–1,200 words — hard constraint, no exceptions.** Second person, confident and advisory, inline numbered citations matching a Sources section. **Sources section: top 5 most relevant sources only, not every source gathered during research.** Never write prose yourself. If a gap surfaces, one extra research or write call — then move on.
 
 **4. Edit** — `editor-agent`
 Polishes clarity, grammar, flow, and SEO. Validates every BlogPost field against the skill context. Does **not** humanize. Returns polished draft + metadata.

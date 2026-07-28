@@ -13,10 +13,26 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: [`"Anthropic Sans"`, `ui-sans-serif`, `system-ui`, `-apple-system`, `BlinkMacSystemFont`, `"Segoe UI"`, `Roboto`, `sans-serif`],
+        sans: [
+          `"Anthropic Sans"`,
+          `ui-sans-serif`,
+          `system-ui`,
+          `-apple-system`,
+          `BlinkMacSystemFont`,
+          `"Segoe UI"`,
+          `Roboto`,
+          `sans-serif`,
+        ],
         mono: [
-          `"Anthropic Mono"`, `"JetBrains Mono"`, `"SF Mono"`, `Monaco`, `"Cascadia Code"`, `"Roboto Mono"`,
-          `Consolas`, `"Courier New"`, `monospace`,
+          `"Anthropic Mono"`,
+          `"JetBrains Mono"`,
+          `"SF Mono"`,
+          `Monaco`,
+          `"Cascadia Code"`,
+          `"Roboto Mono"`,
+          `Consolas`,
+          `"Courier New"`,
+          `monospace`,
         ],
       },
       fontSize: {
@@ -101,7 +117,9 @@ export default {
           to: { opacity: 0 },
         },
         slideIn: {
-          from: { transform: "translateX(calc(100% + var(--viewport-padding)))" },
+          from: {
+            transform: "translateX(calc(100% + var(--viewport-padding)))",
+          },
           to: { transform: "translateX(0)" },
         },
         swipeOut: {
@@ -144,13 +162,23 @@ export default {
           "&::-webkit-scrollbar": { display: "none" },
         },
         ".break-anywhere": {
-          "@supports (overflow-wrap: anywhere)": { "overflow-wrap": "anywhere" },
-          "@supports not (overflow-wrap: anywhere)": { "word-break": "break-word" },
+          "@supports (overflow-wrap: anywhere)": {
+            "overflow-wrap": "anywhere",
+          },
+          "@supports not (overflow-wrap: anywhere)": {
+            "word-break": "break-word",
+          },
         },
         ".no-number-spinner": {
           MozAppearance: "textfield",
-          "&::-webkit-outer-spin-button": { WebkitAppearance: "none !important", margin: 0 },
-          "&::-webkit-inner-spin-button": { WebkitAppearance: "none !important", margin: 0 },
+          "&::-webkit-outer-spin-button": {
+            WebkitAppearance: "none !important",
+            margin: 0,
+          },
+          "&::-webkit-inner-spin-button": {
+            WebkitAppearance: "none !important",
+            margin: 0,
+          },
         },
         ".text-security": {
           textSecurity: "disc",

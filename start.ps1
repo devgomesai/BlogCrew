@@ -27,7 +27,6 @@ Write-Host ""
 $Root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $Backend = Join-Path $Root "backend"
 $Frontend = Join-Path $Root "frontend"
-$VenvActivate = Join-Path $Backend ".venv\Scripts\Activate.ps1"
 
 Write-Color "Project Root :" DarkGray
 Write-Color "  $Root" White
@@ -63,15 +62,7 @@ Write-Color "Checking dependencies..." Yellow
 $yarn = Test-Tool "yarn"
 $docker = Test-Tool "docker"
 
-if (-not (Test-Path $VenvActivate)) {
-    Write-Host ""
-    Write-Color "✖ Virtual environment not found." Red
-    Write-Color "Expected:" Yellow
-    Write-Color "  $VenvActivate" White
-    exit 1
-}
-
-Write-Color "✔ Virtual environment found" Green
+# No .venv check — the backend runs in Docker, not in a local virtualenv.
 
 if (-not $yarn -or -not $docker) {
     Write-Host ""
@@ -103,7 +94,13 @@ Write-Host '     🐳 LANGGRAPH BACKEND (blog-crew-backend)' -ForegroundColor Gr
 Write-Host '=========================================' -ForegroundColor Cyan
 Write-Host ''
 
-docker start `$(docker ps -a --filter 'name=blog-crew-backend' -q)
+# Create-or-start: `docker start` alone silently no-ops when the container
+# has never been built.
+`$id = docker ps -aq --filter 'name=blog-crew-backend'
+if (`$id) { docker start -a `$id } else {
+    Write-Host 'No blog-crew-backend container yet — building with langgraph up...' -ForegroundColor Yellow
+    langgraph up
+}
 "@
 )
 

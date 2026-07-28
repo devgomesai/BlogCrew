@@ -3,7 +3,13 @@ import { getAllBlogs } from "@/lib/blogs";
 import { ThemeToggle } from "./ThemeToggle";
 import { Logo } from "@/app/components/Logo";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
+
+export const metadata = {
+  title: "The Press — BlogCrew",
+  description:
+    "Researched, written, edited and illustrated end-to-end by the BlogCrew agents.",
+};
 
 export default function BlogsPage() {
   const blogs = getAllBlogs();
@@ -22,7 +28,10 @@ export default function BlogsPage() {
             No posts have been published. Send the crew a topic from the
             workshop and the first edition will land right here.
           </p>
-          <Link href="/workshop" className="blog-btn">
+          <Link
+            href="/workshop"
+            className="blog-btn"
+          >
             Open the Workshop
           </Link>
         </div>
@@ -56,11 +65,16 @@ export default function BlogsPage() {
       </header>
 
       <main className="blog-index">
-        <Link href={`/blogs/${lead.slug}`} className="blog-lead">
+        <Link
+          href={`/blogs/${lead.slug}`}
+          className="blog-lead"
+        >
           <div className="blog-lead__media">
             {lead.hasImage ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={`/api/blogs/${lead.slug}/image`} alt={lead.title} />
+              <img
+                src={`/api/blogs/${lead.slug}/image`}
+                alt={lead.title}
+              />
             ) : (
               <Glyph />
             )}
@@ -68,9 +82,7 @@ export default function BlogsPage() {
           <div className="blog-lead__body">
             <p className="blog-kicker">Lead Story · No. 01</p>
             <h2 className="blog-lead__title">{lead.title}</h2>
-            <span className="blog-lead__readmore">
-              Read the feature
-            </span>
+            <span className="blog-lead__readmore">Read the feature</span>
           </div>
         </Link>
 
@@ -98,7 +110,6 @@ export default function BlogsPage() {
                     }`}
                   >
                     {blog.hasImage ? (
-                      // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={`/api/blogs/${blog.slug}/image`}
                         alt={blog.title}
@@ -122,11 +133,17 @@ export default function BlogsPage() {
 function Topbar() {
   return (
     <div className="blog-topbar">
-      <Link href="/workshop" className="blog-link-back">
+      <Link
+        href="/workshop"
+        className="blog-link-back"
+      >
         ← The Workshop
       </Link>
-      <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-        <Link href="/blogs" className="blog-topbar__mark">
+      <div className="blog-topbar__right">
+        <Link
+          href="/blogs"
+          className="blog-topbar__mark"
+        >
           <Logo height={28} />
         </Link>
         <ThemeToggle />
@@ -146,8 +163,17 @@ function Glyph() {
       strokeWidth="2"
       aria-hidden="true"
     >
-      <circle cx="24" cy="14" r="8" />
-      <rect x="14" y="28" width="20" height="20" />
+      <circle
+        cx="24"
+        cy="14"
+        r="8"
+      />
+      <rect
+        x="14"
+        y="28"
+        width="20"
+        height="20"
+      />
       <polygon points="24,52 10,32 38,32" />
     </svg>
   );

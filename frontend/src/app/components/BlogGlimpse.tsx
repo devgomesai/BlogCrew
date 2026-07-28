@@ -8,11 +8,21 @@ export function BlogGlimpse() {
   return (
     <div className="landing-glimpse">
       {blogs.map((blog) => (
-        <Link key={blog.slug} href={`/blogs/${blog.slug}`} className="landing-glimpse__card">
-          <div className={`landing-glimpse__media${blog.hasImage ? "" : " landing-glimpse__media--empty"}`}>
+        <Link
+          key={blog.slug}
+          href={`/blogs/${blog.slug}`}
+          className="landing-glimpse__card"
+        >
+          <div
+            className={`landing-glimpse__media${
+              blog.hasImage ? "" : " landing-glimpse__media--empty"
+            }`}
+          >
             {blog.hasImage && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={`/api/blogs/${blog.slug}/image`} alt={blog.title} />
+              <img
+                src={`/api/blogs/${blog.slug}/image`}
+                alt={blog.title}
+              />
             )}
           </div>
           <span className="landing-glimpse__title">{blog.title}</span>

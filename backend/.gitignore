@@ -14,3 +14,6 @@ wheels/
 # Disk cache (tools.py web/image cache)
 .cache/
 session.txt
+
+# Agent scratch: per-run intermediate drafts, regenerated every run
+src/sandbox/

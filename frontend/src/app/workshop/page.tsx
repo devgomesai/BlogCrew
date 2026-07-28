@@ -31,11 +31,12 @@ const SUGGESTED_TOPICS = [
 function WorkshopPageInner({ config }: { config: StandaloneConfig }) {
   const client = useClient();
   const [threadId, setThreadId] = useQueryState("threadId");
-  const [sidebar, setSidebar] = useQueryState("sidebar");
+  const [sidebar, setSidebar] = useQueryState("sidebar", { defaultValue: "1" });
 
   const [mutateThreads, setMutateThreads] = useState<(() => void) | null>(null);
   const [interruptCount, setInterruptCount] = useState(0);
   const [assistant, setAssistant] = useState<Assistant | null>(null);
+  const [assistantError, setAssistantError] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
   const { theme, toggleTheme } = useTheme();
 
@@ -47,66 +48,35 @@ function WorkshopPageInner({ config }: { config: StandaloneConfig }) {
         config.assistantId
       );
 
-    if (isUUID) {
-      try {
-        const data = await client.assistants.get(config.assistantId);
-        setAssistant(data);
-      } catch (error) {
-        console.error("Failed to fetch assistant:", error);
-        setAssistant({
-          assistant_id: config.assistantId,
-          graph_id: config.assistantId,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          config: {},
-          metadata: {},
-          version: 1,
-          name: "Assistant",
-          context: {},
-        });
+    // No fake-Assistant fallback: a misconfigured NEXT_PUBLIC_ASSISTANT_ID used
+    // to look fine here and only fail on the first message. Surface it now.
+    try {
+      if (isUUID) {
+        setAssistant(await client.assistants.get(config.assistantId));
+        return;
       }
-    } else {
-      try {
-        const assistants = await client.assistants.search({
-          graphId: config.assistantId,
-          limit: 100,
-        });
-        const defaultAssistant = assistants.find(
-          (assistant) => assistant.metadata?.["created_by"] === "system"
-        );
-        if (defaultAssistant === undefined) {
-          throw new Error("No default assistant found");
-        }
-        setAssistant(defaultAssistant);
-      } catch (error) {
-        console.error(
-          "Failed to find default assistant from graph_id: try setting the assistant_id directly:",
-          error
-        );
-        setAssistant({
-          assistant_id: config.assistantId,
-          graph_id: config.assistantId,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          config: {},
-          metadata: {},
-          version: 1,
-          name: config.assistantId,
-          context: {},
-        });
+      const assistants = await client.assistants.search({
+        graphId: config.assistantId,
+        limit: 100,
+      });
+      const defaultAssistant = assistants.find(
+        (assistant) => assistant.metadata?.["created_by"] === "system"
+      );
+      if (!defaultAssistant) {
+        throw new Error(`No assistant found for graph "${config.assistantId}"`);
       }
+      setAssistant(defaultAssistant);
+    } catch (error) {
+      console.error("Failed to load assistant:", error);
+      setAssistantError(
+        error instanceof Error ? error.message : "Failed to load assistant"
+      );
     }
   }, [client, config.assistantId]);
 
   useEffect(() => {
     fetchAssistant();
   }, [fetchAssistant]);
-
-  useEffect(() => {
-    if (sidebar === null) {
-      setSidebar("1");
-    }
-  }, []);
 
   return (
     <div className="flex h-screen flex-col">
@@ -136,14 +106,28 @@ function WorkshopPageInner({ config }: { config: StandaloneConfig }) {
           <button
             type="button"
             onClick={toggleTheme}
-            className="flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent transition-colors"
-            aria-label={mounted ? (theme === "dark" ? "Switch to light mode" : "Switch to dark mode") : "Toggle theme"}
+            className="flex h-8 w-8 items-center justify-center rounded-md transition-colors hover:bg-accent"
+            aria-label={
+              mounted
+                ? theme === "dark"
+                  ? "Switch to light mode"
+                  : "Switch to dark mode"
+                : "Toggle theme"
+            }
           >
-            {mounted ? (theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />) : <span className="block h-4 w-4 rounded bg-muted-foreground/20" />}
+            {mounted ? (
+              theme === "dark" ? (
+                <Sun className="h-4 w-4" />
+              ) : (
+                <Moon className="h-4 w-4" />
+              )
+            ) : (
+              <span className="block h-4 w-4 rounded bg-muted-foreground/20" />
+            )}
           </button>
           <Link
             href="/blogs"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
             <BookOpen className="h-4 w-4" />
             Blogs
@@ -160,6 +144,17 @@ function WorkshopPageInner({ config }: { config: StandaloneConfig }) {
           </Button>
         </div>
       </header>
+
+      {assistantError && (
+        <div
+          role="alert"
+          className="border-b border-destructive/40 bg-destructive/10 px-5 py-2 text-sm text-destructive"
+        >
+          Could not load assistant <code>{config.assistantId}</code>:{" "}
+          {assistantError}. Check <code>NEXT_PUBLIC_ASSISTANT_ID</code> and that
+          the backend is running.
+        </div>
+      )}
 
       <div className="flex-1 overflow-hidden">
         <ResizablePanelGroup
@@ -222,11 +217,14 @@ function WorkshopPageContent() {
   if (!config) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
-        <div className="text-center max-w-md mx-auto px-6">
-          <Link href="/blogs" className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10">
+        <div className="mx-auto max-w-md px-6 text-center">
+          <Link
+            href="/blogs"
+            className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10"
+          >
             <Logo height={28} />
           </Link>
-          <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground mb-3">
+          <p className="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">
             A Multi-Agent Press
           </p>
           <h1 className="text-4xl font-bold tracking-tight text-foreground">
@@ -236,20 +234,16 @@ function WorkshopPageContent() {
             Research, write, edit &amp; illustrate — end to end.
           </p>
           <p className="mt-1 text-sm text-destructive">
-            Missing configuration. Set <code>NEXT_PUBLIC_DEPLOYMENT_URL</code> and <code>NEXT_PUBLIC_ASSISTANT_ID</code> in <code>.env</code>.
+            Missing configuration. Set <code>NEXT_PUBLIC_DEPLOYMENT_URL</code>{" "}
+            and <code>NEXT_PUBLIC_ASSISTANT_ID</code> in <code>.env</code>.
           </p>
         </div>
       </div>
     );
   }
 
-  const langsmithApiKey = config.langsmithApiKey || process.env.NEXT_PUBLIC_LANGSMITH_API_KEY || "";
-
   return (
-    <ClientProvider
-      deploymentUrl={config.deploymentUrl}
-      apiKey={langsmithApiKey}
-    >
+    <ClientProvider deploymentUrl={config.deploymentUrl}>
       <WorkshopPageInner config={config} />
     </ClientProvider>
   );
@@ -261,12 +255,10 @@ export default function WorkshopPage() {
       fallback={
         <div className="flex h-screen items-center justify-center bg-background">
           <div className="text-center">
-            <div className="mb-4 inline-flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10">
+            <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
               <span className="text-lg font-bold text-primary">BC</span>
             </div>
-            <p className="text-sm text-muted-foreground">
-              Loading BlogCrew...
-            </p>
+            <p className="text-sm text-muted-foreground">Loading BlogCrew...</p>
           </div>
         </div>
       }

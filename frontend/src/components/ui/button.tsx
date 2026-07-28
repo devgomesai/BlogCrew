@@ -20,8 +20,7 @@ const buttonVariants = cva(
           "border-transparent text-foreground hover:bg-accent hover:text-accent-foreground",
         destructive:
           "bg-destructive text-destructive-foreground border-destructive hover:bg-destructive/90 shadow-sm",
-        link:
-          "border-transparent text-primary underline-offset-4 hover:underline",
+        link: "border-transparent text-primary underline-offset-4 hover:underline",
       },
       size: {
         default: "h-10 px-5 py-2 has-[>svg]:px-3",

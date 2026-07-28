@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
@@ -8,7 +9,35 @@ import { Logo } from "@/app/components/Logo";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const blog = getBlog(slug);
+  if (!blog) return { title: "Not found" };
+
+  const images = blog.hasImage ? [`/api/blogs/${blog.slug}/image`] : [];
+  return {
+    title: blog.title,
+    description: blog.description ?? undefined,
+    keywords: blog.tags.length ? blog.tags : undefined,
+    openGraph: {
+      type: "article",
+      title: blog.title,
+      description: blog.description ?? undefined,
+      publishedTime: blog.date ?? undefined,
+      images,
+    },
+    twitter: {
+      card: images.length ? "summary_large_image" : "summary",
+      images,
+    },
+  };
+}
 
 export default async function BlogPostPage({
   params,
@@ -25,11 +54,17 @@ export default async function BlogPostPage({
   return (
     <>
       <div className="blog-topbar">
-        <Link href="/blogs" className="blog-link-back">
+        <Link
+          href="/blogs"
+          className="blog-link-back"
+        >
           ← All Articles
         </Link>
-        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-          <Link href="/blogs" className="blog-topbar__mark">
+        <div className="blog-topbar__right">
+          <Link
+            href="/blogs"
+            className="blog-topbar__mark"
+          >
             <Logo height={28} />
           </Link>
           <ThemeToggle />
@@ -44,12 +79,14 @@ export default async function BlogPostPage({
             <div className="blog-article__meta">
               <span>{minutes} min read</span>
               <span>{words.toLocaleString()} words</span>
-              <span>{slug}</span>
+              {blog.date && <time dateTime={blog.date}>{blog.date}</time>}
             </div>
             {blog.hasImage && (
               <figure className="blog-article__hero">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={`/api/blogs/${blog.slug}/image`} alt={blog.title} />
+                <img
+                  src={`/api/blogs/${blog.slug}/image`}
+                  alt={blog.title}
+                />
               </figure>
             )}
           </header>
@@ -73,7 +110,10 @@ export default async function BlogPostPage({
                     );
                   }
                   return (
-                    <code className={className} {...props}>
+                    <code
+                      className={className}
+                      {...props}
+                    >
                       {children}
                     </code>
                   );
@@ -88,7 +128,10 @@ export default async function BlogPostPage({
 
       <footer className="blog-article__foot">
         <span className="blog-kicker">End of article</span>
-        <Link href="/blogs" className="blog-link-back">
+        <Link
+          href="/blogs"
+          className="blog-link-back"
+        >
           ← Back to all articles
         </Link>
       </footer>

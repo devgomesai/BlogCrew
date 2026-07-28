@@ -20,8 +20,9 @@ Quickstart (5 minutes)
    uv sync
   ```
    or
-3. Copy `.env.example` → `.env` and set required keys (see Configuration).
-4. Run LangGraph Studio:
+3. Copy `backend/.env.example` → `backend/.env` and set required keys, and
+   `frontend/.env.local.example` → `frontend/.env.local`.
+4. Run LangGraph Studio (from `backend/`):
   ```bash
    langgraph dev
   ```
@@ -36,7 +37,8 @@ Production notes — required configuration
   TAVILY_API_KEY=your_tavily_api_key
   GOOGLE_API_KEY=your_google_api_key
   ```
-- The subagents' model & behavior are defined in `src/subagents.yaml`.
+- The subagents' behavior is defined in `backend/src/subagents.yaml`; the model
+  comes from `LLM_CHOICE` for every agent.
 
 How it works (high level)
 
@@ -44,27 +46,43 @@ How it works (high level)
 - Researcher performs targeted web searches (Tavily) per section.
 - Writer generates section text using the blog-writer skill and references.
 - Editor polishes the whole draft and enforces validations.
+- Humanizer strips AI tells from the edited draft — this is what gets saved.
 - generate_cover uses Gemini to create a cover image saved alongside the article.
 
 Outputs
 
-- Blog//Blog.md — generated article (Markdown)
-- Blog//cover.png — generated cover image
+- `backend/Blog/<slug>/Blog.md` — generated article (Markdown, with YAML frontmatter:
+  `title`, `date`, `description`, `tags`)
+- `backend/Blog/<slug>/cover.png` — generated cover image
 
 Project layout
 
 ```
-├── src/
-│   ├── agent.py        # Orchestrator and backend mapping
-│   ├── tools.py        # web_search, write_blog, generate_cover
-│   ├── llm_service.py  # Model selection (LLM_CHOICE)
-│   ├── subagents.yaml  # Planner/Researcher/Writer/Editor configs
-│   └── AGENTS.md       # Orchestrator manual loaded as /memory/AGENTS.md
-├── skills/             # Skills (blog-writer + references)
-├── Blog/               # Generated blog posts and covers
-├── langgraph.json
-└── pyproject.toml
+├── backend/
+│   ├── src/
+│   │   ├── agent.py         # Orchestrator and backend mapping
+│   │   ├── tools.py         # web_search, write_blog, generate_cover
+│   │   ├── llm_service.py   # Model selection (LLM_CHOICE)
+│   │   ├── subagents.yaml   # Planner/Researcher/Writer/Editor/Humanizer configs
+│   │   ├── AGENTS.md        # Orchestrator manual loaded as /memory/AGENTS.md
+│   │   └── test_tools.py    # Self-check: python -m src.test_tools
+│   ├── skills/              # Skills (blog-writer, humanizer + references)
+│   ├── Blog/                # Generated blog posts and covers
+│   ├── langgraph.json
+│   └── pyproject.toml
+├── frontend/                # Next.js reader (/blogs) + workshop UI
+└── start.ps1                # Launches backend (Docker) + frontend
 ```
+
+Deployment note
+
+The frontend reads posts straight off the backend's filesystem
+(`frontend/src/lib/blogs.ts` → `backend/Blog/`). That is deliberate: run both on
+one box (a VM, or one container with a shared volume). On Vercel or any
+serverless host there is no sibling `backend/` directory, so `/blogs` would
+render empty. Serving `Blog/` over HTTP from the backend is the upgrade path if
+that day comes. There is also no auth or rate limiting on the workshop page —
+don't expose it to the internet as-is.
 
 Windows-specific note
 The project uses a CompositeBackend that maps virtual paths (/memory/, /skills/) to local directories to avoid a FilesystemBackend path-resolution issue on Windows. Do not change that routing unless testing on non-Windows environments.

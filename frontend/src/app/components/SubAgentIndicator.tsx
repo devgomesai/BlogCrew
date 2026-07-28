@@ -2,7 +2,14 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, ChevronUp, Sparkles, Globe, PenLine, CheckSquare } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  Sparkles,
+  Globe,
+  PenLine,
+  CheckSquare,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { SubAgent } from "@/app/types/types";
 
@@ -12,7 +19,10 @@ interface SubAgentIndicatorProps {
   isExpanded?: boolean;
 }
 
-const PIPELINE_CONFIG: Record<string, { icon: React.ElementType; color: string; bgColor: string; label: string }> = {
+const PIPELINE_CONFIG: Record<
+  string,
+  { icon: React.ElementType; color: string; bgColor: string; label: string }
+> = {
   "planner-agent": {
     icon: Sparkles,
     color: "text-emerald-600 dark:text-emerald-400",
@@ -45,7 +55,13 @@ const PIPELINE_CONFIG: Record<string, { icon: React.ElementType; color: string; 
   },
 };
 
-const PIPELINE_ORDER = ["planner-agent", "researcher-agent", "writer-agent", "editor-agent", "humanizer-agent"];
+const PIPELINE_ORDER = [
+  "planner-agent",
+  "researcher-agent",
+  "writer-agent",
+  "editor-agent",
+  "humanizer-agent",
+];
 
 export const SubAgentIndicator = React.memo<SubAgentIndicatorProps>(
   ({ subAgent, onClick, isExpanded = true }) => {
@@ -75,7 +91,8 @@ export const SubAgentIndicator = React.memo<SubAgentIndicatorProps>(
               {PIPELINE_ORDER.map((agent, i) => {
                 const agentConfig = PIPELINE_CONFIG[agent];
                 const AgentIcon = agentConfig.icon;
-                const isPast = i < currentIndex || (currentIndex === -1 && isCompleted);
+                const isPast =
+                  i < currentIndex || (currentIndex === -1 && isCompleted);
                 const isCurrent = i === currentIndex;
                 const isFuture = i > currentIndex;
                 return (
@@ -85,8 +102,12 @@ export const SubAgentIndicator = React.memo<SubAgentIndicatorProps>(
                       "flex h-6 w-6 items-center justify-center rounded-full transition-all duration-300",
                       isPast && isCompleted ? "bg-green-500 text-white" : "",
                       isPast && !isCompleted ? "text-muted-foreground" : "",
-                      isCurrent && isActive ? `${agentConfig.bgColor} ${agentConfig.color} ring-2 ring-ring/30` : "",
-                      isCurrent && !isActive ? `${agentConfig.bgColor} ${agentConfig.color}` : "",
+                      isCurrent && isActive
+                        ? `${agentConfig.bgColor} ${agentConfig.color} ring-2 ring-ring/30`
+                        : "",
+                      isCurrent && !isActive
+                        ? `${agentConfig.bgColor} ${agentConfig.color}`
+                        : "",
                       isFuture ? "bg-muted text-muted-foreground/40" : ""
                     )}
                   >
@@ -97,13 +118,18 @@ export const SubAgentIndicator = React.memo<SubAgentIndicatorProps>(
             </div>
 
             <div className="flex items-center gap-2">
-              <div className={cn("flex items-center gap-1.5 rounded-full px-2.5 py-0.5", config.bgColor)}>
+              <div
+                className={cn(
+                  "flex items-center gap-1.5 rounded-full px-2.5 py-0.5",
+                  config.bgColor
+                )}
+              >
                 <Icon className={cn("h-3.5 w-3.5", config.color)} />
                 <span className={cn("text-xs font-medium", config.color)}>
                   {config.label}
                 </span>
               </div>
-              {(isActive) && (
+              {isActive && (
                 <span className="flex items-center gap-1 text-xs text-muted-foreground">
                   <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
                   Working...
@@ -113,9 +139,15 @@ export const SubAgentIndicator = React.memo<SubAgentIndicatorProps>(
           </div>
 
           {isExpanded ? (
-            <ChevronUp size={14} className="shrink-0 text-muted-foreground" />
+            <ChevronUp
+              size={14}
+              className="shrink-0 text-muted-foreground"
+            />
           ) : (
-            <ChevronDown size={14} className="shrink-0 text-muted-foreground" />
+            <ChevronDown
+              size={14}
+              className="shrink-0 text-muted-foreground"
+            />
           )}
         </Button>
       </div>

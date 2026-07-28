@@ -1,9 +1,11 @@
 from pathlib import Path
+
 import yaml
-from dotenv import load_dotenv
 from deepagents import create_deep_agent
 from deepagents.backends import CompositeBackend, FilesystemBackend, StateBackend
+from dotenv import load_dotenv
 from langchain.agents.middleware import ToolCallLimitMiddleware
+
 from src.llm_service import get_llm
 from src.tools import generate_cover, web_search, write_blog
 
@@ -13,9 +15,6 @@ load_dotenv()
 
 # BASE_DIR: directory where this script resides
 BASE_DIR = Path(__file__).parent
-
-# BLOG_DIR: where blogs will be saved
-BLOG_DIR = BASE_DIR.parent / "Blog"
 
 # SKILLS_DIR: where agent skills are stored
 SKILLS_DIR = BASE_DIR.parent / "skills"
@@ -45,7 +44,8 @@ def load_subagents(config_path: Path) -> list[dict]:
 
         merged = {**defaults, **spec}
 
-        required = ["name", "description", "system_prompt", "model"]
+        # 'model' is deliberately not required: get_llm() overrides it below.
+        required = ["name", "description", "system_prompt"]
         missing = [f for f in required if f not in merged]
         if missing:
             raise ValueError(f"{key} missing fields: {missing}")
@@ -60,7 +60,9 @@ def load_subagents(config_path: Path) -> list[dict]:
             "name": str(merged["name"]),
             "description": str(merged["description"]),
             "system_prompt": str(merged["system_prompt"]),
-            "model": get_llm(),  # ponytail: LM Studio for all subagents; re-read YAML model if per-agent models ever needed
+            # ponytail: one env-driven model for every subagent. Read
+            # merged["model"] here the day per-agent models are actually wanted.
+            "model": get_llm(),
         }
 
         if tools:
@@ -94,10 +96,3 @@ blog_agent = create_deep_agent(
         ToolCallLimitMiddleware(tool_name="web_search", thread_limit=5, run_limit=3),
     ],
 )
-
-# See the Subagents
-# agents = load_subagents(BASE_DIR / "subagents.yaml")
-
-# for agent in agents:
-#     print("\n" + "=" * 50)
-#     pprint.pprint(agent)

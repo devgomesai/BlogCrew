@@ -1,33 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
-import { BLOG_DIR } from "@/lib/blogs";
-import { join } from "path";
-import { existsSync, readdirSync } from "fs";
+import { getBlog } from "@/lib/blogs";
+import { readFileSync } from "fs";
+
+const MIME: Record<string, string> = {
+  png: "image/png",
+  webp: "image/webp",
+  jpg: "image/jpeg",
+  jpeg: "image/jpeg",
+};
 
 export async function GET(
   _req: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
-  const slugDir = join(BLOG_DIR, slug);
-  if (!existsSync(slugDir)) {
+  // getBlog validates the slug — never join() a URL segment here.
+  const blog = getBlog(slug);
+  if (!blog?.imagePath || !blog.imageName) {
     return new NextResponse("Not found", { status: 404 });
   }
 
-  const entries = readdirSync(slugDir);
-  const imageFile = entries.find((f) => /\.(png|jpg|jpeg|webp)$/i.test(f));
-  if (!imageFile) {
-    return new NextResponse("No image", { status: 404 });
-  }
-
-  const ext = imageFile.split(".").pop()?.toLowerCase();
-  const mime = ext === "png" ? "image/png" : ext === "webp" ? "image/webp" : "image/jpeg";
-
-  const { readFileSync } = await import("fs");
-  const buffer = readFileSync(join(slugDir, imageFile));
-
-  return new NextResponse(buffer, {
+  const ext = blog.imageName.split(".").pop()?.toLowerCase() ?? "";
+  return new NextResponse(readFileSync(blog.imagePath), {
     headers: {
-      "Content-Type": mime,
+      "Content-Type": MIME[ext] ?? "application/octet-stream",
       "Cache-Control": "public, max-age=31536000, immutable",
     },
   });

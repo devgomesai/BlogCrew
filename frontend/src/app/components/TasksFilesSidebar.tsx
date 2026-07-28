@@ -213,7 +213,7 @@ export const TasksFilesSidebar = React.memo<{
                   <div className="ml-1 p-0.5">
                     {Object.entries(groupedTodos).map(([status, todos]) => (
                       <div className="mb-4">
-                        <h3 className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-tertiary">
+                        <h3 className="text-tertiary mb-1 text-[10px] font-semibold uppercase tracking-wider">
                           {groupedLabels[status as keyof typeof groupedLabels]}
                         </h3>
                         {todos.map((todo, index) => (

@@ -78,8 +78,22 @@ The humanizer must:
 - **Zero em dashes** (`—` or `–`) in the output — no exceptions
 - Add natural voice: opinions, thinking markers, first person where it fits
 - Rewrite, never delete — same sections, same facts, same sources, same length, metadata untouched
+- Never touch the YAML frontmatter block — copy it through verbatim
 
 **Finalize** — write `Blog/<slug>/Blog.md` (the humanized draft) and generate `Blog/<slug>/cover.png`. Both files, always.
+
+`Blog.md` must begin with YAML frontmatter — the site reads it for the page
+title, meta description, OG tags, and post ordering. Without it the post
+falls back to guessing from the H1 and the file's mtime:
+
+```yaml
+---
+title: "The post title"
+date: YYYY-MM-DD
+description: "One sentence, under 160 characters."
+tags: [tag-one, tag-two, tag-three]
+---
+```
 
 ---
 

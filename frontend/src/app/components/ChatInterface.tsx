@@ -12,10 +12,6 @@ import { Button } from "@/components/ui/button";
 import {
   Square,
   ArrowUp,
-  CheckCircle,
-  Clock,
-  Circle,
-  FileIcon,
   PenLine,
   Sparkles,
   Search,
@@ -26,12 +22,7 @@ import {
   MicOff,
 } from "lucide-react";
 import { ChatMessage } from "@/app/components/ChatMessage";
-import type {
-  TodoItem,
-  ToolCall,
-  ActionRequest,
-  ReviewConfig,
-} from "@/app/types/types";
+import type { ToolCall, ActionRequest, ReviewConfig } from "@/app/types/types";
 import { Assistant, Message } from "@langchain/langgraph-sdk";
 import { extractStringFromMessageContent } from "@/app/utils/utils";
 import { useChatContext } from "@/providers/ChatProvider";
@@ -39,6 +30,7 @@ import { cn } from "@/lib/utils";
 import { useStickToBottom } from "use-stick-to-bottom";
 import { FilesPopover } from "@/app/components/TasksFilesSidebar";
 import { useSpeechRecognition } from "@/app/hooks/useSpeechRecognition";
+import { MetaStrip, getStatusIcon } from "@/app/components/MetaStrip";
 
 interface ChatInterfaceProps {
   assistant: Assistant | null;
@@ -46,32 +38,6 @@ interface ChatInterfaceProps {
 }
 
 const TOPIC_ICONS = [Sparkles, Globe, Lightbulb, Search, FileText, PenLine];
-
-const getStatusIcon = (status: TodoItem["status"], className?: string) => {
-  switch (status) {
-    case "completed":
-      return (
-        <CheckCircle
-          size={16}
-          className={cn("text-green-500", className)}
-        />
-      );
-    case "in_progress":
-      return (
-        <Clock
-          size={16}
-          className={cn("text-amber-500", className)}
-        />
-      );
-    default:
-      return (
-        <Circle
-          size={16}
-          className={cn("text-muted-foreground/50", className)}
-        />
-      );
-  }
-};
 
 export const ChatInterface = React.memo<ChatInterfaceProps>(
   ({ assistant, suggestedTopics }) => {
@@ -125,15 +91,12 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
       [input, isLoading, sendMessage, setInput, submitDisabled]
     );
 
-    const handleTopicClick = useCallback(
-      (topic: string) => {
-        setInput(topic);
-        if (textareaRef.current) {
-          textareaRef.current.focus();
-        }
-      },
-      []
-    );
+    const handleTopicClick = useCallback((topic: string) => {
+      setInput(topic);
+      if (textareaRef.current) {
+        textareaRef.current.focus();
+      }
+    }, []);
 
     const handleKeyDown = useCallback(
       (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -146,104 +109,110 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
       [handleSubmit, submitDisabled]
     );
 
-  const processedMessages = useMemo(() => {
-    const messageMap = new Map<
-      string,
-      { message: Message; toolCalls: ToolCall[] }
-    >();
-    messages.forEach((message: Message) => {
-      if (message.type === "ai") {
-        const toolCallsInMessage: Array<{
-          id?: string;
-          function?: { name?: string; arguments?: unknown };
-          name?: string;
-          type?: string;
-          args?: unknown;
-          input?: unknown;
-        }> = [];
-        if (
-          message.additional_kwargs?.tool_calls &&
-          Array.isArray(message.additional_kwargs.tool_calls)
-        ) {
-          toolCallsInMessage.push(...message.additional_kwargs.tool_calls);
-        } else if (message.tool_calls && Array.isArray(message.tool_calls)) {
-          toolCallsInMessage.push(
-            ...message.tool_calls.filter(
-              (toolCall: { name?: string }) => toolCall.name !== ""
-            )
-          );
-        } else if (Array.isArray(message.content)) {
-          const toolUseBlocks = message.content.filter(
-            (block: { type?: string }) => block.type === "tool_use"
-          );
-          toolCallsInMessage.push(...toolUseBlocks);
-        }
-        const toolCallsWithStatus = toolCallsInMessage.map(
-          (toolCall: {
+    const processedMessages = useMemo(() => {
+      const messageMap = new Map<
+        string,
+        { message: Message; toolCalls: ToolCall[] }
+      >();
+      messages.forEach((message: Message) => {
+        if (message.type === "ai") {
+          const toolCallsInMessage: Array<{
             id?: string;
             function?: { name?: string; arguments?: unknown };
             name?: string;
             type?: string;
             args?: unknown;
             input?: unknown;
-          }) => {
-            const name =
-              toolCall.function?.name ||
-              toolCall.name ||
-              toolCall.type ||
-              "unknown";
-            const args =
-              toolCall.function?.arguments ||
-              toolCall.args ||
-              toolCall.input ||
-              {};
-            return {
-              id: toolCall.id || `tool-${Math.random()}`,
-              name,
-              args,
-              status: interrupt ? "interrupted" : ("pending" as const),
-            } as ToolCall;
+          }> = [];
+          if (
+            message.additional_kwargs?.tool_calls &&
+            Array.isArray(message.additional_kwargs.tool_calls)
+          ) {
+            toolCallsInMessage.push(...message.additional_kwargs.tool_calls);
+          } else if (message.tool_calls && Array.isArray(message.tool_calls)) {
+            toolCallsInMessage.push(
+              ...message.tool_calls.filter(
+                (toolCall: { name?: string }) => toolCall.name !== ""
+              )
+            );
+          } else if (Array.isArray(message.content)) {
+            const toolUseBlocks = message.content.filter(
+              (block: { type?: string }) => block.type === "tool_use"
+            );
+            toolCallsInMessage.push(...toolUseBlocks);
           }
-        );
-        messageMap.set(message.id!, {
-          message,
-          toolCalls: toolCallsWithStatus,
-        });
-      } else if (message.type === "tool") {
-        const toolCallId = message.tool_call_id;
-        if (!toolCallId) {
-          return;
-        }
-        for (const [, data] of messageMap.entries()) {
-          const toolCallIndex = data.toolCalls.findIndex(
-            (tc: ToolCall) => tc.id === toolCallId
+          const toolCallsWithStatus = toolCallsInMessage.map(
+            (
+              toolCall: {
+                id?: string;
+                function?: { name?: string; arguments?: unknown };
+                name?: string;
+                type?: string;
+                args?: unknown;
+                input?: unknown;
+              },
+              toolCallIndex: number
+            ) => {
+              const name =
+                toolCall.function?.name ||
+                toolCall.name ||
+                toolCall.type ||
+                "unknown";
+              const args =
+                toolCall.function?.arguments ||
+                toolCall.args ||
+                toolCall.input ||
+                {};
+              return {
+                // Index, not Math.random() — a fresh id each render becomes a new
+                // React key and remounts the tool box, losing its open/closed state.
+                id: toolCall.id || `${message.id}-tool-${toolCallIndex}`,
+                name,
+                args,
+                status: interrupt ? "interrupted" : ("pending" as const),
+              } as ToolCall;
+            }
           );
-          if (toolCallIndex === -1) {
-            continue;
+          messageMap.set(message.id!, {
+            message,
+            toolCalls: toolCallsWithStatus,
+          });
+        } else if (message.type === "tool") {
+          const toolCallId = message.tool_call_id;
+          if (!toolCallId) {
+            return;
           }
-          data.toolCalls[toolCallIndex] = {
-            ...data.toolCalls[toolCallIndex],
-            status: "completed" as const,
-            result: extractStringFromMessageContent(message),
-          };
-          break;
+          for (const [, data] of messageMap.entries()) {
+            const toolCallIndex = data.toolCalls.findIndex(
+              (tc: ToolCall) => tc.id === toolCallId
+            );
+            if (toolCallIndex === -1) {
+              continue;
+            }
+            data.toolCalls[toolCallIndex] = {
+              ...data.toolCalls[toolCallIndex],
+              status: "completed" as const,
+              result: extractStringFromMessageContent(message),
+            };
+            break;
+          }
+        } else if (message.type === "human") {
+          messageMap.set(message.id!, {
+            message,
+            toolCalls: [],
+          });
         }
-      } else if (message.type === "human") {
-        messageMap.set(message.id!, {
-          message,
-          toolCalls: [],
-        });
-      }
-    });
-    const processedArray = Array.from(messageMap.values());
-    return processedArray.map((data, index) => {
-      const prevMessage = index > 0 ? processedArray[index - 1].message : null;
-      return {
-        ...data,
-        showAvatar: data.message.type !== prevMessage?.type,
-      };
-    });
-  }, [messages, interrupt]);
+      });
+      const processedArray = Array.from(messageMap.values());
+      return processedArray.map((data, index) => {
+        const prevMessage =
+          index > 0 ? processedArray[index - 1].message : null;
+        return {
+          ...data,
+          showAvatar: data.message.type !== prevMessage?.type,
+        };
+      });
+    }, [messages, interrupt]);
 
     const groupedTodos = {
       in_progress: todos.filter((t) => t.status === "in_progress"),
@@ -286,15 +255,16 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
               </div>
             ) : isEmpty ? (
               <div className="flex flex-col items-center justify-center py-16">
-                <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10">
+                <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
                   <PenLine className="h-6 w-6 text-primary" />
                 </div>
                 <h2 className="text-2xl font-semibold tracking-tight text-foreground">
                   What should we write about?
                 </h2>
                 <p className="mt-1 max-w-md text-center text-sm text-muted-foreground">
-                  Give BlogCrew a topic and our four-agent pipeline will research,
-                  write, and polish a publication-ready blog post for you.
+                  Give BlogCrew a topic and our four-agent pipeline will
+                  research, write, and polish a publication-ready blog post for
+                  you.
                 </p>
 
                 <div className="mt-8 flex flex-wrap justify-center gap-2 px-4">
@@ -378,118 +348,13 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
             {(hasTasks || hasFiles) && (
               <div className="flex max-h-72 flex-col overflow-y-auto border-b border-border empty:hidden">
                 {!metaOpen && (
-                  <>
-                    {(() => {
-                      const activeTask = todos.find(
-                        (t) => t.status === "in_progress"
-                      );
-
-                      const totalTasks = todos.length;
-                      const remainingTasks =
-                        totalTasks - groupedTodos.pending.length;
-                      const isCompleted = totalTasks === remainingTasks;
-
-                      const tasksTrigger = (() => {
-                        if (!hasTasks) return null;
-                        return (
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setMetaOpen((prev) =>
-                                prev === "tasks" ? null : "tasks"
-                              )
-                            }
-                            className="grid w-full cursor-pointer grid-cols-[auto_auto_1fr] items-center gap-3 px-[18px] py-3 text-left"
-                            aria-expanded={metaOpen === "tasks"}
-                          >
-                            {(() => {
-                              if (isCompleted) {
-                                return [
-                                  <CheckCircle
-                                    key="icon"
-                                    size={16}
-                                    className="text-green-500"
-                                  />,
-                                  <span
-                                    key="label"
-                                    className="ml-[1px] min-w-0 truncate text-sm"
-                                  >
-                                    All tasks completed
-                                  </span>,
-                                ];
-                              }
-
-                              if (activeTask != null) {
-                                return [
-                                  <div key="icon">
-                                    {getStatusIcon(activeTask.status)}
-                                  </div>,
-                                  <span
-                                    key="label"
-                                    className="ml-[1px] min-w-0 truncate text-sm"
-                                  >
-                                    Task{" "}
-                                    {totalTasks - groupedTodos.pending.length} of{" "}
-                                    {totalTasks}
-                                  </span>,
-                                  <span
-                                    key="content"
-                                    className="min-w-0 gap-2 truncate text-sm text-muted-foreground"
-                                  >
-                                    {activeTask.content}
-                                  </span>,
-                                ];
-                              }
-
-                              return [
-                                <Circle
-                                  key="icon"
-                                  size={16}
-                                  className="text-muted-foreground/50"
-                                />,
-                                <span
-                                  key="label"
-                                  className="ml-[1px] min-w-0 truncate text-sm"
-                                >
-                                  Task {totalTasks - groupedTodos.pending.length}{" "}
-                                  of {totalTasks}
-                                </span>,
-                              ];
-                            })()}
-                          </button>
-                        );
-                      })();
-
-                      const filesTrigger = (() => {
-                        if (!hasFiles) return null;
-                        return (
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setMetaOpen((prev) =>
-                                prev === "files" ? null : "files"
-                              )
-                            }
-                            className="flex flex-shrink-0 cursor-pointer items-center gap-2 px-[18px] py-3 text-left text-sm"
-                            aria-expanded={metaOpen === "files"}
-                          >
-                            <FileIcon size={16} />
-                            Files (State)
-                            <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[10px] font-medium text-primary-foreground">
-                              {Object.keys(files).length}
-                            </span>
-                          </button>
-                        );
-                      })();
-
-                      return (
-                        <div className="grid grid-cols-[1fr_auto_auto] items-center">
-                          {tasksTrigger}
-                          {filesTrigger}
-                        </div>
-                      );
-                    })()}
-                  </>
+                  <MetaStrip
+                    todos={todos}
+                    pendingCount={groupedTodos.pending.length}
+                    fileCount={Object.keys(files).length}
+                    metaOpen={metaOpen}
+                    setMetaOpen={setMetaOpen}
+                  />
                 )}
 
                 {metaOpen && (
@@ -555,7 +420,9 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
                               </h3>
                               <div className="grid grid-cols-[auto_1fr] gap-3 rounded-sm p-1 pl-0 text-sm">
                                 {todos.map((todo, index) => (
-                                  <Fragment key={`${status}_${todo.id}_${index}`}>
+                                  <Fragment
+                                    key={`${status}_${todo.id}_${index}`}
+                                  >
                                     {getStatusIcon(todo.status, "mt-0.5")}
                                     <span className="break-words text-inherit">
                                       {todo.content}
@@ -591,7 +458,11 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder={isLoading ? "BlogCrew is writing..." : "Type a blog topic or ask for a post..."}
+                placeholder={
+                  isLoading
+                    ? "BlogCrew is writing..."
+                    : "Type a blog topic or ask for a post..."
+                }
                 className="font-inherit field-sizing-content flex-1 resize-none border-0 bg-transparent px-[18px] pb-[13px] pt-[14px] text-sm leading-7 text-foreground outline-none placeholder:text-muted-foreground"
                 rows={1}
               />

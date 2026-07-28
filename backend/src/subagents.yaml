@@ -1,9 +1,7 @@
-_defaults:
-  model: &model "ornith-1.0-9b"  # must match LLM_CHOICE in .env; served by LM Studio via get_llm()
+# Model is not set here — get_llm() reads LLM_CHOICE from .env for every agent.
 
 planner:
   name: planner-agent
-  model: *model
   description: >-
     Call FIRST. Input: topic. Output: H2/H3 outline with a narrative arc —
     hook, core argument, takeaway, strong close. Structure only, no prose.
@@ -17,7 +15,6 @@ planner:
 
 researcher:
   name: researcher-agent
-  model: *model
   description: >-
     Call per section BEFORE writing. Input: section title + save path.
     Output: sourced research notes saved to that path.
@@ -34,7 +31,6 @@ researcher:
 
 writer:
   name: writer-agent
-  model: *model
   description: >-
     Call ONCE after all research is saved. Input: outline + research paths +
     skill context. Output: complete draft, all sections, one pass.
@@ -49,12 +45,22 @@ writer:
     numbers. Confident, not hedged. Every claim comes from the research
     files. Match outline headings exactly. Blog markdown only, no preamble.
     Word count: 800–1,200 words — hard constraint, no exceptions.
+
+    START the document with YAML frontmatter, exactly this shape, then the
+    H1 and the body:
+
+    ---
+    title: "The post title"
+    date: YYYY-MM-DD
+    description: "One sentence, under 160 characters — this is the SEO meta
+      description and the social preview text."
+    tags: [tag-one, tag-two, tag-three]
+    ---
   skills:
     - /skills/blog-writer/
 
 editor:
   name: editor-agent
-  model: *model
   description: >-
     Call ONCE on the assembled draft. Polishes precision, flow, SEO;
     validates BlogPost metadata. Does NOT humanize — humanizer-agent runs
@@ -68,12 +74,15 @@ editor:
     Don't add claims, drop insights, or change meaning. Don't humanize —
     that's the next agent's job. Validate every BlogPost field. Return only
     the polished markdown + metadata block.
+
+    The YAML frontmatter block (title, date, description, tags) must survive
+    intact at the top of the document — the site reads it for <title>, meta
+    description, and OG tags. Add it if the writer omitted it.
   skills:
     - /skills/blog-writer/
 
 humanizer:
   name: humanizer-agent
-  model: *model
   description: >-
     Call LAST, ONCE, on the edited draft. Rewrites it to read as
     human-written. Output: final markdown + unchanged metadata. This output

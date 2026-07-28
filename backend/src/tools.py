@@ -5,16 +5,20 @@ Reliability: retry (tenacity), caching (diskcache), and timeouts on all external
 
 import re
 from pathlib import Path
-from functools import lru_cache
+from typing import Annotated, Literal
 
-import httpx
 import diskcache
+import httpx
+from dotenv import load_dotenv
 from langchain_core.tools import InjectedToolArg, tool
 from markdownify import markdownify
 from tavily import TavilyClient
-from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
-from typing_extensions import Annotated, Literal
-from dotenv import load_dotenv
+from tenacity import (
+    retry,
+    retry_if_exception_type,
+    stop_after_attempt,
+    wait_exponential,
+)
 
 load_dotenv()
 
@@ -130,12 +134,12 @@ def web_search(
 ) -> str:
     """Search the web for information on a given query.
 
-    Uses Tavily to discover relevant URLs, then fetches full webpage content as markdown.
+    Uses Tavily to discover relevant URLs, then fetches page content as markdown.
     Results are cached so repeated queries reuse prior results.
 
     Args:
         query: Search query to execute
-        max_results: Maximum number of results to return (default: 1)
+        max_results: Maximum number of results to return (default: 3)
         topic: Topic filter - 'general', 'news', or 'finance' (default: 'general')
 
     Returns:
@@ -193,7 +197,8 @@ def write_blog(slug: str, content: str) -> str:
     """
     if not SLUG_RE.match(slug):
         return (
-            f"Invalid slug '{slug}'. Use only letters, numbers, hyphens, and underscores."
+            f"Invalid slug '{slug}'. Use only letters, numbers, "
+            "hyphens, and underscores."
         )
     path = BLOG_DIR / slug / "Blog.md"
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -201,9 +206,20 @@ def write_blog(slug: str, content: str) -> str:
     return f"Blog saved to {path}"
 
 
+@retry(
+    stop=stop_after_attempt(3),
+    wait=wait_exponential(multiplier=1, min=2, max=30),
+    retry=retry_if_exception_type(Exception),
+    reraise=True,
+)
 def _generate_cover_gemini(prompt: str, slug: str, name: str) -> str:
-    """Inner implementation — extracted so tenacity can retry it cleanly."""
+    """Inner implementation — retried here, not on the tool.
+
+    On the tool the retry is dead: its try/except returns a string, which
+    tenacity reads as success.
+    """
     import io
+
     import PIL.Image
     from google import genai
     from google.genai import types
@@ -228,24 +244,23 @@ def _generate_cover_gemini(prompt: str, slug: str, name: str) -> str:
 
 
 @tool(parse_docstring=True)
-@retry(
-    stop=stop_after_attempt(3),
-    wait=wait_exponential(multiplier=1, min=2, max=30),
-    retry=retry_if_exception_type(Exception),
-    reraise=False,
-)
 def generate_cover(prompt: str, slug: str, name: str) -> str:
     """
     Generate and save a cover image to Blog/<slug>/<name>.png using Gemini image model
 
     Args:
         prompt: Text prompt describing the image
-        slug: Blog subfolder
+        slug: Blog subfolder (alphanumeric, hyphens, underscores only)
         name: Image file name
 
     Returns:
         Status message with saved path or error
     """
+    if not SLUG_RE.match(slug) or not SLUG_RE.match(name):
+        return (
+            f"Invalid slug '{slug}' or name '{name}'. "
+            "Use only letters, numbers, hyphens, and underscores."
+        )
     try:
         return _generate_cover_gemini(prompt, slug, name)
     except Exception as e:

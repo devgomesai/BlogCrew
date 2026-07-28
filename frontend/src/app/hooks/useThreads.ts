@@ -23,10 +23,6 @@ export function useThreads(props: {
   return useSWRInfinite(
     (pageIndex: number, previousPageData: ThreadItem[] | null) => {
       const config = getConfig();
-      const apiKey =
-        config?.langsmithApiKey ||
-        process.env.NEXT_PUBLIC_LANGSMITH_API_KEY ||
-        "";
 
       // If the previous page returned no items, we've reached the end
       if (previousPageData && previousPageData.length === 0) {
@@ -40,14 +36,12 @@ export function useThreads(props: {
         hasConfig: !!config,
         deploymentUrl: config?.deploymentUrl ?? "",
         assistantId: config?.assistantId ?? "",
-        apiKey,
         status: props?.status,
       };
     },
     async ({
       deploymentUrl,
       assistantId,
-      apiKey,
       status,
       pageIndex,
       pageSize,
@@ -59,7 +53,6 @@ export function useThreads(props: {
       hasConfig: boolean;
       deploymentUrl: string;
       assistantId: string;
-      apiKey: string;
       status?: Thread["status"];
     }) => {
       if (!hasConfig) {
@@ -70,7 +63,7 @@ export function useThreads(props: {
 
       const client = new Client({
         apiUrl: deploymentUrl,
-        defaultHeaders: apiKey ? { "X-Api-Key": apiKey } : {},
+        defaultHeaders: {},
       });
 
       // Check if assistantId is a UUID (deployed) or graph name (local)

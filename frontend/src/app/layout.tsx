@@ -23,7 +23,10 @@ export default function RootLayout({
           href="https://cdn.jsdelivr.net/gh/devchauhann/fonts@v1.1.0/cdn/v1/css/all.css"
         />
       </head>
-      <body className="font-sans" suppressHydrationWarning>
+      <body
+        className="font-sans"
+        suppressHydrationWarning
+      >
         <ThemeProvider>
           <NuqsAdapter>{children}</NuqsAdapter>
         </ThemeProvider>

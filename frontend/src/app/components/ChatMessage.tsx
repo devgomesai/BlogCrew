@@ -119,14 +119,17 @@ export const ChatMessage = React.memo<ChatMessageProps>(
                   </p>
                 ) : hasContent ? (
                   <>
-                    {(!isUser && messageContent.includes("slug") && messageContent.includes("BlogPost") && messageContent.includes("---")) && (
-                      <div className="mb-4 flex items-center gap-2 rounded-md border border-border bg-card px-3 py-2">
-                        <FileText className="h-4 w-4 text-foreground" />
-                        <span className="text-xs font-medium text-foreground">
-                          Blog Post Generated
-                        </span>
-                      </div>
-                    )}
+                    {!isUser &&
+                      messageContent.includes("slug") &&
+                      messageContent.includes("BlogPost") &&
+                      messageContent.includes("---") && (
+                        <div className="mb-4 flex items-center gap-2 rounded-md border border-border bg-card px-3 py-2">
+                          <FileText className="h-4 w-4 text-foreground" />
+                          <span className="text-xs font-medium text-foreground">
+                            Blog Post Generated
+                          </span>
+                        </div>
+                      )}
                     <MarkdownContent content={messageContent} />
                   </>
                 ) : null}

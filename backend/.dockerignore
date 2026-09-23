@@ -1,0 +1,12 @@
+# Secrets come in at runtime via compose's env_file — never bake them in.
+.env
+.env.*
+!.env.example
+
+# Local-only state
+.venv/
+.cache/
+.langgraph_api/
+__pycache__/
+*.py[oc]
+src/sandbox/

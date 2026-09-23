@@ -85,6 +85,28 @@ Project layout
 └── start.ps1                # Launches backend (Docker) + frontend
 ```
 
+Run with Docker (frontend + backend)
+
+1. Copy `backend/.env.example` → `backend/.env` and fill in `LLM_CHOICE`, the
+   provider key it needs, `TAVILY_API_KEY`, `GOOGLE_API_KEY`, and
+   `LANGSMITH_API_KEY` (the production LangGraph server image won't start
+   without it, unlike `langgraph dev`).
+2. From the repo root:
+   ```bash
+   docker compose up -d --build
+   docker compose logs -f backend    # wait for the server to be ready
+   ```
+3. Open http://localhost:3000/workshop. The backend API is on
+   http://localhost:8123 (`/ok` returns `{"ok":true}`).
+4. Stop with `docker compose down` (add `-v` to also wipe generated posts and
+   thread history).
+
+Compose runs redis, postgres, the backend and the frontend. Posts live in the
+`blogs` volume: the backend writes it, the frontend mounts it read-only. The
+frontend's `NEXT_PUBLIC_DEPLOYMENT_URL` is baked in at build time (default
+`http://localhost:8123`); to reach the backend at another address, rebuild with
+`NEXT_PUBLIC_DEPLOYMENT_URL=http://<host>:8123 docker compose up -d --build`.
+
 Deployment note
 
 The frontend reads posts straight off the backend's filesystem

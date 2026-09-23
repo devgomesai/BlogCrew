@@ -15,9 +15,11 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { ThreadList } from "@/app/components/ThreadList";
-import { ChatProvider } from "@/providers/ChatProvider";
+import { ChatProvider, useChatContext } from "@/providers/ChatProvider";
 import { ChatInterface } from "@/app/components/ChatInterface";
 import { useTheme } from "@/providers/ThemeProvider";
+import { BlogPreviewPanel } from "@/app/components/BlogPreviewPanel";
+import { findSavedBlogSlug } from "@/app/utils/utils";
 
 const SUGGESTED_TOPICS = [
   "Explain machine learning in simple terms for beginners",
@@ -27,6 +29,32 @@ const SUGGESTED_TOPICS = [
   "Climate tech startups to watch this year",
   "A practical guide to Kubernetes for small teams",
 ];
+
+/** Opens on the right once a run has finished and saved a post. */
+function BlogPreviewSlot() {
+  const { messages, isLoading } = useChatContext();
+  const [dismissedSlug, setDismissedSlug] = useState<string | null>(null);
+  const slug = isLoading ? null : findSavedBlogSlug(messages);
+
+  if (!slug || slug === dismissedSlug) return null;
+  return (
+    <>
+      <ResizableHandle className="w-px bg-border" />
+      <ResizablePanel
+        id="blog-preview"
+        order={3}
+        defaultSize={35}
+        minSize={25}
+        className="min-w-[340px]"
+      >
+        <BlogPreviewPanel
+          slug={slug}
+          onClose={() => setDismissedSlug(slug)}
+        />
+      </ResizablePanel>
+    </>
+  );
+}
 
 function WorkshopPageInner({ config }: { config: StandaloneConfig }) {
   const client = useClient();
@@ -157,48 +185,50 @@ function WorkshopPageInner({ config }: { config: StandaloneConfig }) {
       )}
 
       <div className="flex-1 overflow-hidden">
-        <ResizablePanelGroup
-          direction="horizontal"
-          autoSaveId="standalone-chat"
+        <ChatProvider
+          activeAssistant={assistant}
+          onHistoryRevalidate={() => mutateThreads?.()}
         >
-          {sidebar && (
-            <>
-              <ResizablePanel
-                id="thread-history"
-                order={1}
-                defaultSize={25}
-                minSize={20}
-                className="relative min-w-[380px] border-r border-border"
-              >
-                <ThreadList
-                  onThreadSelect={async (id) => {
-                    await setThreadId(id);
-                  }}
-                  onMutateReady={(fn) => setMutateThreads(() => fn)}
-                  onClose={() => setSidebar(null)}
-                  onInterruptCountChange={setInterruptCount}
-                />
-              </ResizablePanel>
-              <ResizableHandle className="w-px bg-border" />
-            </>
-          )}
-
-          <ResizablePanel
-            id="chat"
-            className="relative flex flex-col"
-            order={2}
+          <ResizablePanelGroup
+            direction="horizontal"
+            autoSaveId="standalone-chat"
           >
-            <ChatProvider
-              activeAssistant={assistant}
-              onHistoryRevalidate={() => mutateThreads?.()}
+            {sidebar && (
+              <>
+                <ResizablePanel
+                  id="thread-history"
+                  order={1}
+                  defaultSize={25}
+                  minSize={20}
+                  className="relative min-w-[380px] border-r border-border"
+                >
+                  <ThreadList
+                    onThreadSelect={async (id) => {
+                      await setThreadId(id);
+                    }}
+                    onMutateReady={(fn) => setMutateThreads(() => fn)}
+                    onClose={() => setSidebar(null)}
+                    onInterruptCountChange={setInterruptCount}
+                  />
+                </ResizablePanel>
+                <ResizableHandle className="w-px bg-border" />
+              </>
+            )}
+
+            <ResizablePanel
+              id="chat"
+              className="relative flex flex-col"
+              order={2}
             >
               <ChatInterface
                 assistant={assistant}
                 suggestedTopics={SUGGESTED_TOPICS}
               />
-            </ChatProvider>
-          </ResizablePanel>
-        </ResizablePanelGroup>
+            </ResizablePanel>
+
+            <BlogPreviewSlot />
+          </ResizablePanelGroup>
+        </ChatProvider>
       </div>
     </div>
   );

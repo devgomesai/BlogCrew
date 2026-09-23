@@ -155,3 +155,32 @@ export function formatConversationForLLM(messages: Message[]): string {
   const formattedMessages = messages.map(formatMessageForLLM);
   return formattedMessages.join("\n\n---\n\n");
 }
+
+/**
+ * Slug of the most recent post this thread saved, or null. A post counts as
+ * saved only once write_blog's tool result reports success.
+ */
+export function findSavedBlogSlug(messages: Message[]): string | null {
+  const slugByCallId = new Map<string, string>();
+  let saved: string | null = null;
+
+  for (const message of messages) {
+    if (message.type === "ai") {
+      for (const call of message.tool_calls ?? []) {
+        const slug = (call.args as { slug?: unknown })?.slug;
+        if (call.name === "write_blog" && call.id && typeof slug === "string") {
+          slugByCallId.set(call.id, slug);
+        }
+      }
+    } else if (message.type === "tool") {
+      const slug = slugByCallId.get(message.tool_call_id ?? "");
+      if (
+        slug &&
+        extractStringFromMessageContent(message).startsWith("Blog saved to")
+      ) {
+        saved = slug;
+      }
+    }
+  }
+  return saved;
+}

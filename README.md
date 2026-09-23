@@ -49,6 +49,16 @@ How it works (high level)
 - Humanizer strips AI tells from the edited draft — this is what gets saved.
 - generate_cover uses Gemini to create a cover image saved alongside the article.
 
+Architecture
+
+![BlogCrew architecture](docs/architecture.svg)
+
+- The Next.js `/workshop` page streams to the LangGraph `blogwriter` graph via the
+  LangGraph SDK; the orchestrator delegates to the five subagents.
+- Subagents call out to Tavily (search), Gemini (covers) and the `LLM_CHOICE` model.
+- Posts are written to `backend/Blog/<slug>/`, a volume the frontend's `/blogs`
+  reader mounts read-only.
+
 Outputs
 
 - `backend/Blog/<slug>/Blog.md` — generated article (Markdown, with YAML frontmatter:
@@ -70,6 +80,7 @@ Project layout
 │   ├── Blog/                # Generated blog posts and covers
 │   ├── langgraph.json
 │   └── pyproject.toml
+├── docs/                    # README assets (architecture.svg)
 ├── frontend/                # Next.js reader (/blogs) + workshop UI
 └── start.ps1                # Launches backend (Docker) + frontend
 ```

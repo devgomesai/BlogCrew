@@ -1,8 +1,0 @@
-# The image installs and builds its own; host copies break the Alpine build.
-node_modules/
-.next/
-
-# NEXT_PUBLIC_* arrive as build args; keep local env files out of the image.
-.env
-.env.*
-!.env.local.example

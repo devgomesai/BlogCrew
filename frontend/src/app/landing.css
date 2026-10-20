@@ -1,12 +1,14 @@
 .landing-shell {
-  min-height: 100vh;
+  height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-snap-type: y proximity;
+  scroll-behavior: smooth;
   color: hsl(var(--foreground));
   background-color: hsl(var(--background));
   font-family: "Anthropic Sans", ui-sans-serif, system-ui, -apple-system,
     BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
-  display: flex;
-  flex-direction: column;
 }
 
 .landing-shell ::selection {
@@ -63,8 +65,13 @@
 
 /* ---- hero ---------------------------------------------------------------- */
 .landing-hero {
-  padding: clamp(4rem, 10vw, 8rem) clamp(1.25rem, 5vw, 3.5rem);
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6rem clamp(1.25rem, 5vw, 3.5rem) 4rem;
   text-align: center;
+  scroll-snap-align: start;
 }
 
 .landing-hero__inner {
@@ -147,9 +154,175 @@
 }
 
 /* ---- pipeline section ---------------------------------------------------- */
+/* Kept for reference; superseded by the scrollable journey below. */
 .landing-pipeline {
   padding: clamp(3rem, 8vw, 6rem) clamp(1.25rem, 5vw, 3.5rem);
   border-top: 1px solid hsl(var(--border));
+}
+
+/* ---- journey (one full-page snap per phase) ----------------------------- */
+.landing-journey {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.landing-phase {
+  --progress: 0;
+  grid-column: 1;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem clamp(1.25rem, 5vw, 3.5rem) 4rem;
+  position: relative;
+  z-index: 1;
+  background: hsl(var(--background));
+  scroll-snap-align: center;
+}
+
+.landing-phase__card {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--progress) * 2.25rem);
+  width: min(920px, 100%);
+  padding: clamp(1.4rem, 3.5vw, 2.4rem) clamp(1.5rem, 4vw, 2.75rem);
+  border-radius: 1.5rem;
+  border: 1px solid
+    hsl(var(--border) / calc(0.35 + var(--progress) * 0.65));
+  background: hsl(var(--card) / calc(0.55 + var(--progress) * 0.45));
+  box-shadow: 0 28px 70px
+    hsl(var(--foreground) / calc(var(--progress) * 0.1));
+  transform: scale(calc(0.78 + var(--progress) * 0.28));
+  transform-origin: center;
+  will-change: transform;
+}
+
+.landing-phase__identity {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-width: 11rem;
+}
+
+.landing-phase__icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+}
+
+.landing-phase__icon svg {
+  width: 32px;
+  height: 32px;
+  color: white;
+}
+
+.landing-phase__name {
+  font-size: clamp(1.8rem, 4.5vw, 2.75rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin: 0;
+  color: hsl(var(--foreground));
+}
+
+.landing-phase__desc {
+  flex: 1 1 auto;
+  margin: 0;
+  font-size: 1.08rem;
+  color: hsl(var(--muted-foreground));
+  line-height: 1.65;
+  max-width: calc(var(--progress) * 28rem);
+  opacity: max(0, calc((var(--progress) - 0.42) * 2.2));
+  transform: translateX(calc((1 - var(--progress)) * 1.25rem));
+  overflow: hidden;
+  border-left: 1px solid
+    hsl(var(--border) / calc(var(--progress) * 0.9));
+  padding-left: calc(var(--progress) * 2rem);
+}
+
+@media (max-width: 720px) {
+  .landing-phase__card {
+    flex-direction: column;
+    align-items: center;
+    gap: calc(var(--progress) * 1.25rem);
+  }
+
+  .landing-phase__desc {
+    max-width: 100%;
+    border-left: none;
+    padding-left: 0;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-phase__card,
+  .landing-phase__desc {
+    transform: none;
+  }
+}
+
+.landing-journey__nav {
+  grid-column: 1;
+  grid-row: 1 / 6;
+  justify-self: end;
+  align-self: start;
+  position: sticky;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  z-index: 20;
+  margin-right: clamp(1.25rem, 5vw, 3.5rem);
+  pointer-events: none;
+}
+
+.landing-journey__dot {
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: hsl(var(--border));
+  pointer-events: auto;
+  cursor: pointer;
+  transition: all 250ms ease;
+}
+
+.landing-journey__dot--active {
+  background: hsl(var(--primary));
+  width: 26px;
+  border-radius: 8px;
+}
+
+.landing-journey__label {
+  position: absolute;
+  right: 100%;
+  margin-right: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: hsl(var(--muted-foreground));
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 250ms ease;
+}
+
+.landing-journey__dot--active ~ .landing-journey__label,
+.landing-journey__dot:hover ~ .landing-journey__label {
+  opacity: 1;
+}
+
+@media (max-width: 640px) {
+  .landing-journey__nav {
+    display: none;
+  }
 }
 
 .landing-pipeline__inner {
@@ -267,9 +440,14 @@
 
 /* ---- CTA section --------------------------------------------------------- */
 .landing-cta {
-  padding: clamp(3rem, 8vw, 6rem) clamp(1.25rem, 5vw, 3.5rem);
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6rem clamp(1.25rem, 5vw, 3.5rem) 4rem;
   border-top: 1px solid hsl(var(--border));
   text-align: center;
+  scroll-snap-align: start;
 }
 
 .landing-cta__inner {
@@ -353,7 +531,6 @@
 
 /* ---- footer -------------------------------------------------------------- */
 .landing-footer {
-  margin-top: auto;
   border-top: 1px solid hsl(var(--border));
   padding: 1.25rem clamp(1.25rem, 5vw, 3.5rem);
 }

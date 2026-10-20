@@ -82,40 +82,35 @@ Project layout
 │   └── pyproject.toml
 ├── docs/                    # README assets (architecture.svg)
 ├── frontend/                # Next.js reader (/blogs) + workshop UI
-└── start.ps1                # Launches backend (Docker) + frontend
+└── start.ps1                # Launches backend (localhost) + frontend
 ```
 
-Run with Docker (frontend + backend)
+Run locally (no Docker)
 
 1. Copy `backend/.env.example` → `backend/.env` and fill in `LLM_CHOICE`, the
    provider key it needs, `TAVILY_API_KEY`, `GOOGLE_API_KEY`, and
-   `LANGSMITH_API_KEY` (the production LangGraph server image won't start
-   without it, unlike `langgraph dev`).
-2. From the repo root:
-   ```bash
-   docker compose up -d --build
-   docker compose logs -f backend    # wait for the server to be ready
+   `LANGSMITH_API_KEY`.
+2. Copy `frontend/.env.local.example` → `frontend/.env.local` (or use the
+   provided `frontend/.env.local`) and set:
+   ```env
+   NEXT_PUBLIC_DEPLOYMENT_URL=http://localhost:8123
+   NEXT_PUBLIC_ASSISTANT_ID=blogwriter
    ```
-3. Open http://localhost:3000/workshop. The backend API is on
-   http://localhost:8123 (`/ok` returns `{"ok":true}`).
-4. Stop with `docker compose down` (add `-v` to also wipe generated posts and
-   thread history).
+3. From the repo root, run the launcher:
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File .\start.ps1
+   ```
+   This starts the backend on `http://localhost:8123` and the frontend on
+   `http://localhost:3000`, then opens the workshop URL.
+4. Stop by closing the two PowerShell windows the launcher opens.
 
-Compose runs redis, postgres, the backend and the frontend. Posts live in the
-`blogs` volume: the backend writes it, the frontend mounts it read-only. The
-frontend's `NEXT_PUBLIC_DEPLOYMENT_URL` is baked in at build time (default
-`http://localhost:8123`); to reach the backend at another address, rebuild with
-`NEXT_PUBLIC_DEPLOYMENT_URL=http://<host>:8123 docker compose up -d --build`.
-
-Deployment note
-
-The frontend reads posts straight off the backend's filesystem
-(`frontend/src/lib/blogs.ts` → `backend/Blog/`). That is deliberate: run both on
-one box (a VM, or one container with a shared volume). On Vercel or any
-serverless host there is no sibling `backend/` directory, so `/blogs` would
-render empty. Serving `Blog/` over HTTP from the backend is the upgrade path if
-that day comes. There is also no auth or rate limiting on the workshop page —
-don't expose it to the internet as-is.
+Posts live in `backend/Blog/`: the backend writes them there, and the frontend
+reads them straight off the local filesystem
+(`frontend/src/lib/blogs.ts` → `backend/Blog/`). Both must run on the same box.
+On Vercel or any serverless host there is no sibling `backend/` directory, so
+`/blogs` would render empty. Serving `Blog/` over HTTP from the backend is the
+upgrade path if that day comes. There is also no auth or rate limiting on the
+workshop page — don't expose it to the internet as-is.
 
 Windows-specific note
 The project uses a CompositeBackend that maps virtual paths (/memory/, /skills/) to local directories to avoid a FilesystemBackend path-resolution issue on Windows. Do not change that routing unless testing on non-Windows environments.

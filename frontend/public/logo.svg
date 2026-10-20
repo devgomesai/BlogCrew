@@ -1,19 +1,80 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 36" fill="none">
-  <!-- crew mark: four nodes orbiting a hub -->
-  <g transform="translate(18, 18)">
-    <!-- orbit ring -->
-    <circle cx="0" cy="0" r="14" stroke="#000" stroke-opacity="0.2" stroke-width="1.5" fill="none" />
-    <!-- hub -->
-    <circle cx="0" cy="0" r="5" fill="#CC785C" />
-    <!-- planner (top) -->
-    <circle cx="0" cy="-10" r="3" fill="#CC785C" fill-opacity="0.65" />
-    <!-- researcher (right) -->
-    <circle cx="10" cy="0" r="3" fill="#CC785C" fill-opacity="0.65" />
-    <!-- writer (bottom) -->
-    <circle cx="0" cy="10" r="3" fill="#CC785C" fill-opacity="0.65" />
-    <!-- editor (left) -->
-    <circle cx="-10" cy="0" r="3" fill="#CC785C" fill-opacity="0.65" />
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="512" height="512" viewBox="0 0 512 512">
+  <title>Quill Logo</title>
+  <defs>
+    <linearGradient id="feather" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#EAD8B8"/>
+      <stop offset="55%" stop-color="#E0B066"/>
+      <stop offset="100%" stop-color="#C87A14"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#C87A14"/>
+      <stop offset="100%" stop-color="#D9A455"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Feather bird emblem -->
+  <g>
+    <path fill="url(#feather)" d="
+      M 176,222
+      C 183,164 222,94 292,76
+      C 320,68 344,80 362,101
+      L 381,125
+      C 356,115 337,122 323,139
+      C 309,157 307,183 289,202
+      C 267,226 225,241 194,279
+      L 174,306
+      C 178,273 192,245 211,222
+      C 232,198 252,172 264,145
+      C 232,170 204,193 176,222 Z"/>
+
+    <!-- Head and beak -->
+    <path fill="url(#feather)" d="
+      M 292,76
+      C 324,67 354,82 373,109
+      L 381,125
+      C 360,113 342,119 329,135
+      C 338,115 325,91 292,76 Z"/>
+
+    <!-- Eye -->
+    <path fill="#101421" d="
+      M 333,96 Q 345,100 351,109
+      Q 339,109 333,96 Z"/>
+
+    <!-- Wing cutout -->
+    <path fill="#101421" d="
+      M 188,211
+      Q 217,184 251,162
+      Q 220,198 188,211 Z"/>
+
+    <!-- Feather shaft -->
+    <path fill="none" stroke="#C87A14"
+          stroke-width="5" stroke-linecap="round"
+          d="M 175,307 Q 217,229 264,145"/>
+
+    <!-- Lower feather detail -->
+    <path fill="url(#feather)" d="
+      M 192,274
+      Q 227,245 276,229
+      Q 255,255 225,267
+      L 192,274 Z"/>
+
+    <!-- Ink stroke -->
+    <path fill="none" stroke="url(#gold)"
+          stroke-width="5" stroke-linecap="round"
+          d="M 174,321 Q 240,311 294,306
+             Q 323,303 292,296
+             Q 265,291 233,296"/>
   </g>
-  <!-- wordmark -->
-  <text x="46" y="24" font-family="Anthropic Sans, system-ui, -apple-system, sans-serif" font-size="16" font-weight="700" letter-spacing="-0.3" fill="#141413">BlogCrew</text>
+
+  <!-- Wordmark -->
+  <g fill="#FFF8ED">
+    <text x="256" y="421"
+          font-family="Arial, Helvetica, sans-serif"
+          font-size="100"
+          font-weight="600"
+          letter-spacing="-5"
+          text-anchor="middle"
+          fill="#101421">Quill</text>
+  </g>
 </svg>

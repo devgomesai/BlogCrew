@@ -65,7 +65,7 @@ export default async function BlogPostPage({
             href="/blogs"
             className="blog-topbar__mark"
           >
-            <Logo height={28} />
+            <Logo height={56} />
           </Link>
           <ThemeToggle />
         </div>
@@ -74,7 +74,7 @@ export default async function BlogPostPage({
       <div className="blog-article-wrapper">
         <article className="blog-article">
           <header className="blog-article__head">
-            <p className="blog-kicker">Feature · BlogCrew</p>
+            <p className="blog-kicker">Feature · Quill</p>
             <h1 className="blog-article__title">{blog.title}</h1>
             <div className="blog-article__meta">
               <span>{minutes} min read</span>

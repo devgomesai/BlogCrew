@@ -1,82 +1,91 @@
 # ============================================================
-# 🚀 LangGraph Development Launcher
+# 🚀 LangGraph Development Launcher (v2 — localhost, no docker)
 # ============================================================
+# Backend:  langgraph up  →  http://localhost:8123
+# Frontend: yarn dev      →  http://localhost:3000
+# Browser:  opens your workshop thread automatically
 
-$Host.UI.RawUI.WindowTitle = "Development Launcher"
+$Host.UI.RawUI.WindowTitle = "LangGraph Dev Launcher v2"
+
+# ------------------------------------------------------------
+# Logging (console + file)
+# ------------------------------------------------------------
+$Root = Split-Path -Parent $MyInvocation.MyCommand.Path
+$LogDir = Join-Path $Root "logs"
+if (!(Test-Path $LogDir)) { New-Item -ItemType Directory -Path $LogDir -Force | Out-Null }
+$LogFile = Join-Path $LogDir "start.log"
+$ts = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
 
 function Write-Color {
-    param(
-        [string]$Text,
-        [ConsoleColor]$Color = "White"
-    )
-
+    param([string]$Text, [ConsoleColor]$Color = "White")
+    $line = "[$ts] $Text"
     Write-Host $Text -ForegroundColor $Color
+    Add-Content -Path $LogFile -Value $line
 }
 
-Clear-Host
+function Write-Section {
+    param([string]$Text, [ConsoleColor]$Color = "Cyan")
+    Write-Host ""
+    Write-Host ("=" * 60) -ForegroundColor $Color
+    Write-Host $Text -ForegroundColor $Color
+    Write-Host ("=" * 60) -ForegroundColor $Color
+    Add-Content -Path $LogFile -Value "[$ts] $Text"
+}
 
-Write-Color "====================================================" Cyan
-Write-Color "          🚀 LANGGRAPH DEVELOPMENT LAUNCHER          " Magenta
-Write-Color "====================================================" Cyan
+# ------------------------------------------------------------
+# Banner
+# ------------------------------------------------------------
+Write-Host ""
+Write-Section "🚀 LANGGRAPH DEVELOPMENT LAUNCHER v2" Magenta
+Write-Color "Backend on localhost (NO docker)" Magenta
+Write-Color "Log file: $LogFile" DarkGray
 Write-Host ""
 
 # ------------------------------------------------------------
-# Project Paths
+# Project paths
 # ------------------------------------------------------------
-
-$Root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $Backend = Join-Path $Root "backend"
 $Frontend = Join-Path $Root "frontend"
 
-Write-Color "Project Root :" DarkGray
-Write-Color "  $Root" White
-
-Write-Color "Backend :" DarkGray
-Write-Color "  $Backend" White
-
-Write-Color "Frontend :" DarkGray
-Write-Color "  $Frontend" White
+Write-Color "Root   : $Root" DarkGray
+Write-Color "Backend: $Backend" DarkGray
+Write-Color "Frontend: $Frontend" DarkGray
 Write-Host ""
 
 # ------------------------------------------------------------
-# Dependency Check
+# Dependency check (yarn only — no docker needed)
 # ------------------------------------------------------------
+Write-Color "Checking dependencies..." Yellow
 
 function Test-Tool {
     param([string]$Name)
-
     $tool = Get-Command $Name -ErrorAction SilentlyContinue
-
     if ($tool) {
         Write-Color "✔ $Name found" Green
-        return $tool
+        return $true
     }
-
-    Write-Color "✖ $Name not found" Red
-    return $null
+    Write-Color "✖ $Name NOT found" Red
+    return $false
 }
 
-Write-Color "Checking dependencies..." Yellow
+$haveYarn = Test-Tool "yarn"
 
-# yarn and docker must exist globally
-$yarn = Test-Tool "yarn"
-$docker = Test-Tool "docker"
-
-# No .venv check — the backend runs in Docker, not in a local virtualenv.
-
-if (-not $yarn -or -not $docker) {
+if (-not $haveYarn) {
     Write-Host ""
-    Write-Color "Missing required tools." Red
+    Write-Color "✖ Missing required tool: yarn" Red
+    Write-Color "Install yarn (https://yarnpkg.com), then run:" Yellow
+    Write-Color "  powershell -ExecutionPolicy Bypass -File .\start.ps1" Yellow
+    Write-Host ""
+    Read-Host "Press Enter to exit"
     exit 1
 }
 
 Write-Host ""
 
 # ------------------------------------------------------------
-# Launch Backend
+# Launch Backend (localhost, no docker)
 # ------------------------------------------------------------
-
-Write-Color "Starting Backend..." Cyan
+Write-Section "Starting Backend (localhost:8123)" Cyan
 
 Start-Process powershell `
     -WorkingDirectory $Backend `
@@ -85,32 +94,34 @@ Start-Process powershell `
         "-ExecutionPolicy", "Bypass",
         "-Command",
 @"
-`$Host.UI.RawUI.WindowTitle = '🐳 LangGraph Backend (Docker)'
+`$Host.UI.RawUI.WindowTitle = '🖥️ Backend (localhost:8123)'
 Clear-Host
-
 Write-Host ''
 Write-Host '=========================================' -ForegroundColor Cyan
-Write-Host '     🐳 LANGGRAPH BACKEND (blog-crew-backend)' -ForegroundColor Green
+Write-Host '   🖥️  LANGGRAPH BACKEND (localhost:8123)' -ForegroundColor Green
 Write-Host '=========================================' -ForegroundColor Cyan
+Write-Host '  Running locally — no docker container.' -ForegroundColor DarkGray
 Write-Host ''
 
-# Create-or-start: `docker start` alone silently no-ops when the container
-# has never been built.
-`$id = docker ps -aq --filter 'name=blog-crew-backend'
-if (`$id) { docker start -a `$id } else {
-    Write-Host 'No blog-crew-backend container yet — building with langgraph up...' -ForegroundColor Yellow
-    langgraph up
+`$Venv = Join-Path (Get-Location) '.venv\Scripts\Activate.ps1'
+if (Test-Path `$Venv) {
+    Write-Host 'Activating venv...' -ForegroundColor Yellow
+    & `$Venv
+} else {
+    Write-Host "Warning: venv not found at `$Venv" -ForegroundColor Red
 }
+
+Write-Host 'Running: langgraph up' -ForegroundColor Yellow
+langgraph up
 "@
-)
+    )
 
 # ------------------------------------------------------------
 # Launch Frontend
 # ------------------------------------------------------------
+Write-Section "Starting Frontend (localhost:3000)" Cyan
 
-Write-Color "Starting Frontend..." Cyan
-
-$YarnPath = $yarn.Source
+$YarnPath = (Get-Command yarn).Source
 
 Start-Process powershell `
     -WorkingDirectory $Frontend `
@@ -119,9 +130,8 @@ Start-Process powershell `
         "-ExecutionPolicy", "Bypass",
         "-Command",
 @"
-`$Host.UI.RawUI.WindowTitle = '🌐 Frontend'
+`$Host.UI.RawUI.WindowTitle = '🌐 Frontend (localhost:3000)'
 Clear-Host
-
 Write-Host ''
 Write-Host '=========================================' -ForegroundColor Green
 Write-Host '           🌐 FRONTEND' -ForegroundColor Cyan
@@ -130,10 +140,30 @@ Write-Host ''
 
 & '$YarnPath' dev
 "@
-)
+    )
+
+# ------------------------------------------------------------
+# Open workshop URL
+# ------------------------------------------------------------
+$WorkshopUrl = "http://localhost:3000/workshop?assistantId=blogwriter&sidebar=0&threadId=01a14f20-ab1f-7751-8979-c7e99663ecfb"
 
 Write-Host ""
-Write-Color "✔ Backend launched (Docker: blog-crew-backend, http://localhost:8123)." Green
-Write-Color "✔ Frontend launched." Green
-Write-Color "  Stop backend containers: docker compose -p blog-crew-backend down" DarkGray
+Write-Color "✔ Backend launched → http://localhost:8123" Green
+Write-Color "✔ Frontend launched → http://localhost:3000" Green
+Write-Color "🌐 Opening workshop URL..." Cyan
+
+try {
+    Start-Process $WorkshopUrl
+    Write-Color "✔ Opened: $WorkshopUrl" Green
+} catch {
+    Write-Color "✖ Could not open browser automatically." Red
+    Write-Color "  Open this manually: $WorkshopUrl" Red
+}
+
 Write-Host ""
+Write-Color "  Full trace saved to: $LogFile" DarkGray
+Write-Color "  To stop: close the two PowerShell windows above." DarkGray
+Write-Host ""
+
+# Keep this window open so you can read the output
+Read-Host "Press Enter to close this launcher window"

@@ -262,7 +262,7 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
                   What should we write about?
                 </h2>
                 <p className="mt-1 max-w-md text-center text-sm text-muted-foreground">
-                  Give BlogCrew a topic and our four-agent pipeline will
+                  Give Quill a topic and our four-agent pipeline will
                   research, write, and polish a publication-ready blog post for
                   you.
                 </p>
@@ -460,7 +460,7 @@ export const ChatInterface = React.memo<ChatInterfaceProps>(
                 onKeyDown={handleKeyDown}
                 placeholder={
                   isLoading
-                    ? "BlogCrew is writing..."
+                    ? "Quill is writing..."
                     : "Type a blog topic or ask for a post..."
                 }
                 className="font-inherit field-sizing-content flex-1 resize-none border-0 bg-transparent px-[18px] pb-[13px] pt-[14px] text-sm leading-7 text-foreground outline-none placeholder:text-muted-foreground"

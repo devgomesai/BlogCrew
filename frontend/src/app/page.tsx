@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Logo } from "@/app/components/Logo";
 import { BlogGlimpse } from "@/app/components/BlogGlimpse";
 import { ThemeToggleButton } from "@/app/components/ThemeToggleButton";
-import { Brain, Search, PenLine, CheckSquare, Image } from "lucide-react";
+import Journey from "@/app/components/Journey";
 import "./landing.css";
 
 export default function HomePage() {
@@ -13,7 +13,7 @@ export default function HomePage() {
           href="/"
           className="landing-topbar__mark"
         >
-          <Logo height={28} />
+          <Logo height={56} />
         </Link>
         <nav className="landing-topbar__nav">
           <Link
@@ -44,7 +44,7 @@ export default function HomePage() {
               </span>
             </h1>
             <p className="landing-hero__sub">
-              BlogCrew is an autonomous editorial pipeline — a crew of AI agents
+              Quill is an autonomous editorial pipeline — a crew of AI agents
               that research, write, edit, illustrate, and publish complete blog
               posts. One topic in. A polished article out.
             </p>
@@ -101,182 +101,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="landing-pipeline">
-          <div className="landing-pipeline__inner">
-            <h2 className="landing-section-title">The Crew</h2>
-            <p className="landing-section-sub">
-              Five specialised agents working in sequence to produce every
-              article.
-            </p>
-            <div className="landing-pipeline__grid">
-              <div className="landing-agent-card">
-                <div
-                  className="landing-agent-card__icon"
-                  style={{ background: "hsl(15, 52%, 58%)" }}
-                >
-                  <Brain className="landing-agent-card__icon-svg" />
-                </div>
-                <div
-                  className="landing-agent-card__dot"
-                  style={{ background: "hsl(15, 52%, 58%)" }}
-                />
-                <h3>Planner</h3>
-                <p>
-                  Researches the topic, outlines the structure, and briefs the
-                  team on scope and angle.
-                </p>
-              </div>
-              <div className="landing-agent-arrow">
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <line
-                    x1="5"
-                    y1="12"
-                    x2="19"
-                    y2="12"
-                  />
-                  <polyline points="12 5 19 12 12 19" />
-                </svg>
-              </div>
-              <div className="landing-agent-card">
-                <div
-                  className="landing-agent-card__icon"
-                  style={{ background: "hsl(200, 70%, 50%)" }}
-                >
-                  <Search className="landing-agent-card__icon-svg" />
-                </div>
-                <div
-                  className="landing-agent-card__dot"
-                  style={{ background: "hsl(200, 70%, 50%)" }}
-                />
-                <h3>Researcher</h3>
-                <p>
-                  Searches the web for sources, data, and context. Gathers
-                  evidence and supporting material.
-                </p>
-              </div>
-              <div className="landing-agent-arrow">
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <line
-                    x1="5"
-                    y1="12"
-                    x2="19"
-                    y2="12"
-                  />
-                  <polyline points="12 5 19 12 12 19" />
-                </svg>
-              </div>
-              <div className="landing-agent-card">
-                <div
-                  className="landing-agent-card__icon"
-                  style={{ background: "hsl(140, 50%, 45%)" }}
-                >
-                  <PenLine className="landing-agent-card__icon-svg" />
-                </div>
-                <div
-                  className="landing-agent-card__dot"
-                  style={{ background: "hsl(140, 50%, 45%)" }}
-                />
-                <h3>Writer</h3>
-                <p>
-                  Drafts the full article with structure, voice, and SEO.
-                  Produces the raw manuscript.
-                </p>
-              </div>
-              <div className="landing-agent-arrow">
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <line
-                    x1="5"
-                    y1="12"
-                    x2="19"
-                    y2="12"
-                  />
-                  <polyline points="12 5 19 12 12 19" />
-                </svg>
-              </div>
-              <div className="landing-agent-card">
-                <div
-                  className="landing-agent-card__icon"
-                  style={{ background: "hsl(270, 60%, 55%)" }}
-                >
-                  <CheckSquare className="landing-agent-card__icon-svg" />
-                </div>
-                <div
-                  className="landing-agent-card__dot"
-                  style={{ background: "hsl(270, 60%, 55%)" }}
-                />
-                <h3>Editor</h3>
-                <p>
-                  Reviews, fact-checks, tightens prose, and ensures every post
-                  meets publication standards.
-                </p>
-              </div>
-              <div className="landing-agent-arrow">
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <line
-                    x1="5"
-                    y1="12"
-                    x2="19"
-                    y2="12"
-                  />
-                  <polyline points="12 5 19 12 12 19" />
-                </svg>
-              </div>
-              <div className="landing-agent-card">
-                <div
-                  className="landing-agent-card__icon"
-                  style={{ background: "hsl(30, 80%, 55%)" }}
-                >
-                  <Image className="landing-agent-card__icon-svg" />
-                </div>
-                <div
-                  className="landing-agent-card__dot"
-                  style={{ background: "hsl(30, 80%, 55%)" }}
-                />
-                <h3>Humanizer</h3>
-                <p>
-                  Strips the AI tells out of the final draft so it reads like a
-                  person wrote it.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
+        <Journey />
 
         <section className="landing-cta">
           <div className="landing-cta__inner">
@@ -315,7 +140,7 @@ export default function HomePage() {
 
       <footer className="landing-footer">
         <div className="landing-footer__inner">
-          <span>BlogCrew · A Multi-Agent Press</span>
+          <span>Quill · A Multi-Agent Press</span>
           <Link
             href="/blogs"
             className="landing-footer__link"

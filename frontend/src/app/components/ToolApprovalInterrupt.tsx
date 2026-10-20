@@ -130,7 +130,13 @@ export function ToolApprovalInterrupt({
           <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
             Tool
           </span>
-          <p className="mt-1 font-mono text-sm font-medium text-foreground">
+          <p
+            className="mt-1 text-sm font-medium text-foreground"
+            style={{
+              fontFamily:
+                '"Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace',
+            }}
+          >
             {actionRequest.name}
           </p>
         </div>
@@ -157,7 +163,11 @@ export function ToolApprovalInterrupt({
                         : JSON.stringify(value, null, 2)
                     }
                     onChange={(e) => updateEditedArg(key, e.target.value)}
-                    className="font-mono text-xs"
+                    className="text-xs"
+                    style={{
+                      fontFamily:
+                        '"Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace',
+                    }}
                     rows={
                       typeof value === "string" && value.length < 100 ? 2 : 4
                     }
@@ -172,7 +182,13 @@ export function ToolApprovalInterrupt({
             <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
               Arguments
             </span>
-            <pre className="mt-2 overflow-x-auto whitespace-pre-wrap break-all rounded-sm border border-border bg-muted/40 p-2 font-mono text-xs text-foreground">
+            <pre
+              className="mt-2 overflow-x-auto whitespace-pre-wrap break-all rounded-sm border border-border bg-muted/40 p-2 text-xs text-foreground"
+              style={{
+                fontFamily:
+                  '"Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace',
+              }}
+            >
               {JSON.stringify(actionRequest.args, null, 2)}
             </pre>
           </div>

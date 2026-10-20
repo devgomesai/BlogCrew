@@ -59,7 +59,9 @@ function BlogPreviewSlot() {
 function WorkshopPageInner({ config }: { config: StandaloneConfig }) {
   const client = useClient();
   const [threadId, setThreadId] = useQueryState("threadId");
-  const [sidebar, setSidebar] = useQueryState("sidebar", { defaultValue: "1" });
+  const [sidebarParam, setSidebarParam] = useQueryState("sidebar");
+  const sidebar = sidebarParam !== "0";
+  const setSidebar = (open: boolean) => setSidebarParam(open ? null : "0");
 
   const [mutateThreads, setMutateThreads] = useState<(() => void) | null>(null);
   const [interruptCount, setInterruptCount] = useState(0);
@@ -112,13 +114,13 @@ function WorkshopPageInner({ config }: { config: StandaloneConfig }) {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <Link href="/">
-              <Logo height={24} />
+              <Logo height={56} />
             </Link>
           </div>
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => setSidebar(sidebar ? null : "1")}
+            onClick={() => setSidebar(!sidebar)}
             aria-pressed={!!sidebar}
           >
             <MessagesSquare className="mr-1.5 h-4 w-4" />
@@ -207,7 +209,7 @@ function WorkshopPageInner({ config }: { config: StandaloneConfig }) {
                       await setThreadId(id);
                     }}
                     onMutateReady={(fn) => setMutateThreads(() => fn)}
-                    onClose={() => setSidebar(null)}
+                    onClose={() => setSidebar(false)}
                     onInterruptCountChange={setInterruptCount}
                   />
                 </ResizablePanel>
@@ -252,13 +254,13 @@ function WorkshopPageContent() {
             href="/blogs"
             className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10"
           >
-            <Logo height={28} />
+            <Logo height={56} />
           </Link>
           <p className="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">
             A Multi-Agent Press
           </p>
           <h1 className="text-4xl font-bold tracking-tight text-foreground">
-            BlogCrew
+            Quill
           </h1>
           <p className="mt-3 text-muted-foreground">
             Research, write, edit &amp; illustrate — end to end.
@@ -288,7 +290,7 @@ export default function WorkshopPage() {
             <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
               <span className="text-lg font-bold text-primary">BC</span>
             </div>
-            <p className="text-sm text-muted-foreground">Loading BlogCrew...</p>
+            <p className="text-sm text-muted-foreground">Loading Quill...</p>
           </div>
         </div>
       }

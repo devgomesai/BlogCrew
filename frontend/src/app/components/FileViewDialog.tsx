@@ -209,7 +209,11 @@ export const FileViewDialog = React.memo<{
               value={fileContent}
               onChange={(e) => setFileContent(e.target.value)}
               placeholder="Enter file content..."
-              className="h-full min-h-[400px] resize-none font-mono text-sm"
+              className="h-full min-h-[400px] resize-none text-sm"
+              style={{
+                fontFamily:
+                  '"Anthropic Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+              }}
             />
           ) : (
             <ScrollArea className="bg-surface h-full rounded-md">

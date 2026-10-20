@@ -226,7 +226,7 @@ def _generate_cover_gemini(prompt: str, slug: str, name: str) -> str:
 
     client = genai.Client()
     res = client.models.generate_content(
-        model="gemini-3.1-flash-image",
+        model="gemini-3.1-flash-lite-image",
         contents=[prompt],
         config=types.GenerateContentConfig(
             response_modalities=["TEXT", "IMAGE"]

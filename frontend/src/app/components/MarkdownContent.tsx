@@ -61,7 +61,11 @@ export const MarkdownContent = React.memo<MarkdownContentProps>(
                 </SyntaxHighlighter>
               ) : (
                 <code
-                  className="bg-surface rounded-sm px-1 py-0.5 font-mono text-[0.9em]"
+                  className="bg-surface rounded-sm px-1 py-0.5 text-[0.9em]"
+                  style={{
+                    fontFamily:
+                      '"Anthropic Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                  }}
                   {...props}
                 >
                   {children}

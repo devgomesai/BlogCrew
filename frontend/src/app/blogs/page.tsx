@@ -6,9 +6,9 @@ import { Logo } from "@/app/components/Logo";
 export const revalidate = 60;
 
 export const metadata = {
-  title: "The Press — Quill",
+  title: "The Press — BlogCrew",
   description:
-    "Researched, written, edited and illustrated end-to-end by the Quill agents.",
+    "Researched, written, edited and illustrated end-to-end by the BlogCrew agents.",
 };
 
 export default function BlogsPage() {
@@ -53,7 +53,7 @@ export default function BlogsPage() {
           </h1>
           <p className="blog-masthead__sub">
             Researched, written, edited and illustrated end-to-end by the
-            Quill agents.
+            BlogCrew agents.
           </p>
           <div className="blog-masthead__meta">
             <span>Issue · {issue}</span>
@@ -140,12 +140,6 @@ function Topbar() {
         ← The Workshop
       </Link>
       <div className="blog-topbar__right">
-        <Link
-          href="/blogs"
-          className="blog-topbar__mark"
-        >
-          <Logo height={56} />
-        </Link>
         <ThemeToggle />
       </div>
     </div>

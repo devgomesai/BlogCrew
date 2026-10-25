@@ -2,7 +2,15 @@ import { readdirSync, readFileSync, existsSync, statSync } from "fs";
 import { join } from "path";
 import { load } from "js-yaml";
 
-const BLOG_DIR = join(process.cwd(), "..", "backend", "Blog");
+// Content sources, in priority order. `content/Blog` is committed inside the
+// frontend so posts survive frontend-only deployments (e.g. Vercel);
+// `../backend/Blog` holds posts the crew generates during local runs.
+const CONTENT_DIRS = [
+  join(process.cwd(), "content", "Blog"),
+  join(process.cwd(), "..", "backend", "Blog"),
+];
+
+const BLOG_DIR = CONTENT_DIRS[0];
 
 // Mirrors SLUG_RE in backend/src/tools.py. Guards every path built from a URL
 // segment — without it `..%2f..%2f` escapes BLOG_DIR.
@@ -61,7 +69,15 @@ function parseFrontmatter(raw: string): { data: Frontmatter; body: string } {
 
 function read(slug: string): BlogContent | null {
   if (!SLUG_RE.test(slug)) return null;
-  const slugDir = join(BLOG_DIR, slug);
+  for (const dir of CONTENT_DIRS) {
+    const content = readFromDir(dir, slug);
+    if (content) return content;
+  }
+  return null;
+}
+
+function readFromDir(dir: string, slug: string): BlogContent | null {
+  const slugDir = join(dir, slug);
   const blogPath = join(slugDir, "Blog.md");
   if (!existsSync(blogPath)) return null;
 
@@ -84,17 +100,22 @@ function read(slug: string): BlogContent | null {
 }
 
 export function getAllBlogs(): BlogMeta[] {
-  if (!existsSync(BLOG_DIR)) return [];
-  return readdirSync(BLOG_DIR)
-    .map((slug) => {
+  const bySlug = new Map<string, BlogMeta>();
+  for (const dir of CONTENT_DIRS) {
+    if (!existsSync(dir)) continue;
+    for (const slug of readdirSync(dir)) {
+      if (bySlug.has(slug)) continue; // committed content wins over backend copies
       try {
-        return read(slug);
+        const blog = readFromDir(dir, slug);
+        if (blog) bySlug.set(slug, blog);
       } catch {
-        return null;
+        // unreadable slug dir — skip rather than break the whole list
       }
-    })
-    .filter((b): b is BlogContent => b !== null)
-    .sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""));
+    }
+  }
+  return [...bySlug.values()].sort((a, b) =>
+    (b.date ?? "").localeCompare(a.date ?? "")
+  );
 }
 
 export function getBlog(slug: string): BlogContent | null {

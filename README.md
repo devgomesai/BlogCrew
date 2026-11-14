@@ -5,7 +5,7 @@ BlogCrew is a multi-agent AI system that autonomously researches, writes, edits,
 Why use BlogCrew?
 
 - Produces structured, reference-backed blog drafts.
-- Built-in web research (Tavily) and image generation (Gemini).
+- Built-in web research (Tavily) and image generation (Cloudflare Workers AI, free tier).
 - Configurable subagent prompts and skills for control over voice & quality.
 
 Quickstart (5 minutes)
@@ -35,8 +35,14 @@ Production notes — required configuration
   ```env
   LLM_CHOICE="provider:model"    # e.g. openrouter:anthropic/claude-sonnet-5
   TAVILY_API_KEY=your_tavily_api_key
-  GOOGLE_API_KEY=your_google_api_key
+  IMAGE_PROVIDER=pollinations    # pollinations | cloudflare | gemini
+  POLLONATION_API_KEY=your_pollinations_api_key
   ```
+- Cover images default to the Pollinations gen API running FLUX.1.1-pro, which
+  needs `POLLONATION_API_KEY`. Alternatively set `IMAGE_PROVIDER=cloudflare` to
+  use Cloudflare Workers AI FLUX.1 schnell on its free tier (roughly 170
+  covers/day, no watermark, needs `CLOUDFLARE_ACCOUNT_ID` +
+  `CLOUDFLARE_API_TOKEN`).
 - The subagents' behavior is defined in `backend/src/subagents.yaml`; the model
   comes from `LLM_CHOICE` for every agent.
 
@@ -47,7 +53,7 @@ How it works (high level)
 - Writer generates section text using the blog-writer skill and references.
 - Editor polishes the whole draft and enforces validations.
 - Humanizer strips AI tells from the edited draft — this is what gets saved.
-- generate_cover uses Gemini to create a cover image saved alongside the article.
+- generate_cover uses the Pollinations gen API (FLUX.1.1-pro) to create a cover image saved alongside the article.
 
 Architecture
 
@@ -55,7 +61,7 @@ Architecture
 
 - The Next.js `/workshop` page streams to the LangGraph `blogwriter` graph via the
   LangGraph SDK; the orchestrator delegates to the five subagents.
-- Subagents call out to Tavily (search), Gemini (covers) and the `LLM_CHOICE` model.
+- Subagents call out to Tavily (search), the Pollinations image API (covers) and the `LLM_CHOICE` model.
 - Posts are written to `backend/Blog/<slug>/`, a volume the frontend's `/blogs`
   reader mounts read-only.
 

@@ -17,7 +17,9 @@ langgraph dev               # run the agent; graph is exposed as "blogwriter" in
 
 There is **no test suite, linter, or build step** configured. `src/test.py` is an untracked scratch file, not a test runner. Requires Python >=3.12.
 
-Required env vars (in `.env`, see `.env.example`): `LLM_CHOICE` (`provider:model` form, e.g. `openrouter:...`, `ollama:...`, `google_genai:...`), `TAVILY_API_KEY`, `GOOGLE_API_KEY` (cover images), plus optional `LANGSMITH_*` tracing keys.
+Required env vars (in `.env`, see `.env.example`): `LLM_CHOICE` (`provider:model` form, e.g. `openrouter:...`, `ollama:...`, `google_genai:...`), `TAVILY_API_KEY`, plus optional `LANGSMITH_*` tracing keys.
+
+Cover images default to the Pollinations gen API (`IMAGE_PROVIDER=pollinations`) running FLUX.1.1-pro, which needs `POLLONATION_API_KEY`. `IMAGE_PROVIDER=cloudflare` (Workers AI FLUX.1 schnell, free tier, no watermark, needs `CLOUDFLARE_ACCOUNT_ID` + `CLOUDFLARE_API_TOKEN`) or `gemini` (needs `GOOGLE_API_KEY`) can be set explicitly. If Cloudflare is selected without credentials and the Pollinations key is present, `generate_cover` falls back to Pollinations.
 
 ## Architecture
 
@@ -26,7 +28,7 @@ The whole system is wired together in `src/agent.py` via a single `create_deep_a
 - **`src/agent.py`** — builds the orchestrator. Loads subagents from YAML, sets up the backend, and registers tools. The orchestrator's behavior (workflow, delegation rules) is driven by the memory file `/memory/AGENTS.md`, not by Python.
 - **`src/subagents.yaml`** — declarative definitions of the four subagents (name, description, `system_prompt`, model, tools, skills). A `_defaults` block sets the shared model via a YAML anchor (`&model` / `*model`). `load_subagents()` merges defaults, validates required fields, and resolves tool names through a `tool_map`. **To add a subagent tool, you must register it in `tool_map` inside `load_subagents()`** — tools are referenced by string name in YAML.
 - **`src/llm_service.py`** — `get_llm()` returns `init_chat_model(os.environ["LLM_CHOICE"])`. Model selection is fully env-driven; the subagents' model is set separately in `subagents.yaml`.
-- **`src/tools.py`** — the three agent tools: `web_search` (Tavily search + fetch page → markdown), `write_blog` (saves to `Blog/<slug>/Blog.md`, validates slug against `SLUG_RE`), `generate_cover` (Gemini image model → `Blog/<slug>/<name>.png`). All external calls use tenacity retries + a diskcache-backed cache (`.cache/web`, 24h TTL); only 5xx/network errors are retried, 4xx are returned as error strings.
+- **`src/tools.py`** — the three agent tools: `web_search` (Tavily search + fetch page → markdown), `write_blog` (saves to `Blog/<slug>/Blog.md`, validates slug against `SLUG_RE`), `generate_cover` (image model via `IMAGE_PROVIDER` → `Blog/<slug>/<name>.png`, centre-cropped and resized to 1408×768). All external calls use tenacity retries + a diskcache-backed cache (`.cache/web`, 24h TTL); only 5xx/network errors are retried, 4xx are returned as error strings.
 
 ### Virtual filesystem / backend (important, Windows-specific)
 

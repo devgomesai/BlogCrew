@@ -3,9 +3,14 @@
 Reliability: retry (tenacity), caching (diskcache), and timeouts on all external calls.
 """
 
+import base64
+import hashlib
+import io
+import os
 import re
 from pathlib import Path
 from typing import Annotated, Literal
+from urllib.parse import quote
 
 import diskcache
 import httpx
@@ -206,21 +211,197 @@ def write_blog(slug: str, content: str) -> str:
     return f"Blog saved to {path}"
 
 
+# ---------------------------------------------------------------------------
+# Cover images
+#
+# Providers (chosen with IMAGE_PROVIDER):
+#   pollinations— gen.pollinations.ai with FLUX.1.1-pro (default).
+#                 Needs POLLONATION_API_KEY.
+#   cloudflare  — Workers AI FLUX.1 [schnell], free tier, no watermark.
+#                 Needs CLOUDFLARE_ACCOUNT_ID + CLOUDFLARE_API_TOKEN.
+#   gemini      — Gemini image model. Needs GOOGLE_API_KEY + billing.
+#
+# Cover dimensions match the existing posts in Blog/.
+# ---------------------------------------------------------------------------
+
+_COVER_SIZE = (1408, 768)
+# FLUX.1.1-pro generation can take a while; 180s keeps slow queues from
+# tripping the client timeout before the server answers.
+_IMAGE_TIMEOUT = 180.0
+
+_POLLINATIONS_MODEL = "black-forest-labs/flux.1.1-pro"
+
+_CF_MODEL = "@cf/black-forest-labs/flux-1-schnell"
+# FLUX.1 [schnell] maxes out at 8 steps; 4 is the documented default and is
+# what the free daily allowance is sized against.
+_CF_STEPS = 4
+
+
+class _ProviderError(Exception):
+    """Non-retryable provider failure (missing or bad credentials, bad prompt)."""
+
+
+class _ProviderBusy(Exception):
+    """Provider throttled us; worth retrying after a wait."""
+
+
+_RETRYABLE_IMAGE_ERRORS = (
+    httpx.ConnectError,
+    httpx.TimeoutException,
+    httpx.RemoteProtocolError,
+    _ProviderBusy,
+)
+
+
+def _image_provider() -> str:
+    """Provider name from the environment, read per call so .env edits apply."""
+    return os.environ.get("IMAGE_PROVIDER", "pollinations").strip().lower()
+
+
+def _cover_seed(slug: str, name: str, prompt: str) -> int:
+    """Stable seed so re-running the same post reproduces the same cover."""
+    digest = hashlib.sha256(f"{slug}:{name}:{prompt}".encode()).hexdigest()
+    return int(digest[:8], 16) % 2_147_483_647
+
+
+def _fit_cover(image):
+    """Center-crop to the cover aspect ratio, then resize to the cover size."""
+    import PIL.Image
+
+    target_w, target_h = _COVER_SIZE
+    target_ratio = target_w / target_h
+    width, height = image.size
+
+    if width / height > target_ratio:
+        crop_w = int(round(height * target_ratio))
+        left = (width - crop_w) // 2
+        image = image.crop((left, 0, left + crop_w, height))
+    else:
+        crop_h = int(round(width / target_ratio))
+        top = (height - crop_h) // 2
+        image = image.crop((0, top, width, top + crop_h))
+
+    return image.resize(_COVER_SIZE, PIL.Image.Resampling.LANCZOS)
+
+
+def _save_cover(image_bytes: bytes, slug: str, name: str) -> str:
+    """Write the image as PNG and verify it is readable before reporting success."""
+    import PIL.Image
+
+    if not image_bytes:
+        raise _ProviderError("Provider returned an empty image body")
+
+    with PIL.Image.open(io.BytesIO(image_bytes)) as image:
+        fitted = _fit_cover(image.convert("RGB"))
+
+    path = BLOG_DIR / slug / f"{name}.png"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fitted.save(str(path), format="PNG", optimize=True)
+
+    # AGENTS.md requires the saved file to be verified, not assumed.
+    if path.stat().st_size == 0:
+        raise _ProviderError(f"Saved cover is empty: {path}")
+    with PIL.Image.open(str(path)) as check:
+        check.verify()
+
+    return f"Cover saved to {path}"
+
+
 @retry(
     stop=stop_after_attempt(3),
-    wait=wait_exponential(multiplier=1, min=2, max=30),
+    wait=wait_exponential(multiplier=2, min=4, max=60),
+    retry=retry_if_exception_type(_RETRYABLE_IMAGE_ERRORS),
+    reraise=True,
+)
+def _generate_cover_cloudflare(prompt: str, slug: str, name: str) -> str:
+    """Cloudflare Workers AI FLUX.1 [schnell] — free tier, no watermark."""
+    account = os.environ.get("CLOUDFLARE_ACCOUNT_ID", "").strip()
+    token = os.environ.get("CLOUDFLARE_API_TOKEN", "").strip()
+    if not account or not token:
+        raise _ProviderError(
+            "CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_API_TOKEN must be set "
+            "for IMAGE_PROVIDER=cloudflare"
+        )
+
+    url = f"https://api.cloudflare.com/client/v4/accounts/{account}/ai/run/{_CF_MODEL}"
+    payload = {
+        # The model accepts at most 2048 characters; long agent prompts are
+        # truncated rather than rejected.
+        "prompt": prompt[:2048],
+        "steps": _CF_STEPS,
+        "seed": _cover_seed(slug, name, prompt),
+    }
+
+    with httpx.Client(timeout=_IMAGE_TIMEOUT) as client:
+        res = client.post(
+            url,
+            json=payload,
+            headers={"Authorization": f"Bearer {token}"},
+        )
+
+    if res.status_code == 429:
+        raise _ProviderBusy(f"Cloudflare rate limited the request: {res.text[:200]}")
+    if 400 <= res.status_code < 500:
+        # Credential or prompt problems: retrying changes nothing.
+        raise _ProviderError(
+            f"Cloudflare returned {res.status_code}: {res.text[:300]}"
+        )
+    res.raise_for_status()
+
+    if res.headers.get("content-type", "").startswith("image/"):
+        return _save_cover(res.content, slug, name)
+
+    body = res.json()
+    if not body.get("success", False):
+        raise _ProviderError(f"Cloudflare error: {body.get('errors')}")
+    return _save_cover(base64.b64decode(body["result"]["image"]), slug, name)
+
+
+@retry(
+    stop=stop_after_attempt(3),
+    wait=wait_exponential(multiplier=2, min=4, max=60),
+    retry=retry_if_exception_type(_RETRYABLE_IMAGE_ERRORS),
+    reraise=True,
+)
+def _generate_cover_pollinations(prompt: str, slug: str, name: str) -> str:
+    """Pollinations gen API with FLUX.1.1-pro — needs POLLONATION_API_KEY."""
+    api_key = os.environ.get("POLLONATION_API_KEY", "").strip()
+    if not api_key:
+        raise _ProviderError(
+            "POLLONATION_API_KEY must be set for IMAGE_PROVIDER=pollinations"
+        )
+
+    url = "https://gen.pollinations.ai/image/" + quote(prompt[:1500], safe="")
+    with httpx.Client(follow_redirects=True, timeout=_IMAGE_TIMEOUT) as client:
+        res = client.get(
+            url,
+            params={"model": _POLLINATIONS_MODEL},
+            headers={"Authorization": f"Bearer {api_key}"},
+        )
+
+    if res.status_code == 429:
+        raise _ProviderBusy(f"Pollinations rate limited the request: {res.text[:200]}")
+    if res.status_code in (401, 403):
+        # Bad or exhausted key: retrying cannot fix it.
+        raise _ProviderError(
+            f"Pollinations rejected the API key ({res.status_code}): {res.text[:200]}"
+        )
+    if 400 <= res.status_code < 500:
+        raise _ProviderError(
+            f"Pollinations returned {res.status_code}: {res.text[:200]}"
+        )
+    res.raise_for_status()
+    return _save_cover(res.content, slug, name)
+
+
+@retry(
+    stop=stop_after_attempt(3),
+    wait=wait_exponential(multiplier=2, min=2, max=30),
     retry=retry_if_exception_type(Exception),
     reraise=True,
 )
 def _generate_cover_gemini(prompt: str, slug: str, name: str) -> str:
-    """Inner implementation — retried here, not on the tool.
-
-    On the tool the retry is dead: its try/except returns a string, which
-    tenacity reads as success.
-    """
-    import io
-
-    import PIL.Image
+    """Gemini image model — needs GOOGLE_API_KEY and billing enabled."""
     from google import genai
     from google.genai import types
 
@@ -235,18 +416,38 @@ def _generate_cover_gemini(prompt: str, slug: str, name: str) -> str:
 
     for part in res.candidates[0].content.parts:
         if part.inline_data:
-            path = BLOG_DIR / slug / f"{name}.png"
-            path.parent.mkdir(parents=True, exist_ok=True)
-            image = PIL.Image.open(io.BytesIO(part.inline_data.data))
-            image.save(str(path))
-            return f"Cover saved to {path}"
+            return _save_cover(part.inline_data.data, slug, name)
     return "No image was generated"
+
+
+_COVER_PROVIDERS = {
+    "cloudflare": _generate_cover_cloudflare,
+    "pollinations": _generate_cover_pollinations,
+    "gemini": _generate_cover_gemini,
+}
+
+
+def _cloudflare_configured() -> bool:
+    """True when both Cloudflare values needed for Workers AI are present."""
+    return bool(
+        os.environ.get("CLOUDFLARE_ACCOUNT_ID", "").strip()
+        and os.environ.get("CLOUDFLARE_API_TOKEN", "").strip()
+    )
+
+
+def _pollinations_configured() -> bool:
+    """True when the gen API key needed for the Pollinations provider is set."""
+    return bool(os.environ.get("POLLONATION_API_KEY", "").strip())
 
 
 @tool(parse_docstring=True)
 def generate_cover(prompt: str, slug: str, name: str) -> str:
     """
-    Generate and save a cover image to Blog/<slug>/<name>.png using Gemini image model
+    Generate and save a 1408x768 cover image to Blog/<slug>/<name>.png
+
+    Provider is set by IMAGE_PROVIDER (pollinations, cloudflare, or gemini).
+    Pollinations (gen API, FLUX.1.1-pro) is the default and needs
+    POLLONATION_API_KEY in .env.
 
     Args:
         prompt: Text prompt describing the image
@@ -261,7 +462,34 @@ def generate_cover(prompt: str, slug: str, name: str) -> str:
             f"Invalid slug '{slug}' or name '{name}'. "
             "Use only letters, numbers, hyphens, and underscores."
         )
+
+    provider = _image_provider()
+    impl = _COVER_PROVIDERS.get(provider)
+    if impl is None:
+        return (
+            f"Unknown IMAGE_PROVIDER '{provider}'. "
+            f"Use one of: {', '.join(sorted(_COVER_PROVIDERS))}."
+        )
+
+    # If Cloudflare was picked without credentials, fall back to the
+    # Pollinations gen API instead of breaking the run.
+    if provider == "cloudflare" and not _cloudflare_configured():
+        if not _pollinations_configured():
+            return (
+                "Error generating cover: no usable image provider. Set "
+                "POLLONATION_API_KEY (pollinations) or CLOUDFLARE_ACCOUNT_ID "
+                "and CLOUDFLARE_API_TOKEN (cloudflare) in .env."
+            )
+        try:
+            result = _generate_cover_pollinations(prompt, slug, name)
+            return (
+                f"{result} (fallback: Pollinations. Set CLOUDFLARE_ACCOUNT_ID "
+                "and CLOUDFLARE_API_TOKEN for watermark-free covers.)"
+            )
+        except Exception as e:
+            return f"Error generating cover: {e}"
+
     try:
-        return _generate_cover_gemini(prompt, slug, name)
+        return impl(prompt, slug, name)
     except Exception as e:
         return f"Error generating cover: {e}"

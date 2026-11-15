@@ -8,3 +8,9 @@ __pycache__/
 .next/
 
 logs/
+
+# Local agent tooling — not part of the project
+CLAUDE.md
+backend/CLAUDE.md
+.claude/
+.agents/

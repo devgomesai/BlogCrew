@@ -61,6 +61,24 @@ Architecture
 - Posts are written to `backend/Blog/<slug>/`, a volume the frontend's `/blogs`
   reader mounts read-only.
 
+Screenshots
+
+**Home** — the Quill landing page; one click to create a blog or browse published posts.
+
+![Home page](images/home.png)
+
+**Workshop** — the main blog creator page, where the user enters a blog topic. Suggested prompts below the composer, and the pipeline legend shows which agent is on duty.
+
+![Workshop where the user enters a blog topic](images/main_blog_creator_page_where_user_entersa_blog_topic.png)
+
+**The Press (`/blogs`)** — every blog created by the crew, listed with its AI-generated cover.
+
+![All blogs which are created, listed](images/all_blogs_which_are_created_listed.png)
+
+**Workshop + live preview** — a blog once created: the chat thread on the left, the finished article and cover in the preview panel on the right, ready to open.
+
+![A blog once created, with live preview](images/blog_once_created.png)
+
 Outputs
 
 - `backend/Blog/<slug>/Blog.md` — generated article (Markdown, with YAML frontmatter:
@@ -83,6 +101,7 @@ Project layout
 │   ├── langgraph.json
 │   └── pyproject.toml
 ├── docs/                    # README assets (architecture.svg)
+├── images/                  # README screenshots (home, workshop, /blogs, preview)
 ├── frontend/                # Next.js reader (/blogs) + workshop UI
 └── start.ps1                # Launches backend (localhost) + frontend
 ```

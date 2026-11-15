@@ -57,11 +57,11 @@ flowchart LR
     W -->|LangGraph SDK stream| S["LangGraph dev server :8123 - blogwriter graph"]
     S --> Q["Quill orchestrator - create_deep_agent"]
 
-    Q --> P["planner"]
-    Q --> R["researcher"]
-    Q --> WR["writer"]
-    Q --> E["editor"]
-    Q --> HU["humanizer"]
+    Q --> P["planner-agent"]
+    Q --> R["researcher-agent"]
+    Q --> WR["writer-agent"]
+    Q --> E["editor-agent"]
+    Q --> HU["humanizer-agent"]
 
     R -->|web_search| T["Tavily"]
     Q -->|generate_cover| O["OpenRouter Images API - Recraft V4.1 Flash"]

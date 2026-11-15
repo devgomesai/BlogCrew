@@ -53,7 +53,7 @@ def test_load_subagents_requires_description():
 
 
 def test_fit_cover_crops_and_resizes():
-    # Square source (what FLUX.1 [schnell] returns) must come out as the exact
+    # Square source (what Recraft returns) must come out as the exact
     # cover size, not a 1024x1024 square.
     square = PIL.Image.new("RGB", (1024, 1024), "navy")
     assert _fit_cover(square).size == _COVER_SIZE
@@ -89,36 +89,19 @@ def test_generate_cover_validates_names():
         assert "Invalid slug" in out, out
 
 
-def test_generate_cover_requires_pollinations_key():
-    """Default provider is the Pollinations gen API; without a key it must say so."""
+def test_generate_cover_requires_openrouter_key():
+    """Without OPENROUTER_API_KEY the tool must say so instead of failing silently."""
     real, tools.BLOG_DIR = tools.BLOG_DIR, Path(tempfile.mkdtemp())
-    saved = {
-        key: tools.os.environ.pop(key, None)
-        for key in ("POLLONATION_API_KEY", "IMAGE_PROVIDER")
-    }
+    saved = tools.os.environ.pop("OPENROUTER_API_KEY", None)
     try:
         out = generate_cover.invoke(
             {"prompt": "a cover", "slug": "fallback-test", "name": "cover"}
         )
-        assert "POLLONATION_API_KEY" in out, out
+        assert "OPENROUTER_API_KEY" in out, out
     finally:
         tools.BLOG_DIR = real
-        for key, value in saved.items():
-            if value is not None:
-                tools.os.environ[key] = value
-
-
-def test_generate_cover_reports_unknown_provider():
-    saved = tools.os.environ.get("IMAGE_PROVIDER")
-    tools.os.environ["IMAGE_PROVIDER"] = "not-a-provider"
-    try:
-        out = generate_cover.invoke({"prompt": "x", "slug": "ok", "name": "cover"})
-        assert "Unknown IMAGE_PROVIDER" in out, out
-    finally:
-        if saved is None:
-            tools.os.environ.pop("IMAGE_PROVIDER", None)
-        else:
-            tools.os.environ["IMAGE_PROVIDER"] = saved
+        if saved is not None:
+            tools.os.environ["OPENROUTER_API_KEY"] = saved
 
 
 if __name__ == "__main__":
@@ -128,6 +111,5 @@ if __name__ == "__main__":
     test_fit_cover_crops_and_resizes()
     test_save_cover_writes_readable_png()
     test_generate_cover_validates_names()
-    test_generate_cover_requires_pollinations_key()
-    test_generate_cover_reports_unknown_provider()
+    test_generate_cover_requires_openrouter_key()
     print("ok")

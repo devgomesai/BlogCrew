@@ -51,14 +51,6 @@ How it works (high level)
 - Humanizer strips AI tells from the edited draft — this is what gets saved.
 - generate_cover uses the OpenRouter Images API (Recraft V4.1 Flash) to create a cover image saved alongside the article.
 
-Architecture
-
-![BlogCrew architecture](docs/architecture.svg)
-
-Two apps, one contract: the Next.js workshop talks to the `blogwriter` LangGraph
-graph over the SDK; everything the crew produces lands in `backend/Blog/<slug>/`,
-which the `/blogs` reader serves.
-
 ```mermaid
 flowchart LR
     U(["User"]) -->|topic| W["Workshop UI - Next.js /workshop"]
@@ -139,7 +131,6 @@ Project layout
 │   ├── Blog/                # Generated blog posts and covers
 │   ├── langgraph.json
 │   └── pyproject.toml
-├── docs/                    # README assets (architecture.svg)
 ├── images/                  # README screenshots (home, workshop, /blogs, preview)
 ├── frontend/                # Next.js reader (/blogs) + workshop UI
 └── start.ps1                # Launches backend (localhost) + frontend
@@ -194,4 +185,3 @@ Credits & License
 
 - Inspired by LangChain DeepAgents content-builder example.
 - Repository: [https://github.com/devgomesai/BlogCrew](https://github.com/devgomesai/BlogCrew)
-

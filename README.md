@@ -61,9 +61,9 @@ which the `/blogs` reader serves.
 
 ```mermaid
 flowchart LR
-    U(("User")) -- topic --> W["Workshop UI<br/>(Next.js /workshop)"]
-    W -- "stream (LangGraph SDK)" --> S["LangGraph dev server<br/>:8123 · blogwriter graph"]
-    S --> Q["Quill — orchestrator<br/>create_deep_agent"]
+    U(["User"]) -->|topic| W["Workshop UI - Next.js /workshop"]
+    W -->|LangGraph SDK stream| S["LangGraph dev server :8123 - blogwriter graph"]
+    S --> Q["Quill orchestrator - create_deep_agent"]
 
     Q --> P["planner"]
     Q --> R["researcher"]
@@ -71,10 +71,10 @@ flowchart LR
     Q --> E["editor"]
     Q --> HU["humanizer"]
 
-    R -- "web_search" --> T["Tavily"]
-    Q -- "generate_cover" --> O["OpenRouter Images API<br/>(Recraft V4.1 Flash)"]
-    Q -- "write_blog" --> B["backend/Blog/&lt;slug&gt;/<br/>Blog.md + cover.png"]
-    B -- "read locally" --> BL["/blogs reader<br/>(The Press)"]
+    R -->|web_search| T["Tavily"]
+    Q -->|generate_cover| O["OpenRouter Images API - Recraft V4.1 Flash"]
+    Q -->|write_blog| B["backend/Blog/[slug] - Blog.md + cover.png"]
+    B -->|read locally| BL["/blogs reader - The Press"]
 ```
 
 **One model, five roles.** Every agent — orchestrator and subagents — runs on the

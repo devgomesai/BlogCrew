@@ -55,11 +55,50 @@ Architecture
 
 ![BlogCrew architecture](docs/architecture.svg)
 
-- The Next.js `/workshop` page streams to the LangGraph `blogwriter` graph via the
-  LangGraph SDK; the orchestrator delegates to the five subagents.
-- Subagents call out to Tavily (search), the OpenRouter Images API (covers) and the `LLM_CHOICE` model.
-- Posts are written to `backend/Blog/<slug>/`, a volume the frontend's `/blogs`
-  reader mounts read-only.
+Two apps, one contract: the Next.js workshop talks to the `blogwriter` LangGraph
+graph over the SDK; everything the crew produces lands in `backend/Blog/<slug>/`,
+which the `/blogs` reader serves.
+
+```mermaid
+flowchart LR
+    U(("User")) -- topic --> W["Workshop UI<br/>(Next.js /workshop)"]
+    W -- "stream (LangGraph SDK)" --> S["LangGraph dev server<br/>:8123 · blogwriter graph"]
+    S --> Q["Quill — orchestrator<br/>create_deep_agent"]
+
+    Q --> P["planner"]
+    Q --> R["researcher"]
+    Q --> WR["writer"]
+    Q --> E["editor"]
+    Q --> HU["humanizer"]
+
+    R -- "web_search" --> T["Tavily"]
+    Q -- "generate_cover" --> O["OpenRouter Images API<br/>(Recraft V4.1 Flash)"]
+    Q -- "write_blog" --> B["backend/Blog/&lt;slug&gt;/<br/>Blog.md + cover.png"]
+    B -- "read locally" --> BL["/blogs reader<br/>(The Press)"]
+```
+
+**One model, five roles.** Every agent — orchestrator and subagents — runs on the
+same `LLM_CHOICE` model from `backend/.env`. The five subagents are plain dicts in
+`backend/src/subagents.yaml` (name, description, system_prompt, tools, skills) that
+`agent.py` loads at startup. The orchestrator owns the tools that write: `write_blog`
+and `generate_cover`. Subagents research and draft; only Quill places the final files.
+
+**Virtual filesystem, strict allow-list.** A `CompositeBackend` maps agent-visible
+paths to disk — `/memory/` → `src/` (AGENTS.md is loaded from there on every run),
+`/skills/` → `backend/skills/`, everything else to in-graph `StateBackend`. Research
+notes and drafts accumulate in `/memory/sandbox/<slug>/` during a run. `FilesystemPermission`
+rules are first-match-wins: sandbox + harness paths read/write, `AGENTS.md` + skills
+read-only, everything else denied — which is what stops the agent reading source code
+through a virtual route.
+
+**Middleware.** `TodoListMiddleware` feeds the workshop's task panel; `ToolCallLimitMiddleware`
+caps `web_search` at 5 calls per thread / 3 per run; deepagents' own skills and
+subagent middlewares load `/skills/` and spin up the five subagents behind the `task` tool.
+
+**Data flow of one post.** Planner → outline → researcher (Tavily, capped) → notes in
+sandbox → writer (blog-writer skill) → draft → editor → polish → humanizer (humanizer
+skill) → final prose → `write_blog` writes `Blog.md` next to a Recraft-generated
+`cover.png` → the `/blogs` page picks it up on its next read.
 
 Screenshots
 

@@ -51,13 +51,16 @@ writer:
 
     ---
     title: "The post title"
-    date: YYYY-MM-DD
+    date: "YYYY-MM-DD"
     description: "One sentence, under 160 characters — this is the SEO meta
       description and the social preview text."
     tags: [tag-one, tag-two, tag-three]
     ---
+
+    Quote the date. An unquoted date (date: 2026-01-15) becomes a Date
+    object downstream and breaks the site.
   skills:
-    - /skills/blog-writer/
+    - /skills/
 
 editor:
   name: editor-agent
@@ -79,7 +82,7 @@ editor:
     intact at the top of the document — the site reads it for <title>, meta
     description, and OG tags. Add it if the writer omitted it.
   skills:
-    - /skills/blog-writer/
+    - /skills/
 
 humanizer:
   name: humanizer-agent
@@ -101,4 +104,4 @@ humanizer:
     section, or any metadata field. Return only the final markdown +
     unchanged metadata block.
   skills:
-    - /skills/humanizer/
+    - /skills/

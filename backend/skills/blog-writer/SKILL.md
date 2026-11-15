@@ -1,6 +1,16 @@
 ---
-name: blog-writing
-description: Legendary blog writing that makes readers forget they're reading. This skill combines the narrative mastery of Paul Graham's essays, the technical accessibility of Julia Evans, the conversational wit of Wait But Why, and the viral mechanics of James Clear.  Great blog posts don't inform—they transform. They take complex ideas and make them feel obvious. They turn strangers into superfans. They get shared not because someone should read them, but because someone needs to read them.  This skill adapts to any topic: cybersecurity that reads like a thriller, AI explainers that feel like conversations, marketing insights that make you screenshot every paragraph, and coding tutorials that make you excited to build. Use when "write a blog post, blog post about, write an article, create content about, explain this topic, write about, long-form content, thought leadership, technical blog, how-to article, tutorial post, educational content, industry analysis, opinion piece, newsletter content, make this engaging, write for developers, explain like, writing, blog, content, articles, long-form, storytelling, technical-writing, thought-leadership, educational, tutorials, explainers, engagement" mentioned. 
+name: blog-writer
+description: |
+  Legendary blog writing that makes readers forget they're reading. Combines the
+  narrative mastery of Paul Graham's essays, the technical accessibility of Julia
+  Evans, the conversational wit of Wait But Why, and the viral mechanics of James
+  Clear. Great blog posts don't inform, they transform: complex ideas made to feel
+  obvious, strangers turned into superfans. This skill adapts to any topic,
+  from cybersecurity that reads like a thriller to AI explainers that feel like
+  conversations. Use when writing, editing, or planning any blog post, article,
+  long-form content, thought leadership, technical blog, how-to article, tutorial,
+  educational content, industry analysis, opinion piece, newsletter, or when asked
+  to make content engaging, write for developers, or tell a story with substance.
 ---
 
 # Blog Writing

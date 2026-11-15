@@ -1,10 +1,10 @@
 from pathlib import Path
 
 import yaml
-from deepagents import create_deep_agent
+from deepagents import FilesystemPermission, create_deep_agent
 from deepagents.backends import CompositeBackend, FilesystemBackend, StateBackend
 from dotenv import load_dotenv
-from langchain.agents.middleware import ToolCallLimitMiddleware
+from langchain.agents.middleware import ToolCallLimitMiddleware, TodoListMiddleware
 
 from src.llm_service import get_llm
 from src.tools import generate_cover, web_search, write_blog
@@ -92,7 +92,48 @@ blog_agent = create_deep_agent(
     skills=["/skills/"],  # All the skills,
     subagents=load_subagents(BASE_DIR / "subagents.yaml"),  # Load subagents config
     backend=backend,
+    # Filesystem access is allow-listed (first-match-wins, then default-allow,
+    # so the catch-all deny at the end is what makes this a strict allow-list):
+    #   1. Pipeline workspace — research notes, drafts, edits (read + write)
+    #   2. Harness artifacts — offloaded tool results / blobs / history
+    #   3. Read-only context — /memory/AGENTS.md and /skills/**
+    #   4. Everything else under the virtual routes is denied (this is what
+    #      stops the agent reading source code through /memory/*.py — the
+    #      /memory/ route maps to the src/ tree)
+    #   5. Everything outside the routes is denied too
+    # Skills and memory middleware read through the same backend, so the
+    # allow rules must cover exactly what they load.
+    permissions=[
+        FilesystemPermission(
+            operations=["read", "write"],
+            paths=["/memory/sandbox", "/memory/sandbox/**"],
+            mode="allow",
+        ),
+        FilesystemPermission(
+            operations=["read", "write"],
+            paths=["/blobs/**", "/large_tool_results/**", "/conversation_history/**"],
+            mode="allow",
+        ),
+        FilesystemPermission(
+            operations=["read"],
+            paths=["/memory/AGENTS.md", "/skills", "/skills/**"],
+            mode="allow",
+        ),
+        FilesystemPermission(
+            operations=["read", "write"],
+            paths=["/memory/**", "/skills/**"],
+            mode="deny",
+        ),
+        FilesystemPermission(
+            operations=["read", "write"],
+            paths=["/**"],
+            mode="deny",
+        ),
+    ],
     middleware=[
+        # TodoListMiddleware is opt-in since deepagents 0.7 — restoring it
+        # re-enables write_todos and the todos state the workshop UI renders.
+        TodoListMiddleware(),
         ToolCallLimitMiddleware(tool_name="web_search", thread_limit=5, run_limit=3),
     ],
 )

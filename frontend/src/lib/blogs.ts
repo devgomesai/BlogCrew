@@ -54,6 +54,19 @@ type Frontmatter = {
   tags?: string[];
 };
 
+/**
+ * js-yaml parses an unquoted `date: 2025-01-15` into a JS Date object, which
+ * crashes React when rendered and has no localeCompare for sorting. Coerce
+ * whatever came out of the YAML into the YYYY-MM-DD string the UI expects.
+ */
+function normalizeDate(value: unknown): string | null {
+  if (typeof value === "string") return value;
+  if (value instanceof Date && !Number.isNaN(value.getTime())) {
+    return value.toISOString().slice(0, 10);
+  }
+  return null;
+}
+
 /** Split YAML frontmatter off the body. Posts without it still work. */
 function parseFrontmatter(raw: string): { data: Frontmatter; body: string } {
   const match = raw.match(FRONTMATTER_RE);
@@ -89,7 +102,7 @@ function readFromDir(dir: string, slug: string): BlogContent | null {
     title:
       data.title || body.match(/^#\s+(.+)/m)?.[1].trim() || slugToTitle(slug),
     // No frontmatter date on older posts — file mtime beats sorting by slug.
-    date: data.date ?? statSync(blogPath).mtime.toISOString().slice(0, 10),
+    date: normalizeDate(data.date) ?? statSync(blogPath).mtime.toISOString().slice(0, 10),
     description: data.description ?? null,
     tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
     hasImage: !!image,
